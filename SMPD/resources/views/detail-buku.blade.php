@@ -152,7 +152,7 @@
             min-height: max(884px, 100dvh);
         }
     </style>
-</head>
+</head>                             
 
 <body class="bg-background text-on-background antialiased min-h-screen pb-24 md:pb-0">
     <!-- TopAppBar -->

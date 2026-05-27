@@ -145,7 +145,7 @@
     </style>
 </head>
 
-<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0 flex flex-col md:flex-row">
+<body class="bg-background text-on-background min-h-screen flex flex-col">
     <!-- TopAppBar -->
     <header
         class="bg-white/90 dark:bg-primary/90 backdrop-blur-md docked full-width top-0 z-50 border-b border-outline-variant/30 dark:border-outline/20 shadow-sm sticky w-full flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16 md:hidden">
@@ -175,7 +175,7 @@
             </div>
         </div>
         <a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors"
-            href="#">
+            href="/landing-page">
             <span class="material-symbols-outlined">dashboard</span>
             <span class="font-label-sm text-label-sm">Dashboard</span>
         </a>
@@ -206,39 +206,47 @@
         </a>
     </nav>
     <!-- Main Content Canvas -->
-    <main
-        class="flex-1 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop py-8 md:pl-[304px]">
+    <main <main class="flex-1
+md:ml-[240px]
+w-auto
+px-8
+py-8
+relative
+z-0">
         <!-- Search Hero -->
         <section class="mb-12">
             <div
                 class="bg-surface-container-low rounded-2xl p-8 relative overflow-hidden shadow-[0_4px_12px_rgba(0,30,64,0.05)] border border-outline-variant/20">
-                <div class="relative z-10 max-w-2xl">
-                    <h2 class="font-display-lg text-display-lg text-primary mb-4">Eksplorasi Dunia Pengetahuan</h2>
-                    <p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Temukan jutaan koleksi buku,
-                        jurnal, dan karya ilmiah di Perpustakaan Sumatera Selatan.</p>
-                    <div
-                        class="flex flex-col sm:flex-row gap-4 bg-white p-2 rounded-xl shadow-lg border border-outline-variant/30">
-                        <div class="flex-1 flex items-center px-4">
-                            <span class="material-symbols-outlined text-outline">search</span>
-                            <input
-                                class="w-full bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface placeholder:text-outline-variant py-3 px-3"
-                                placeholder="Cari judul, penulis, atau ISBN..." type="text" />
-                        </div>
-                        <button
-                            class="bg-primary text-on-primary px-6 py-3 rounded-lg font-label-sm text-label-sm hover:shadow-md transition-shadow flex items-center justify-center gap-2">
-                            <span>Cari</span>
-                        </button>
+                <div class="relative z-10 w-full text-center">
+                    <h2 class="font-display-lg text-display-lg text-primary mb-4 mx-auto max-w-4xl">
+                        Eksplorasi Dunia Pengetahuan
+                    </h2>
+                    <p class="font-body-lg text-body-lg text-on-surface-variant mb-8 max-w-3xl mx-auto">
+                        Temukan jutaan koleksi buku, jurnal, dan karya ilmiah di Perpustakaan Sumatera Selatan.
+                    </p>
+                    <div <div <div
+                        class="flex flex-col sm:flex-row gap-4 bg-white p-2 rounded-xl
+shadow-lg border border-outline-variant/30 max-w-3xl mx-auto">
+                        <span class="material-symbols-outlined text-outline">search</span>
+                        <input
+                            class="w-full bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface placeholder:text-outline-variant py-3 px-3"
+                            placeholder="Cari judul, penulis, atau ISBN..." type="text" />
                     </div>
-                    <div class="flex flex-wrap gap-2 mt-4">
-                        <span class="font-caption text-caption text-on-surface-variant py-1">Pencarian Populer:</span>
-                        <a class="bg-surface-variant text-on-surface px-3 py-1 rounded-full font-caption text-caption hover:bg-surface-dim transition-colors"
-                            href="#">Sejarah Palembang</a>
-                        <a class="bg-surface-variant text-on-surface px-3 py-1 rounded-full font-caption text-caption hover:bg-surface-dim transition-colors"
-                            href="#">Teknologi Informasi</a>
-                        <a class="bg-surface-variant text-on-surface px-3 py-1 rounded-full font-caption text-caption hover:bg-surface-dim transition-colors"
-                            href="#">Sastra Anak</a>
-                    </div>
+                    <button
+                        class="bg-primary text-on-primary px-6 py-3 rounded-lg font-label-sm text-label-sm hover:shadow-md transition-shadow flex items-center justify-center gap-2">
+                        <span>Cari</span>
+                    </button>
                 </div>
+                <div class="flex flex-wrap gap-2 mt-4">
+                    <span class="font-caption text-caption text-on-surface-variant py-1">Pencarian Populer:</span>
+                    <a class="bg-surface-variant text-on-surface px-3 py-1 rounded-full font-caption text-caption hover:bg-surface-dim transition-colors"
+                        href="#">Sejarah Palembang</a>
+                    <a class="bg-surface-variant text-on-surface px-3 py-1 rounded-full font-caption text-caption hover:bg-surface-dim transition-colors"
+                        href="#">Teknologi Informasi</a>
+                    <a class="bg-surface-variant text-on-surface px-3 py-1 rounded-full font-caption text-caption hover:bg-surface-dim transition-colors"
+                        href="#">Sastra Anak</a>
+                </div>
+            </div>
             </div>
         </section>
         <!-- Main Layout Grid -->
@@ -318,10 +326,10 @@
                             href="#">Lihat Semua <span
                                 class="material-symbols-outlined text-[18px]">arrow_forward</span></a>
                     </div>
-                    <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
                         <!-- Book Card 1 -->
                         <div
-                            class="bg-white rounded-xl overflow-hidden shadow-[0_4px_12px_rgba(0,30,64,0.05)] border border-outline-variant/20 hover:scale-[1.02] hover:shadow-lg transition-all duration-200 group">
+                            class="bg-white rounded-xl overflow-hidden shadow-md border border-outline-variant/20 hover:-translate-y-1 hover:shadow-xl transition-all duration-300 group flex flex-col h-full">
                             <div class="relative aspect-[2/3] overflow-hidden bg-surface-container">
                                 <img alt="Book Cover"
                                     class="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
@@ -331,12 +339,13 @@
                                     class="absolute top-2 right-2 bg-primary-container text-on-primary-container font-caption text-caption px-2 py-1 rounded-md font-medium">
                                     Tersedia</div>
                             </div>
-                            <div class="p-4">
+                            <div class="p-4 flex flex-col flex-1">
                                 <p class="font-caption text-caption text-outline mb-1">Fiksi Sejarah</p>
                                 <h4
                                     class="font-title-md text-title-md text-on-surface line-clamp-2 mb-1 group-hover:text-primary transition-colors">
                                     Laskar Pelangi</h4>
-                                <p class="font-body-md text-body-md text-on-surface-variant mb-4">Andrea Hirata</p>
+                                <p class="font-body-md text-body-md text-on-surface-variant mb-4 flex-1">Andrea Hirata
+                                </p>
                                 <button
                                     class="w-full py-2 border border-primary text-primary rounded-lg font-label-sm text-label-sm hover:bg-primary hover:text-on-primary transition-colors">Detail</button>
                             </div>
