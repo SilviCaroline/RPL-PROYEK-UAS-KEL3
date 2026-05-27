@@ -1,67 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LandingController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OpacController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\LoanController;
+use App\Http\Controllers\ReturnController;
 
-Route::get('/', function () {
-    return view('landing-page');
-});
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
-Route::get('/public-opac', function () {
-    return view('public-opac');
-});
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard-admin', function () {
-    return view('dashboard-admin');
-});
+Route::get('/opac', [OpacController::class, 'index'])->name('opac.index');
+Route::get('/opac/{id}', [OpacController::class, 'show'])->name('opac.show');
 
-Route::get('/detail-buku', function () {
-    return view('detail-buku');
-});
-
-Route::get('/dashboard-pengguna', function () {
-    return view('dashboard-pengguna');
-});
-
-Route::get('/ebook-reader', function () {
-    return view('ebook-reader');
-});
-
-Route::get('/kartu-anggota', function () {
-    return view('kartu-anggota');
-});
-
-Route::get('/kelola-buku-pustakawan', function () {
-    return view('kelola-buku-pustakawan');
-});
-
-Route::get('/kelola-denda-admin', function () {
-    return view('kelola-denda-admin');
-});
-
-Route::get('/login', function () {
-    return view('login');
-});
-
-Route::get('/notifikasi-pengguna', function () {
-    return view('notifikasi-pengguna');
-});
-
-Route::get('/peminjaman-buku', function () {
-    return view('peminjaman-buku');
-});
-
-Route::get('/pengembaliann-buku', function () {
-    return view('pengembaliann-buku');
-});
-
-Route::get('/profil-pengguna', function () {
-    return view('profil-pengguna');
-});
-
-Route::get('/reservasi-buku', function () {
-    return view('reservasi-buku');
-});
-
-Route::get('/statistik-laporan-admin', function () {
-    return view('statistik-laporan-admin');
-});
+Route::resource('/books', BookController::class);
+Route::resource('/members', MemberController::class);
+Route::get('/members/{id}/card', [MemberController::class, 'card'])->name('members.card');
+Route::resource('/loans', LoanController::class);
+Route::get('/returns', [ReturnController::class, 'index'])->name('returns.index');
+Route::post('/returns/process', [ReturnController::class, 'process'])->name('returns.process');
