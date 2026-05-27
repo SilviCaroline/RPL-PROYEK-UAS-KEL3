@@ -2,41 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use App\Models\Loan;
+use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class LoanController extends Controller
+class LoanController extends BaseController
 {
-    private function loans()
-    {
-        return [
-            1 => [
-                'id' => 1,
-                'loan_code' => 'LN001',
-                'member_code' => 'MBR001',
-                'member_name' => 'Diana Putri',
-                'book_barcode' => 'BK001',
-                'book_title' => 'Laskar Pelangi',
-                'loan_date' => '2026-05-20',
-                'due_date' => '2026-05-27',
-                'status' => 'Dipinjam',
-            ],
-            2 => [
-                'id' => 2,
-                'loan_code' => 'LN002',
-                'member_code' => 'MBR002',
-                'member_name' => 'Andi Saputra',
-                'book_barcode' => 'BK002',
-                'book_title' => 'Bumi Manusia',
-                'loan_date' => '2026-05-18',
-                'due_date' => '2026-05-25',
-                'status' => 'Terlambat',
-            ],
-        ];
-    }
-
     public function index()
     {
-        $loans = $this->loans();
+        $loans = Loan::with(['member', 'book'])
+            ->latest()
+            ->paginate(10);
+
         return view('loans.index', compact('loans'));
     }
 
@@ -47,6 +26,44 @@ class LoanController extends Controller
 
     public function store(Request $request)
     {
-        return redirect()->route('loans.index')->with('success', 'Peminjaman buku berhasil disimpan.');
+        $request->validate([
+            'member_code' => 'required',
+            'book_barcode' => 'required',
+            'loan_date' => 'required|date',
+            'due_date' => 'required|date|after_or_equal:loan_date',
+        ]);
+
+        $member = Member::where('member_code', $request->member_code)
+            ->where('status', 'Aktif')
+            ->first();
+
+        if (!$member) {
+            return back()->with('error', 'Anggota tidak ditemukan atau status tidak aktif.');
+        }
+
+        $book = Book::where('barcode', $request->book_barcode)->first();
+
+        if (!$book) {
+            return back()->with('error', 'Buku dengan barcode tersebut tidak ditemukan.');
+        }
+
+        if ($book->stock <= 0) {
+            return back()->with('error', 'Stok buku habis. Buku tidak dapat dipinjam.');
+        }
+
+        DB::transaction(function () use ($request, $member, $book) {
+            Loan::create([
+                'loan_code' => 'LN' . date('YmdHis'),
+                'member_id' => $member->id,
+                'book_id' => $book->id,
+                'loan_date' => $request->loan_date,
+                'due_date' => $request->due_date,
+                'status' => 'Dipinjam',
+            ]);
+
+            $book->decrement('stock');
+        });
+
+        return redirect()->route('loans.index')->with('success', 'Peminjaman buku berhasil disimpan dan stok buku otomatis berkurang.');
     }
 }

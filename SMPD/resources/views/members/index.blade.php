@@ -15,9 +15,9 @@
             <a href="{{ route('dashboard', ['role' => request('role', 'pustakawan')]) }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Dashboard</a>
             <a href="{{ route('books.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Manajemen Buku</a>
             <a href="{{ route('members.index') }}" class="block px-4 py-3 bg-blue-900 rounded-lg">Manajemen Anggota</a>
-           <a href="{{ route('loans.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Peminjaman</a>
+            <a href="{{ route('loans.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Peminjaman</a>
             <a href="{{ route('returns.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Pengembalian</a>
-            <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
+            <a href="{{ route('reports.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
             <a href="{{ route('logout') }}" class="block px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg mt-8">Logout</a>
         </nav>
     </aside>
@@ -40,7 +40,7 @@
             </div>
         @endif
 
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
+        <div class="bg-white rounded-2xl shadow overflow-x-auto">
             <table class="w-full text-left">
                 <thead class="bg-blue-950 text-white">
                     <tr>
@@ -54,24 +54,24 @@
                 </thead>
 
                 <tbody>
-                    @foreach($members as $member)
+                    @forelse($members as $member)
                         <tr class="border-b">
-                            <td class="p-4 font-semibold">{{ $member['member_code'] }}</td>
-                            <td class="p-4">{{ $member['name'] }}</td>
-                            <td class="p-4">{{ $member['email'] }}</td>
-                            <td class="p-4">{{ $member['phone'] }}</td>
+                            <td class="p-4 font-semibold">{{ $member->member_code }}</td>
+                            <td class="p-4">{{ $member->name }}</td>
+                            <td class="p-4">{{ $member->email }}</td>
+                            <td class="p-4">{{ $member->phone ?? '-' }}</td>
                             <td class="p-4">
-                                @if($member['status'] == 'Aktif')
+                                @if($member->status == 'Aktif')
                                     <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">Aktif</span>
                                 @else
                                     <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs">Nonaktif</span>
                                 @endif
                             </td>
                             <td class="p-4 flex gap-2">
-                                <a href="{{ route('members.card', $member['id']) }}" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm">Kartu</a>
-                                <a href="{{ route('members.edit', $member['id']) }}" class="bg-yellow-500 text-white px-3 py-2 rounded-lg text-sm">Edit</a>
+                                <a href="{{ route('members.card', $member->id) }}" class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm">Kartu</a>
+                                <a href="{{ route('members.edit', $member->id) }}" class="bg-yellow-500 text-white px-3 py-2 rounded-lg text-sm">Edit</a>
 
-                                <form action="{{ route('members.destroy', $member['id']) }}" method="POST">
+                                <form action="{{ route('members.destroy', $member->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm" onclick="return confirm('Hapus anggota ini?')">
@@ -80,9 +80,19 @@
                                 </form>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" class="p-6 text-center text-slate-500">
+                                Data anggota belum tersedia.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="mt-6">
+            {{ $members->links() }}
         </div>
     </main>
 </div>

@@ -2,82 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseController;
 
 class BookController extends BaseController
 {
-    private function books()
-    {
-        return [
-            1 => [
-                'id' => 1,
-                'title' => 'Laskar Pelangi',
-                'author' => 'Andrea Hirata',
-                'category' => 'Novel',
-                'year' => '2005',
-                'stock' => 5,
-                'barcode' => 'BK001',
-                'status' => 'Tersedia',
-            ],
-            2 => [
-                'id' => 2,
-                'title' => 'Bumi Manusia',
-                'author' => 'Pramoedya Ananta Toer',
-                'category' => 'Sastra',
-                'year' => '1980',
-                'stock' => 0,
-                'barcode' => 'BK002',
-                'status' => 'Dipinjam',
-            ],
-            3 => [
-                'id' => 3,
-                'title' => 'Atomic Habits',
-                'author' => 'James Clear',
-                'category' => 'Pengembangan Diri',
-                'year' => '2018',
-                'stock' => 3,
-                'barcode' => 'BK003',
-                'status' => 'Tersedia',
-            ],
-        ];
-    }
-
     public function index()
     {
-        $books = $this->books();
+        $books = Book::with('category')->latest()->paginate(10);
+
         return view('books.index', compact('books'));
     }
 
     public function create()
     {
-        return view('books.create');
+        $categories = Category::all();
+
+        return view('books.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
+        Book::create([
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'author' => $request->author,
+            'publisher' => $request->publisher,
+            'year' => $request->year,
+            'isbn' => $request->isbn,
+            'barcode' => $request->barcode,
+            'stock' => $request->stock,
+            'description' => $request->description,
+        ]);
+
         return redirect()->route('books.index')->with('success', 'Data buku berhasil ditambahkan.');
     }
 
-    public function show($id)
+    public function show(Book $book)
     {
-        $book = $this->books()[$id] ?? abort(404);
+        $book->load('category');
+
         return view('books.show', compact('book'));
     }
 
-    public function edit($id)
+    public function edit(Book $book)
     {
-        $book = $this->books()[$id] ?? abort(404);
-        return view('books.edit', compact('book'));
+        $categories = Category::all();
+
+        return view('books.edit', compact('book', 'categories'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Book $book)
     {
+        $book->update([
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'author' => $request->author,
+            'publisher' => $request->publisher,
+            'year' => $request->year,
+            'isbn' => $request->isbn,
+            'barcode' => $request->barcode,
+            'stock' => $request->stock,
+            'description' => $request->description,
+        ]);
+
         return redirect()->route('books.index')->with('success', 'Data buku berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Book $book)
     {
+        $book->delete();
+
         return redirect()->route('books.index')->with('success', 'Data buku berhasil dihapus.');
     }
 }

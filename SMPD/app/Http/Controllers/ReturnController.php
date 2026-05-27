@@ -2,42 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fine;
+use App\Models\Loan;
+use App\Models\ReturnBook;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class ReturnController extends BaseController
+class ReturnController extends Controller
 {
     public function index()
     {
-        $returns = [
-            [
-                'return_code' => 'RT001',
-                'loan_code' => 'LN001',
-                'member_name' => 'Diana Putri',
-                'book_title' => 'Laskar Pelangi',
-                'due_date' => '2026-05-27',
-                'return_date' => '2026-05-27',
-                'late_days' => 0,
-                'fine' => 0,
-                'status' => 'Tepat Waktu',
-            ],
-            [
-                'return_code' => 'RT002',
-                'loan_code' => 'LN002',
-                'member_name' => 'Andi Saputra',
-                'book_title' => 'Bumi Manusia',
-                'due_date' => '2026-05-25',
-                'return_date' => '2026-05-27',
-                'late_days' => 2,
-                'fine' => 10000,
-                'status' => 'Terlambat',
-            ],
-        ];
+        $returns = ReturnBook::with(['loan.member', 'loan.book'])
+            ->latest()
+            ->paginate(10);
 
         return view('returns.index', compact('returns'));
     }
 
     public function process(Request $request)
     {
-        return redirect()->route('returns.index')->with('success', 'Pengembalian berhasil diproses dan denda otomatis dihitung.');
+        $request->validate([
+            'loan_code' => 'required',
+            'book_barcode' => 'required',
+            'return_date' => 'required|date',
+        ]);
+
+        $loan = Loan::with(['book', 'member'])
+            ->where('loan_code', $request->loan_code)
+            ->where('status', '!=', 'Dikembalikan')
+            ->first();
+
+        if (!$loan) {
+            return back()->with('error', 'Data peminjaman tidak ditemukan atau sudah dikembalikan.');
+        }
+
+        if ($loan->book->barcode !== $request->book_barcode) {
+            return back()->with('error', 'Barcode buku tidak sesuai dengan data peminjaman.');
+        }
+
+        $returnDate = strtotime($request->return_date);
+        $dueDate = strtotime($loan->due_date);
+
+        $lateDays = 0;
+        if ($returnDate > $dueDate) {
+            $lateDays = floor(($returnDate - $dueDate) / 86400);
+        }
+
+        $fineAmount = $lateDays * 5000;
+
+        DB::transaction(function () use ($loan, $request, $lateDays, $fineAmount) {
+            ReturnBook::create([
+                'return_code' => 'RT' . date('YmdHis'),
+                'loan_id' => $loan->id,
+                'return_date' => $request->return_date,
+                'late_days' => $lateDays,
+                'fine_amount' => $fineAmount,
+            ]);
+
+            if ($fineAmount > 0) {
+                Fine::create([
+                    'loan_id' => $loan->id,
+                    'amount' => $fineAmount,
+                    'status' => 'Belum Dibayar',
+                ]);
+            }
+
+            $loan->update([
+                'status' => $lateDays > 0 ? 'Terlambat' : 'Dikembalikan',
+            ]);
+
+            $loan->book->increment('stock');
+        });
+
+        return redirect()->route('returns.index')->with('success', 'Pengembalian berhasil diproses.');
     }
 }

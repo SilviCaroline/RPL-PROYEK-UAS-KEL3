@@ -18,17 +18,27 @@
 
             <div>
                 <label class="block mb-2 font-medium">Judul Buku</label>
-                <input type="text" name="title" class="w-full border rounded-lg px-4 py-3">
+                <input type="text" name="title" class="w-full border rounded-lg px-4 py-3" required>
             </div>
 
             <div>
                 <label class="block mb-2 font-medium">Penulis</label>
-                <input type="text" name="author" class="w-full border rounded-lg px-4 py-3">
+                <input type="text" name="author" class="w-full border rounded-lg px-4 py-3" required>
             </div>
 
             <div>
                 <label class="block mb-2 font-medium">Kategori</label>
-                <input type="text" name="category" class="w-full border rounded-lg px-4 py-3">
+                <select name="category_id" class="w-full border rounded-lg px-4 py-3" required>
+                    <option value="">Pilih Kategori</option>
+                    @foreach($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div>
+                <label class="block mb-2 font-medium">Penerbit</label>
+                <input type="text" name="publisher" class="w-full border rounded-lg px-4 py-3">
             </div>
 
             <div>
@@ -37,13 +47,23 @@
             </div>
 
             <div>
+                <label class="block mb-2 font-medium">ISBN</label>
+                <input type="text" name="isbn" class="w-full border rounded-lg px-4 py-3">
+            </div>
+
+            <div>
                 <label class="block mb-2 font-medium">Stok</label>
-                <input type="number" name="stock" class="w-full border rounded-lg px-4 py-3">
+                <input type="number" name="stock" class="w-full border rounded-lg px-4 py-3" required>
             </div>
 
             <div>
                 <label class="block mb-2 font-medium">Barcode</label>
-                <input type="text" name="barcode" placeholder="Contoh: BK004" class="w-full border rounded-lg px-4 py-3">
+                <input type="text" name="barcode" placeholder="Contoh: BK0201" class="w-full border rounded-lg px-4 py-3" required>
+            </div>
+
+            <div class="md:col-span-2">
+                <label class="block mb-2 font-medium">Deskripsi</label>
+                <textarea name="description" rows="4" class="w-full border rounded-lg px-4 py-3"></textarea>
             </div>
 
             <div class="md:col-span-2">

@@ -17,7 +17,7 @@
             <a href="{{ route('members.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Manajemen Anggota</a>
             <a href="{{ route('loans.index') }}" class="block px-4 py-3 bg-blue-900 rounded-lg">Peminjaman</a>
             <a href="{{ route('returns.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Pengembalian</a>
-            <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
+            <a href="{{ route('reports.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
             <a href="{{ route('logout') }}" class="block px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg mt-8">Logout</a>
         </nav>
     </aside>
@@ -40,29 +40,35 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-6">
+                {{ session('error') }}
+            </div>
+        @endif
+
         <div class="grid md:grid-cols-4 gap-6 mb-8">
             <div class="bg-white rounded-2xl shadow p-6">
                 <p class="text-slate-500">Peminjaman Aktif</p>
-                <h2 class="text-3xl font-bold text-blue-950">34</h2>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow p-6">
-                <p class="text-slate-500">Jatuh Tempo Hari Ini</p>
-                <h2 class="text-3xl font-bold text-orange-500">8</h2>
+                <h2 class="text-3xl font-bold text-blue-950">{{ $loans->where('status', 'Dipinjam')->count() }}</h2>
             </div>
 
             <div class="bg-white rounded-2xl shadow p-6">
                 <p class="text-slate-500">Terlambat</p>
-                <h2 class="text-3xl font-bold text-red-600">7</h2>
+                <h2 class="text-3xl font-bold text-red-600">{{ $loans->where('status', 'Terlambat')->count() }}</h2>
             </div>
 
             <div class="bg-white rounded-2xl shadow p-6">
-                <p class="text-slate-500">Total Bulan Ini</p>
-                <h2 class="text-3xl font-bold text-blue-950">120</h2>
+                <p class="text-slate-500">Total Data Halaman Ini</p>
+                <h2 class="text-3xl font-bold text-blue-950">{{ $loans->count() }}</h2>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow p-6">
+                <p class="text-slate-500">Total Semua Data</p>
+                <h2 class="text-3xl font-bold text-blue-950">{{ $loans->total() }}</h2>
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow overflow-hidden">
+        <div class="bg-white rounded-2xl shadow overflow-x-auto">
             <table class="w-full text-left">
                 <thead class="bg-blue-950 text-white">
                     <tr>
@@ -76,30 +82,42 @@
                 </thead>
 
                 <tbody>
-                    @foreach($loans as $loan)
+                    @forelse($loans as $loan)
                         <tr class="border-b">
-                            <td class="p-4 font-semibold">{{ $loan['loan_code'] }}</td>
+                            <td class="p-4 font-semibold">{{ $loan->loan_code }}</td>
                             <td class="p-4">
-                                <p class="font-semibold">{{ $loan['member_name'] }}</p>
-                                <p class="text-sm text-slate-500">{{ $loan['member_code'] }}</p>
+                                <p class="font-semibold">{{ $loan->member->name ?? '-' }}</p>
+                                <p class="text-sm text-slate-500">{{ $loan->member->member_code ?? '-' }}</p>
                             </td>
                             <td class="p-4">
-                                <p class="font-semibold">{{ $loan['book_title'] }}</p>
-                                <p class="text-sm text-slate-500">{{ $loan['book_barcode'] }}</p>
+                                <p class="font-semibold">{{ $loan->book->title ?? '-' }}</p>
+                                <p class="text-sm text-slate-500">{{ $loan->book->barcode ?? '-' }}</p>
                             </td>
-                            <td class="p-4">{{ $loan['loan_date'] }}</td>
-                            <td class="p-4">{{ $loan['due_date'] }}</td>
+                            <td class="p-4">{{ $loan->loan_date }}</td>
+                            <td class="p-4">{{ $loan->due_date }}</td>
                             <td class="p-4">
-                                @if($loan['status'] == 'Dipinjam')
+                                @if($loan->status == 'Dipinjam')
                                     <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs">Dipinjam</span>
+                                @elseif($loan->status == 'Dikembalikan')
+                                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">Dikembalikan</span>
                                 @else
                                     <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs">Terlambat</span>
                                 @endif
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" class="p-6 text-center text-slate-500">
+                                Belum ada data peminjaman.
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
+        </div>
+
+        <div class="mt-6">
+            {{ $loans->links() }}
         </div>
     </main>
 </div>

@@ -16,45 +16,61 @@
             Masukkan kode anggota dan barcode buku untuk memproses peminjaman.
         </p>
 
+        @if(session('error'))
+            <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-6">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-6">
+                <ul class="list-disc ml-5">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('loans.store') }}" method="POST" class="grid md:grid-cols-2 gap-6">
             @csrf
 
             <div class="md:col-span-2 bg-blue-50 border border-blue-100 rounded-2xl p-5">
                 <h2 class="font-bold text-blue-950 mb-2">Simulasi Scan</h2>
                 <p class="text-sm text-slate-600">
-                    Pada sistem asli, field ini bisa diisi otomatis dari scanner barcode.
-                    Untuk sementara, input manual kode anggota dan barcode buku.
+                    Scanner barcode biasanya langsung mengetikkan kode ke field aktif.
+                    Klik field barcode/kode anggota, lalu scan atau input manual.
                 </p>
             </div>
 
             <div>
                 <label class="block mb-2 font-medium">Kode Anggota / QR Member</label>
-                <input type="text" name="member_code" placeholder="Contoh: MBR001"
-                    class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
+                <input type="text" name="member_code" value="{{ old('member_code') }}" placeholder="Contoh: MBR0001"
+                    class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none" required>
             </div>
 
             <div>
                 <label class="block mb-2 font-medium">Barcode Buku</label>
-                <input type="text" name="book_barcode" placeholder="Contoh: BK001"
-                    class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
+                <input type="text" name="book_barcode" value="{{ old('book_barcode') }}" placeholder="Contoh: BK0001"
+                    class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none" required>
             </div>
 
             <div>
                 <label class="block mb-2 font-medium">Tanggal Pinjam</label>
-                <input type="date" name="loan_date" value="{{ date('Y-m-d') }}"
-                    class="w-full border rounded-lg px-4 py-3">
+                <input type="date" name="loan_date" value="{{ old('loan_date', date('Y-m-d')) }}"
+                    class="w-full border rounded-lg px-4 py-3" required>
             </div>
 
             <div>
                 <label class="block mb-2 font-medium">Tanggal Jatuh Tempo</label>
-                <input type="date" name="due_date"
-                    class="w-full border rounded-lg px-4 py-3">
+                <input type="date" name="due_date" value="{{ old('due_date', date('Y-m-d', strtotime('+7 days'))) }}"
+                    class="w-full border rounded-lg px-4 py-3" required>
             </div>
 
             <div class="md:col-span-2">
                 <label class="block mb-2 font-medium">Catatan</label>
                 <textarea name="notes" rows="3" placeholder="Opsional"
-                    class="w-full border rounded-lg px-4 py-3"></textarea>
+                    class="w-full border rounded-lg px-4 py-3">{{ old('notes') }}</textarea>
             </div>
 
             <div class="md:col-span-2 flex gap-4">
@@ -67,26 +83,6 @@
                 </a>
             </div>
         </form>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-6 mt-8">
-        <div class="bg-white rounded-2xl shadow p-6">
-            <h2 class="text-xl font-bold text-blue-950 mb-4">Contoh Data Anggota</h2>
-            <ul class="space-y-2 text-slate-600">
-                <li><b>MBR001</b> — Diana Putri</li>
-                <li><b>MBR002</b> — Andi Saputra</li>
-                <li><b>MBR003</b> — Siti Aminah</li>
-            </ul>
-        </div>
-
-        <div class="bg-white rounded-2xl shadow p-6">
-            <h2 class="text-xl font-bold text-blue-950 mb-4">Contoh Barcode Buku</h2>
-            <ul class="space-y-2 text-slate-600">
-                <li><b>BK001</b> — Laskar Pelangi</li>
-                <li><b>BK002</b> — Bumi Manusia</li>
-                <li><b>BK003</b> — Atomic Habits</li>
-            </ul>
-        </div>
     </div>
 </main>
 

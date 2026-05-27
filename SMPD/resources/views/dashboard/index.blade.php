@@ -40,6 +40,7 @@
                         class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Manajemen Anggota</a>
                     <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan Sistem</a>
                     <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Pengaturan</a>
+                    <a href="{{ route('statistics.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Statistik</a>z
                 @endif
 
                 @if ($role == 'pustakawan')
@@ -52,14 +53,15 @@
                     <a href="{{ route('returns.index') }}"
                         class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Pengembalian</a>
                     <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Denda</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
+                    <a href="{{ route('reports.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
+                    <a href="{{ route('statistics.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Statistik Peminjaman</a>
                 @endif
 
                 @if ($role == 'pengguna')
                     <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Katalog Buku</a>
                     <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Riwayat Pinjaman</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Reservasi Buku</a>
-                    <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">E-Library</a>
+                    <a href="{{ route('reservations.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Reservasi Buku</a>
+                    <a href="{{ route('elibrary.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">E-Library</a>
                     <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Kartu Member</a>
                 @endif
 

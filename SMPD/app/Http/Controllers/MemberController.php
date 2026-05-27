@@ -2,46 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Member;
 use Illuminate\Http\Request;
 
-class MemberController extends Controller
+class MemberController extends BaseController
 {
-    private function members()
-    {
-        return [
-            1 => [
-                'id' => 1,
-                'member_code' => 'MBR001',
-                'name' => 'Diana Putri',
-                'email' => 'diana@email.com',
-                'phone' => '081234567890',
-                'address' => 'Semarang',
-                'status' => 'Aktif',
-            ],
-            2 => [
-                'id' => 2,
-                'member_code' => 'MBR002',
-                'name' => 'Andi Saputra',
-                'email' => 'andi@email.com',
-                'phone' => '082345678901',
-                'address' => 'Jakarta',
-                'status' => 'Aktif',
-            ],
-            3 => [
-                'id' => 3,
-                'member_code' => 'MBR003',
-                'name' => 'Siti Aminah',
-                'email' => 'siti@email.com',
-                'phone' => '083456789012',
-                'address' => 'Bandung',
-                'status' => 'Nonaktif',
-            ],
-        ];
-    }
-
     public function index()
     {
-        $members = $this->members();
+        $members = Member::latest()->paginate(10);
+
         return view('members.index', compact('members'));
     }
 
@@ -52,28 +21,46 @@ class MemberController extends Controller
 
     public function store(Request $request)
     {
+        Member::create([
+            'member_code' => $request->member_code,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'status' => $request->status,
+        ]);
+
         return redirect()->route('members.index')->with('success', 'Data anggota berhasil ditambahkan.');
     }
 
-    public function edit($id)
+    public function edit(Member $member)
     {
-        $member = $this->members()[$id] ?? abort(404);
         return view('members.edit', compact('member'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Member $member)
     {
+        $member->update([
+            'member_code' => $request->member_code,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'status' => $request->status,
+        ]);
+
         return redirect()->route('members.index')->with('success', 'Data anggota berhasil diperbarui.');
     }
 
-    public function destroy($id)
+    public function destroy(Member $member)
     {
+        $member->delete();
+
         return redirect()->route('members.index')->with('success', 'Data anggota berhasil dihapus.');
     }
 
-    public function card($id)
+    public function card(Member $member)
     {
-        $member = $this->members()[$id] ?? abort(404);
         return view('members.card', compact('member'));
     }
 }
