@@ -24,7 +24,8 @@
                 <div class="p-6 grid md:grid-cols-2 gap-6 items-center">
                     <div>
                         <p class="text-slate-500">Kode Anggota</p>
-                        <h3 class="text-2xl font-bold text-blue-950">{{ $member->member_code }}</h3>
+                        <h3 class="text-2xl font-bold text-blue-950">
+                            {{ $member->member_code ?? 'MBR' . str_pad($member->id, 4, '0', STR_PAD_LEFT) }}</h3>
 
                         <p class="text-slate-500 mt-4">Nama</p>
                         <h3 class="font-bold">{{ $member->name }}</h3>
@@ -47,9 +48,10 @@
                     <div class="bg-slate-100 h-56 rounded-xl flex items-center justify-center text-center">
                         <div>
                             <div class="bg-white p-3 rounded-lg inline-block">
-                                {!! QrCode::size(150)->generate($member->member_code) !!}
+                                {!! QrCode::size(150)->generate($member->member_code ?? 'MBR' . str_pad($member->id, 4, '0', STR_PAD_LEFT)) !!}
                             </div>
-                            <p class="font-bold mt-3">{{ $member->member_code }}</p>
+                            <p class="font-bold mt-3">
+                                {{ $member->member_code ?? 'MBR' . str_pad($member->id, 4, '0', STR_PAD_LEFT) }}</p>
                             <p class="text-xs text-slate-500">QR Member</p>
                         </div>
                     </div>

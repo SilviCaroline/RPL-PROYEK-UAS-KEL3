@@ -12,6 +12,8 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ELibraryController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LoanHistoryController;
+
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 
@@ -39,3 +41,7 @@ Route::get('/statistics', [StatisticController::class, 'index'])->name('statisti
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])->name('reports.export.pdf');
 Route::get('/reports/export/excel', [ReportController::class, 'exportExcel'])->name('reports.export.excel');
+Route::get('/loan-history', [LoanHistoryController::class, 'index'])->name('loan-history.index');
+Route::get('/reservations/pengguna', [ReservationController::class, 'pengguna'])->name('reservations.pengguna');
+Route::get('/loans/pengguna', [LoanController::class, 'pengguna'])->name('loanhistory.index');
+Route::get('/loan-history/pengguna', [LoanHistoryController::class, 'pengguna'])->name('loanhistory.index');

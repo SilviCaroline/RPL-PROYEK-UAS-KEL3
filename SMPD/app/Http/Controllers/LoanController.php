@@ -7,8 +7,9 @@ use App\Models\Loan;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Controller as BaseControllers;
 
-class LoanController extends BaseController
+class LoanController extends BaseControllers
 {
     public function index()
     {

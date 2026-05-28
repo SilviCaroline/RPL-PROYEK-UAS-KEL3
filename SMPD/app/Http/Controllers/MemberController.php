@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseControllers;
 
-class MemberController extends BaseController
+class MemberController extends BaseControllers
 {
     public function index()
     {

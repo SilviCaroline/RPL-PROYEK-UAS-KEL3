@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\DigitalBook;
+use Illuminate\Routing\Controller as BaseControllers;
 
-class ELibraryController extends BaseController
+class ELibraryController extends BaseControllers
 {
     public function index()
     {
         $digitalBooks = DigitalBook::with('category')->latest()->get();
 
-        return view('elibrary.index', compact('digitalBooks'));
+        return view('e-library.index', compact('digitalBooks'));
     }
 
     public function read(DigitalBook $digitalBook)

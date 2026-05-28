@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-class StatisticController extends BaseController
+use Illuminate\Routing\Controller as BaseControllers;
+
+class StatisticController extends BaseControllers
 {
     public function index()
     {

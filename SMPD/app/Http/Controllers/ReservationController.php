@@ -6,8 +6,9 @@ use App\Models\Book;
 use App\Models\Member;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseControllers;
 
-class ReservationController extends Controller
+class ReservationController extends BaseControllers
 {
     public function index()
     {
@@ -15,7 +16,7 @@ class ReservationController extends Controller
             ->latest()
             ->paginate(10);
 
-        return view('reservations.index', compact('reservations'));
+        return view('reservations.pengguna', compact('reservations'));
     }
 
     public function store(Request $request)
@@ -68,4 +69,13 @@ class ReservationController extends Controller
 
         return redirect()->route('reservations.index')->with('success', 'Reservasi berhasil dibatalkan.');
     }
+
+    public function pengguna()
+{
+    $reservations = Reservation::with(['member', 'book'])
+        ->latest()
+        ->paginate(10);
+
+    return view('reservations.pengguna', compact('reservations'));
+}
 }

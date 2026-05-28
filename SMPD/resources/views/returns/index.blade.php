@@ -22,7 +22,7 @@
                     Anggota</a>
                 <a href="{{ route('loans.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Peminjaman</a>
                 <a href="{{ route('returns.index') }}" class="block px-4 py-3 bg-blue-900 rounded-lg">Pengembalian</a>
-                <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
+                <a href="{{ route('reports.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
                 <a href="{{ route('logout') }}"
                     class="block px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg mt-8">Logout</a>
             </nav>

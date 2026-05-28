@@ -7,8 +7,9 @@ use App\Models\Loan;
 use App\Models\ReturnBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Routing\Controller as BaseControllers;
 
-class ReturnController extends Controller
+class ReturnController extends BaseControllers
 {
     public function index()
     {

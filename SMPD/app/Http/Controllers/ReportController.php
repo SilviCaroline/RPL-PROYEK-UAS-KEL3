@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseControllers;
 
-class ReportController extends BaseController
+class ReportController extends BaseControllers
 {
     public function index()
     {
