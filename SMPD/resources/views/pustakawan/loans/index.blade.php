@@ -1,3 +1,8 @@
+{{-- HAPUS JIKA CUMA AKSES PUSTAKAWAN --}}
+@php
+    $role = session('role');
+@endphp
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -10,24 +15,14 @@
 <body class="bg-slate-100">
 
     <div class="flex min-h-screen">
-        <aside class="w-72 bg-blue-950 text-white p-6 hidden md:block">
-            <h1 class="text-2xl font-bold mb-8">LibrarySystem</h1>
 
-            <nav class="space-y-3">
-                <a href="{{ route('dashboard', ['role' => request('role', 'pustakawan')]) }}"
-                    class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Dashboard</a>
-                <a href="{{ route('books.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Manajemen
-                    Buku</a>
-                <a href="{{ route('members.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Manajemen
-                    Anggota</a>
-                <a href="{{ route('loans.index') }}" class="block px-4 py-3 bg-blue-900 rounded-lg">Peminjaman</a>
-                <a href="{{ route('returns.index') }}"
-                    class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Pengembalian</a>
-                <a href="{{ route('reports.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Laporan</a>
-                <a href="{{ route('logout') }}"
-                    class="block px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg mt-8">Logout</a>
-            </nav>
-        </aside>
+        {{-- @include('sidebar.admin') --}}
+        {{-- HAPUS JIKA CUMA AKSES PUSTAKAWAN --}}
+        @if ($role == 'admin')
+            @include('sidebar.admin')
+        @else
+            @include('sidebar.pustakawan')
+        @endif
 
         <main class="flex-1 p-6 md:p-10">
             <div class="flex justify-between items-center mb-8">

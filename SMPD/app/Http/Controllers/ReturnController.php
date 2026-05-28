@@ -7,74 +7,88 @@ use App\Models\Loan;
 use App\Models\ReturnBook;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Routing\Controller as BaseControllers;
+use Illuminate\Routing\Controller as BaseController;
 
-class ReturnController extends BaseControllers
+class ReturnController extends BaseController
 {
     public function index()
     {
-        $returns = ReturnBook::with(['loan.member', 'loan.book'])
-            ->latest()
-            ->paginate(10);
+        $returns = ReturnBook::with([
+            'loan.member',
+            'loan.book'
+        ])
+        ->latest()
+        ->paginate(10);
 
-        return view('returns.index', compact('returns'));
+        return view(
+            'pustakawan.returns.index',
+            compact('returns')
+        );
     }
 
     public function process(Request $request)
     {
         $request->validate([
-            'loan_code' => 'required',
+            'loan_code'    => 'required',
             'book_barcode' => 'required',
-            'return_date' => 'required|date',
+            'return_date'  => 'required|date',
         ]);
 
-        $loan = Loan::with(['book', 'member'])
-            ->where('loan_code', $request->loan_code)
-            ->where('status', '!=', 'Dikembalikan')
-            ->first();
-
-        if (!$loan) {
-            return back()->with('error', 'Data peminjaman tidak ditemukan atau sudah dikembalikan.');
-        }
-
-        if ($loan->book->barcode !== $request->book_barcode) {
-            return back()->with('error', 'Barcode buku tidak sesuai dengan data peminjaman.');
-        }
+        $loan = Loan::with([
+            'book',
+            'member'
+        ])
+        ->where('loan_code', $request->loan_code)
+        ->firstOrFail();
 
         $returnDate = strtotime($request->return_date);
-        $dueDate = strtotime($loan->due_date);
+        $dueDate    = strtotime($loan->due_date);
 
         $lateDays = 0;
+
         if ($returnDate > $dueDate) {
-            $lateDays = floor(($returnDate - $dueDate) / 86400);
+
+            $lateDays = (int) floor(
+                ($returnDate - $dueDate) / 86400
+            );
         }
 
         $fineAmount = $lateDays * 5000;
 
-        DB::transaction(function () use ($loan, $request, $lateDays, $fineAmount) {
+        DB::transaction(function () use (
+            $loan,
+            $request,
+            $lateDays,
+            $fineAmount
+        ) {
+
             ReturnBook::create([
+
                 'return_code' => 'RT' . date('YmdHis'),
-                'loan_id' => $loan->id,
+                'loan_id'     => $loan->id,
                 'return_date' => $request->return_date,
-                'late_days' => $lateDays,
+                'late_days'   => $lateDays,
                 'fine_amount' => $fineAmount,
+
             ]);
 
             if ($fineAmount > 0) {
+
                 Fine::create([
+
                     'loan_id' => $loan->id,
-                    'amount' => $fineAmount,
-                    'status' => 'Belum Dibayar',
+                    'amount'  => $fineAmount,
+                    'status'  => 'Belum Dibayar',
+
                 ]);
             }
-
-            $loan->update([
-                'status' => $lateDays > 0 ? 'Terlambat' : 'Dikembalikan',
-            ]);
-
-            $loan->book->increment('stock');
         });
 
-        return redirect()->route('returns.index')->with('success', 'Pengembalian berhasil diproses.');
+        return redirect()
+            ->route('returns.index')
+            ->with(
+                'success',
+                'Pengembalian berhasil diproses.'
+            );
     }
 }

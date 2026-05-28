@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Manajemen Anggota - LibrarySystem</title>
+    <title>Manajemen Buku - LibrarySystem</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,8 +13,7 @@
 
     <div class="flex min-h-screen">
 
-        {{-- Sidebar pustakawan --}}
-        @include('sidebar.pustakawan')
+        @include('sidebar.admin')
 
         {{-- Content --}}
         <main class="flex-1 p-6 md:p-10">
@@ -22,17 +21,17 @@
             <div class="flex justify-between items-center mb-8">
                 <div>
                     <h1 class="text-3xl font-bold text-blue-950">
-                        Manajemen Anggota
+                        Manajemen Buku
                     </h1>
 
                     <p class="text-slate-500">
-                        Kelola data anggota dan QR member card.
+                        Kelola data buku dan QR book card.
                     </p>
                 </div>
 
-                <a href="{{ route('members.create') }}"
+                <a href="{{ route('books.create') }}"
                     class="bg-blue-950 text-white px-5 py-3 rounded-lg hover:bg-blue-900">
-                    + Tambah Anggota
+                    + Tambah Buku
                 </a>
             </div>
 
@@ -58,27 +57,27 @@
                     </thead>
 
                     <tbody>
-                        @forelse($members as $member)
+                        @forelse($books as $book)
                             <tr class="border-b">
 
                                 <td class="p-4 font-semibold">
-                                    {{ $member->member_code }}
+                                    {{ $book->title }}
                                 </td>
 
                                 <td class="p-4">
-                                    {{ $member->name }}
+                                    {{ $book->author }}
                                 </td>
 
                                 <td class="p-4">
-                                    {{ $member->email }}
+                                    {{ $book->category->name }}
                                 </td>
 
                                 <td class="p-4">
-                                    {{ $member->phone ?? '-' }}
+                                    {{ $book->stock }}
                                 </td>
 
                                 <td class="p-4">
-                                    @if ($member->status == 'Aktif')
+                                    @if ($book->status == 'Aktif')
                                         <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">
                                             Aktif
                                         </span>
@@ -91,22 +90,22 @@
 
                                 <td class="p-4 flex gap-2">
 
-                                    <a href="{{ route('members.card', $member->id) }}"
+                                    <a href="{{ route('books.show', $book->id) }}"
                                         class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm">
-                                        Kartu
+                                        Detail Buku
                                     </a>
 
-                                    <a href="{{ route('members.edit', $member->id) }}"
+                                    <a href="{{ route('books.edit', $book->id) }}"
                                         class="bg-yellow-500 text-white px-3 py-2 rounded-lg text-sm">
                                         Edit
                                     </a>
 
-                                    <form action="{{ route('members.destroy', $member->id) }}" method="POST">
+                                    <form action="{{ route('books.destroy', $book->id) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
 
                                         <button class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm"
-                                            onclick="return confirm('Hapus anggota ini?')">
+                                            onclick="return confirm('Hapus buku ini?')">
                                             Hapus
                                         </button>
                                     </form>
@@ -117,7 +116,7 @@
                         @empty
                             <tr>
                                 <td colspan="6" class="p-6 text-center text-slate-500">
-                                    Data anggota belum tersedia.
+                                    Data buku belum tersedia.
                                 </td>
                             </tr>
                         @endforelse
@@ -128,7 +127,7 @@
             </div>
 
             <div class="mt-6">
-                {{ $members->links() }}
+                {{ $books->links() }}
             </div>
 
         </main>

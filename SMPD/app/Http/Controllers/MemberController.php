@@ -4,64 +4,183 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller as BaseControllers;
+use Illuminate\Routing\Controller as BaseController;
 
-class MemberController extends BaseControllers
+class MemberController extends BaseController
 {
+    /*
+    |--------------------------------------------------------------------------
+    | INDEX
+    |--------------------------------------------------------------------------
+    */
     public function index()
     {
         $members = Member::latest()->paginate(10);
 
-        return view('members.index', compact('members'));
+        return view(
+            'admin.members.index',
+            compact('members')
+        );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | CREATE
+    |--------------------------------------------------------------------------
+    */
     public function create()
     {
-        return view('members.create');
+        return view('admin.members.create');
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | STORE
+    |--------------------------------------------------------------------------
+    */
 
     public function store(Request $request)
     {
-        Member::create([
-            'member_code' => $request->member_code,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'status' => $request->status,
+        $request->validate([
+
+            'member_code' => 'required|string|unique:members,member_code',
+
+            'name' => 'required|string|max:255',
+
+            'email' => 'required|email|unique:members,email',
+
+            'status' => 'required|in:Aktif,Nonaktif',
+
         ]);
 
-        return redirect()->route('members.index')->with('success', 'Data anggota berhasil ditambahkan.');
+        Member::create([
+
+            'member_code' => $request->member_code,
+
+            'name' => $request->name,
+
+            'email' => $request->email,
+
+            'phone' => $request->phone,
+
+            'address' => $request->address,
+
+            'status' => $request->status,
+
+        ]);
+
+        return redirect()
+            ->route('members.index')
+            ->with('success', 'Data anggota berhasil ditambahkan.');
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | SHOW
+    |--------------------------------------------------------------------------
+    */
+
+    public function show(Member $member)
+    {
+        return view(
+            'admin.members.show',
+            compact('member')
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDIT
+    |--------------------------------------------------------------------------
+    */
 
     public function edit(Member $member)
     {
-        return view('members.edit', compact('member'));
+        return view(
+            'admin.members.edit',
+            compact('member')
+        );
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE
+    |--------------------------------------------------------------------------
+    */
 
     public function update(Request $request, Member $member)
     {
-        $member->update([
-            'member_code' => $request->member_code,
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'status' => $request->status,
+        $request->validate([
+
+            'member_code' =>
+            'required|string|unique:members,member_code,' . $member->id,
+
+            'name' =>
+            'required|string|max:255',
+
+            'email' =>
+            'required|email|unique:members,email,' . $member->id,
+
+            'status' =>
+            'required|in:Aktif,Nonaktif',
+
         ]);
 
-        return redirect()->route('members.index')->with('success', 'Data anggota berhasil diperbarui.');
+        $member->update([
+
+            'member_code' => $request->member_code,
+
+            'name' => $request->name,
+
+            'email' => $request->email,
+
+            'phone' => $request->phone,
+
+            'address' => $request->address,
+
+            'status' => $request->status,
+
+        ]);
+
+        return redirect()
+            ->route('members.index')
+            ->with('success', 'Data anggota berhasil diperbarui.');
     }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DELETE
+    |--------------------------------------------------------------------------
+    */
 
     public function destroy(Member $member)
     {
         $member->delete();
 
-        return redirect()->route('members.index')->with('success', 'Data anggota berhasil dihapus.');
+        return redirect()
+            ->route('members.index')
+            ->with('success', 'Data anggota berhasil dihapus.');
     }
 
-    public function card(Member $member)
+
+    /*
+    |--------------------------------------------------------------------------
+    | MEMBER CARD
+    |--------------------------------------------------------------------------
+    */
+
+    public function card($id)
     {
-        return view('members.card', compact('member'));
+        $member = Member::findOrFail($id);
+
+        return view(
+            'admin.members.card',
+            compact('member')
+        );
     }
 }
