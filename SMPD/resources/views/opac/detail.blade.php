@@ -27,17 +27,16 @@
         </div>
 
         <nav class="space-y-3">
-            <a href="{{ route('dashboard', ['role' => 'pengguna']) }}"
-                class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
+            <a href="{{ route('pengunjung.dashboard') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
                 Dashboard
             </a>
             <a href="{{ route('opac.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
                 Katalog Buku
             </a>
-            <a href="{{ route('loanhistory.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
+            <a href="{{ route('loan-history.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
                 Riwayat Peminjaman
             </a>
-            <a href="{{ route('reservations.pengguna') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
+            <a href="{{ route('reservations.pengunjung') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
                 Reservasi Buku
             </a>
             <a href="{{ route('elibrary.index') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">

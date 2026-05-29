@@ -12,7 +12,7 @@ class ELibraryController extends BaseControllers
     public function read(DigitalBook $digitalBook)
     {
         $digitalBook->load('category');
-        return view('elibrary.read', compact('digitalBook'));
+        //return view('elibrary.read', compact('digitalBook'));
         return view('e-library.read', compact('digitalBook'));
     }
 }
