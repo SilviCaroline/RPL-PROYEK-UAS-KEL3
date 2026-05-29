@@ -17,7 +17,10 @@
             class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-blue-900' : '' }}">
             Dashboard
         </a>
-        <a href="#" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">Manajemen User</a>
+        <a href="{{ route('users.index') }}"
+            class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('users.*') ? 'bg-blue-900' : '' }}">
+            Manajemen User
+        </a>
         <a href="{{ route('books.index') }}"
             class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('books.*') ? 'bg-blue-900' : '' }}">
             Manajemen Buku
@@ -25,22 +28,6 @@
         <a href="{{ route('members.index') }}"
             class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('members.*') ? 'bg-blue-900' : '' }}">
             Manajemen Anggota
-        </a>
-        <a href="{{ route('loans.index') }}"
-            class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('loans.*') ? 'bg-blue-900' : '' }}">
-            Peminjaman
-        </a>
-        <a href="{{ route('returns.index') }}"
-            class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->is('returns*') ? 'bg-blue-900' : '' }}">
-            Pengembalian
-        </a>
-        <a href="{{ route('reservations.index') }}"
-            class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->is('reservations*') ? 'bg-blue-900' : '' }}">
-            Reservasi Buku
-        </a>
-        <a href="{{ route('statistics.index') }}"
-            class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('statistics.*') ? 'bg-blue-900' : '' }}">
-            Statistik
         </a>
         <a href="{{ route('reports.index') }}"
             class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('reports.*') ? 'bg-blue-900' : '' }}">

@@ -14,6 +14,7 @@ use App\Http\Controllers\ELibraryController;
 use App\Http\Controllers\OpacController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 
 
 /*
@@ -129,10 +130,10 @@ Route::get('/reports/export/excel',
     [ReportController::class, 'exportExcel']
 )->name('reports.export.excel');
 
-// STATISTICS
-Route::get('/statistics',
-    [StatisticController::class, 'index']
-)->name('statistics.index');
+//MANAJEMEN HAK AKSES
+Route::get('/users',
+    [UserController::class, 'index']
+)->name('users.index');
 
 /*
 |--------------------------------------------------------------------------
