@@ -40,13 +40,9 @@
                             <h2 class="font-bold text-lg">
                                 Daftar Peran
                             </h2>
-                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                                Tambah
-                            </button>
                         </div>
 
                         <div class="p-5">
-                            <input type="text" placeholder="Cari Peran..." class="w-full border rounded-lg p-3 mb-4">
                             @foreach ($roles as $role)
                                 <div onclick="selectRole('{{ $role['nama_role'] }}')"
                                     class="border rounded-xl p-4 mb-3 cursor-pointer hover:bg-slate-50">
@@ -69,14 +65,6 @@
                             <h2 id="roleTitle" class="font-bold text-lg">
                                 Pengaturan Hak Akses
                             </h2>
-
-                            <select class="border rounded-lg px-4 py-2">
-                                @foreach ($roles as $role)
-                                    <option>
-                                        {{ $role['nama_role'] }}
-                                    </option>
-                                @endforeach
-                            </select>
                         </div>
 
                         <div class="overflow-x-auto">
@@ -137,7 +125,7 @@
                                         <td><input checked type="checkbox"></td>
                                     </tr>
                                     <tr class="border-b">
-                                        <td class="p-3">Jenis Anggota</td>
+                                        <td class="p-3">Buku</td>
                                         <td><input checked type="checkbox"></td>
                                         <td><input checked type="checkbox"></td>
                                         <td><input checked type="checkbox"></td>
@@ -164,6 +152,15 @@
                                     </tr>
                                     <tr>
                                         <td class="p-3">Pengembalian</td>
+                                        <td><input checked type="checkbox"></td>
+                                        <td><input checked type="checkbox"></td>
+                                        <td><input checked type="checkbox"></td>
+                                        <td><input checked type="checkbox"></td>
+                                        <td><input checked type="checkbox"></td>
+                                        <td><input checked type="checkbox"></td>
+                                    </tr>
+                                    <tr class="border-b">
+                                        <td class="p-3">Reservasi</td>
                                         <td><input checked type="checkbox"></td>
                                         <td><input checked type="checkbox"></td>
                                         <td><input checked type="checkbox"></td>
