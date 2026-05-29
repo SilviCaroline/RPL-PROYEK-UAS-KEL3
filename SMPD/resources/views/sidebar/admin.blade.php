@@ -13,7 +13,7 @@
 
 
     <nav class="space-y-2">
-        <a href="{{ route('pustakawan.dashboard') }}"
+        <a href="{{ route('admin.dashboard') }}"
             class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('admin.dashboard') ? 'bg-blue-900' : '' }}">
             Dashboard
         </a>
