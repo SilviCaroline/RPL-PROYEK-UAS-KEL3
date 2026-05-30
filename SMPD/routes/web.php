@@ -130,6 +130,11 @@ Route::get('/reports/export/excel',
     [ReportController::class, 'exportExcel']
 )->name('reports.export.excel');
 
+//STATISTICS
+Route::get('/statistics',
+    [StatisticController::class, 'index']
+)->name('statistics.index');
+
 //MANAJEMEN HAK AKSES
 Route::get('/users',
     [UserController::class, 'index']

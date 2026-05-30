@@ -74,7 +74,7 @@
                         </div>
 
                         <button class="w-full bg-blue-950 text-white py-3 rounded-lg hover:bg-blue-900">
-                            Proses Pengembalian
+                            Konfirmasi Pengembalian
                         </button>
                     </form>
                 </div>

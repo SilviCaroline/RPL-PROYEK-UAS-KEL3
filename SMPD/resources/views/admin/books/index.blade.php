@@ -1,3 +1,7 @@
+@php
+    $role = session('role');
+@endphp
+
 <!DOCTYPE html>
 <html lang="id">
 
@@ -13,7 +17,11 @@
 
     <div class="flex min-h-screen">
 
-        @include('sidebar.admin')
+        @if ($role == 'admin')
+            @include('sidebar.admin')
+        @else
+            @include('sidebar.pustakawan')
+        @endif
 
         {{-- Content --}}
         <main class="flex-1 p-6 md:p-10">
@@ -47,10 +55,11 @@
 
                     <thead class="bg-blue-950 text-white">
                         <tr>
-                            <th class="p-4">Kode</th>
-                            <th class="p-4">Nama</th>
-                            <th class="p-4">Email</th>
-                            <th class="p-4">No HP</th>
+                            <th class="p-4">Kode Buku</th>
+                            <th class="p-4">Judul Buku</th>
+                            <th class="p-4">Nama Penulis</th>
+                            <th class="p-4">Kategori</th>
+                            <th class="p-4">Stok</th>
                             <th class="p-4">Status</th>
                             <th class="p-4">Aksi</th>
                         </tr>
