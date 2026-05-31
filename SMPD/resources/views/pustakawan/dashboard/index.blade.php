@@ -1,123 +1,565 @@
-<!DOCTYPE html>
-<html lang="id">
+@php$role = session('role');@endphp
 
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard Pustakawan</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
+<div class="flex min-h-screen">
 
-<body class="bg-slate-100">
+    @include('sidebar.pustakawan')
 
-    <div class="flex min-h-screen">
+    <main class="flex-1 p-6 md:p-8">
 
-        @include('sidebar.pustakawan')
+        <!-- Header -->
+        <div class="mb-8">
 
-        <main class="flex-1 p-6 md:p-10">
+            <h1 class="text-3xl font-bold text-blue-950">
+                Dashboard
+            </h1>
 
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-blue-950">
-                    Dashboard Pustakawan
-                </h1>
+            <p class="text-slate-500 mt-2">
+                Pantau aktivitas peminjaman dan pengembalian buku.
+            </p>
+
+        </div>
+
+        <!-- Statistik -->
+        <section class="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+
+            <div class="bg-white rounded-2xl shadow p-6">
 
                 <p class="text-slate-500">
-                    Kelola operasional perpustakaan harian.
+                    Total Peminjaman
                 </p>
+
+                <h2 class="text-4xl font-bold text-blue-950 mt-2">
+                    {{ $totalLoans }}
+                </h2>
+
             </div>
 
-            <section class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-2xl shadow p-6">
 
-                <div class="bg-white p-6 rounded-2xl shadow">
-                    <p class="text-slate-500">Peminjaman</p>
-                    <h2 class="text-3xl font-bold text-blue-950">320</h2>
-                </div>
+                <p class="text-slate-500">
+                    Total Pengembalian
+                </p>
 
-                <div class="bg-white p-6 rounded-2xl shadow">
-                    <p class="text-slate-500">Pengembalian</p>
-                    <h2 class="text-3xl font-bold text-green-600">290</h2>
-                </div>
+                <h2 class="text-4xl font-bold text-green-600 mt-2">
+                    {{ $totalReturns }}
+                </h2>
 
-                <div class="bg-white p-6 rounded-2xl shadow">
-                    <p class="text-slate-500">Reservasi</p>
-                    <h2 class="text-3xl font-bold text-orange-500">18</h2>
-                </div>
+            </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow">
-                    <p class="text-slate-500">Denda</p>
-                    <h2 class="text-3xl font-bold text-red-600">Rp85.000</h2>
-                </div>
+            <div class="bg-white rounded-2xl shadow p-6">
 
-            </section>
+                <p class="text-slate-500">
+                    Reservasi Menunggu
+                </p>
 
-            <section class="grid lg:grid-cols-2 gap-8">
+                <h2 class="text-4xl font-bold text-orange-500 mt-2">
+                    {{ $pendingReservations }}
+                </h2>
 
-                <div class="bg-white p-6 rounded-2xl shadow">
+            </div>
 
-                    <h2 class="text-xl font-bold text-blue-950 mb-5">
-                        Buku Trending
-                    </h2>
+            <div class="bg-white rounded-2xl shadow p-6">
 
-                    <div class="space-y-5">
+                <p class="text-slate-500">
+                    Keterlambatan
+                </p>
 
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span>Laskar Pelangi</span>
-                                <span>45x</span>
-                            </div>
+                <h2 class="text-4xl font-bold text-red-600 mt-2">
+                    {{ $lateLoans }}
+                </h2>
 
-                            <div class="w-full bg-slate-200 h-4 rounded-full">
-                                <div class="bg-blue-950 h-4 rounded-full" style="width:90%">
-                                </div>
-                            </div>
+            </div>
+
+        </section>
+
+        <!-- Grafik Peminjaman -->
+        <div class="bg-white rounded-2xl shadow p-6">
+
+            <div class="flex justify-between items-center mb-5">
+
+                <h2 class="text-xl font-bold text-blue-950">
+                    Grafik Peminjaman
+                </h2>
+
+                <form method="GET">
+
+                    <select name="period" onchange="this.form.submit()"
+                        class="border border-slate-300 rounded-lg px-3 py-2">
+
+                        <option value="week" {{ $period == 'week' ? 'selected' : '' }}>
+                            1 Minggu
+                        </option>
+
+                        <option value="month" {{ $period == 'month' ? 'selected' : '' }}>
+                            1 Bulan
+                        </option>
+
+                        <option value="year" {{ $period == 'year' ? 'selected' : '' }}>
+                            1 Tahun
+                        </option>
+
+                        <option value="3years" {{ $period == '3years' ? 'selected' : '' }}>
+                            3 Tahun
+                        </option>
+
+                    </select>
+
+                </form>
+
+            </div>
+
+            <div class="h-80">
+
+                <canvas id="loanChart"></canvas>
+
+            </div>
+
+        </div>
+
+        <!-- Top Buku + Aktivitas -->
+        <section class="grid lg:grid-cols-2 gap-8 mb-8">
+
+            <!-- Buku Populer -->
+            <div class="bg-white rounded-2xl shadow p-6">
+
+                <h2 class="text-xl font-bold text-blue-950 mb-5">
+                    Buku Terpopuler
+                </h2>
+
+                <div class="space-y-4">
+
+                    @forelse($popularBooks ?? [] as $book)
+                        <div class="border-b pb-3 flex justify-between">
+
+                            <span>
+                                {{ $book['title'] }}
+                            </span>
+
+                            <span class="font-semibold">
+                                {{ $book['total'] }}
+                            </span>
+
                         </div>
 
-                        <div>
-                            <div class="flex justify-between mb-2">
-                                <span>Atomic Habits</span>
-                                <span>38x</span>
+                    @empty
+
+                        <div class="space-y-4">
+
+                            <div class="bg-slate-50 rounded-xl p-4 border">
+
+                                <div class="flex justify-between items-center mb-2">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <div
+                                            class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                                            🥇
+                                        </div>
+
+                                        <div>
+                                            <h3 class="font-semibold text-slate-800">
+                                                {{ $book['title'] }}
+                                            </h3>
+
+                                            <p class="text-sm text-slate-500">
+                                                Buku paling banyak dipinjam
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <span class="font-bold text-blue-950">
+                                        45%
+                                    </span>
+
+                                </div>
+
+                                <div class="w-full bg-slate-200 rounded-full h-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full w-[90%]"></div>
+                                </div>
+
                             </div>
 
-                            <div class="w-full bg-slate-200 h-4 rounded-full">
-                                <div class="bg-blue-950 h-4 rounded-full" style="width:76%">
+                            <div class="bg-slate-50 rounded-xl p-4 border">
+
+                                <div class="flex justify-between items-center mb-2">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <div
+                                            class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center">
+                                            🥈
+                                        </div>
+
+                                        <div>
+                                            <h3 class="font-semibold text-slate-800">
+                                                Bumi
+                                            </h3>
+
+                                            <p class="text-sm text-slate-500">
+                                                Favorit pembaca remaja
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <span class="font-bold text-blue-950">
+                                        38%
+                                    </span>
+
                                 </div>
+
+                                <div class="w-full bg-slate-200 rounded-full h-2">
+                                    <div class="bg-slate-500 h-2 rounded-full w-[76%]"></div>
+                                </div>
+
                             </div>
+
+                            <div class="bg-slate-50 rounded-xl p-4 border">
+
+                                <div class="flex justify-between items-center mb-2">
+
+                                    <div class="flex items-center gap-3">
+
+                                        <div
+                                            class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                                            🥉
+                                        </div>
+
+                                        <div>
+                                            <h3 class="font-semibold text-slate-800">
+                                                Atomic Habits
+                                            </h3>
+
+                                            <p class="text-sm text-slate-500">
+                                                Buku pengembangan diri
+                                            </p>
+                                        </div>
+
+                                    </div>
+
+                                    <span class="font-bold text-blue-950">
+                                        32%
+                                    </span>
+
+                                </div>
+
+                                <div class="w-full bg-slate-200 rounded-full h-2">
+                                    <div class="bg-orange-500 h-2 rounded-full w-[64%]"></div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    @endforelse
+
+                </div>
+
+            </div>
+
+            <!-- Aktivitas -->
+            <div class="bg-white rounded-2xl shadow p-6">
+
+                <h2 class="text-xl font-bold text-blue-950 mb-5">
+                    Aktivitas Terbaru
+                </h2>
+
+                <div class="space-y-5">
+
+                    <div class="flex items-start gap-4">
+
+                        <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-lg">
+                            📚
+                        </div>
+
+                        <div class="flex-1">
+
+                            <div class="flex justify-between items-center">
+
+                                <h3 class="font-semibold text-slate-800">
+                                    Peminjaman Buku
+                                </h3>
+
+                                <span class="text-sm text-slate-400">
+                                    5 menit lalu
+                                </span>
+
+                            </div>
+
+                            <p class="text-slate-500 text-sm">
+                                Ahmad meminjam buku
+                                <span class="font-medium">Laskar Pelangi</span>.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-start gap-4">
+
+                        <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-lg">
+                            🔄
+                        </div>
+
+                        <div class="flex-1">
+
+                            <div class="flex justify-between items-center">
+
+                                <h3 class="font-semibold text-slate-800">
+                                    Pengembalian Buku
+                                </h3>
+
+                                <span class="text-sm text-slate-400">
+                                    12 menit lalu
+                                </span>
+
+                            </div>
+
+                            <p class="text-slate-500 text-sm">
+                                Sinta mengembalikan buku
+                                <span class="font-medium">Bumi</span>.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-start gap-4">
+
+                        <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-lg">
+                            📌
+                        </div>
+
+                        <div class="flex-1">
+
+                            <div class="flex justify-between items-center">
+
+                                <h3 class="font-semibold text-slate-800">
+                                    Reservasi Baru
+                                </h3>
+
+                                <span class="text-sm text-slate-400">
+                                    20 menit lalu
+                                </span>
+
+                            </div>
+
+                            <p class="text-slate-500 text-sm">
+                                Reservasi buku
+                                <span class="font-medium">Atomic Habits</span>
+                                menunggu persetujuan.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="flex items-start gap-4">
+
+                        <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-lg">
+                            👤
+                        </div>
+
+                        <div class="flex-1">
+
+                            <div class="flex justify-between items-center">
+
+                                <h3 class="font-semibold text-slate-800">
+                                    Anggota Baru
+                                </h3>
+
+                                <span class="text-sm text-slate-400">
+                                    35 menit lalu
+                                </span>
+
+                            </div>
+
+                            <p class="text-slate-500 text-sm">
+                                Diana Putri berhasil terdaftar sebagai anggota perpustakaan.
+                            </p>
+
                         </div>
 
                     </div>
 
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow">
+        </section>
 
-                    <h2 class="text-xl font-bold text-blue-950 mb-5">
-                        Aktivitas Hari Ini
-                    </h2>
+        <!-- Reservasi -->
+        <section class="bg-white rounded-2xl shadow p-6">
 
-                    <div class="space-y-4">
+            <div class="flex justify-between items-center mb-5">
 
-                        <div class="border-b pb-3">
-                            8 buku dipinjam hari ini.
-                        </div>
+                <h2 class="text-xl font-bold text-blue-950">
+                    Reservasi Menunggu Persetujuan
+                </h2>
 
-                        <div class="border-b pb-3">
-                            5 buku dikembalikan.
-                        </div>
+                <a href="{{ route('reservations.pustakawan') }}" class="text-blue-950 font-semibold hover:underline">
+                    Lihat Semua
+                </a>
 
-                        <div class="border-b pb-3">
-                            2 reservasi disetujui.
-                        </div>
+            </div>
 
-                    </div>
+            <div class="overflow-x-auto">
 
-                </div>
+                <table class="w-full">
 
-            </section>
+                    <thead>
 
-        </main>
+                        <tr class="border-b">
 
-    </div>
+                            <th class="text-left py-3">
+                                Nama
+                            </th>
 
-</body>
+                            <th class="text-left py-3">
+                                Buku
+                            </th>
 
-</html>
+                            <th class="text-left py-3">
+                                Tanggal
+                            </th>
+
+                            <th class="text-left py-3">
+                                Status
+                            </th>
+                            <th class="text-left py-3">
+                                Aksi
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        @forelse($reservations ?? [] as $reservation)
+                            <tr class="border-b hover:bg-slate-50">
+
+                                <td class="py-3">
+                                    {{ $reservation->member->name }}
+                                </td>
+
+                                <td>
+                                    {{ $reservation->book->title }}
+                                </td>
+
+                                <td>
+                                    {{ date('d M Y', strtotime($reservation->reservation_date)) }}
+                                </td>
+
+                                <td>
+
+                                    @if ($reservation->status == 'Menunggu')
+                                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+                                            Menunggu
+                                        </span>
+                                    @elseif($reservation->status == 'Disetujui')
+                                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                                            Disetujui
+                                        </span>
+                                    @elseif($reservation->status == 'Dibatalkan')
+                                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
+                                            Dibatalkan
+                                        </span>
+                                    @else
+                                        <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-sm">
+                                            {{ $reservation->status }}
+                                        </span>
+                                    @endif
+
+                                </td>
+
+                                <td class="py-3">
+                                    <div class="flex space-x-2">
+
+                                        <a href="{{ route('reservations.approve', $reservation->id) }}"
+                                            class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-sm">
+                                            Setujui
+                                        </a>
+
+                                        <a href="{{ route('reservations.cancel', $reservation->id) }}"
+                                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm">
+                                            Batalkan
+                                        </a>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="4" class="text-center py-6 text-slate-500">
+                                    Belum ada data reservasi.
+                                </td>
+
+                            </tr>
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- Chart -->
+<script>
+    const ctx = document.getElementById('loanChart');
+
+    new Chart(ctx, {
+
+        type: 'line',
+
+        data: {
+
+            labels: @json($labels),
+            datasets: [{
+                label: 'Jumlah Peminjaman',
+                data: @json($data),
+                borderColor: '#172554',
+                backgroundColor: 'rgba(23,37,84,0.1)',
+                fill: true,
+                tension: 0.4,
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+
+                }
+
+            }
+
+        }
+
+    });
+</script>

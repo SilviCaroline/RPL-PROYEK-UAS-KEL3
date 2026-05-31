@@ -32,13 +32,9 @@
             class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->is('returns*') ? 'bg-blue-900' : '' }}">
             Pengembalian
         </a>
-        <a href="{{ route('reservations.index') }}"
+        <a href="{{ route('reservations.pustakawan') }}"
             class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->is('reservations*') ? 'bg-blue-900' : '' }}">
             Reservasi Buku
-        </a>
-        <a href="{{ route('statistics.index') }}"
-            class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('statistics.*') ? 'bg-blue-900' : '' }}">
-            Statistik Peminjaman
         </a>
         <a href="{{ route('reports.index') }}"
             class="block px-4 py-3 hover:bg-blue-900 rounded-lg {{ request()->routeIs('reports.*') ? 'bg-blue-900' : '' }}">

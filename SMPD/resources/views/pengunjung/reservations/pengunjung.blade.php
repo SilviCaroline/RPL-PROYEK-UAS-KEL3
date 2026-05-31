@@ -106,7 +106,7 @@
                             Barcode Buku
                         </label>
 
-                        <input type="text" name="book_barcode" placeholder="BK001"
+                        <input type="text" name="kode_buku" placeholder="BK001"
                             class="w-full border rounded-lg px-4 py-3">
                     </div>
 

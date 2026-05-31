@@ -13,26 +13,67 @@ class ReservationController extends BaseController
     //Pustakwan
     public function index()
     {
-        $reservations = Reservation::with(['member', 'book'])
+        $reservations = Reservation::with([
+            'member',
+            'book'
+        ])
             ->latest()
             ->paginate(10);
 
+        $totalReservations = Reservation::count();
+
+        $waitingReservations = Reservation::where(
+            'status',
+            'Menunggu'
+        )->count();
+
+        $approvedReservations = Reservation::where(
+            'status',
+            'Disetujui'
+        )->count();
+
         return view(
             'pustakawan.reservations.pustakawan',
-            compact('reservations')
+            compact(
+                'reservations',
+                'totalReservations',
+                'waitingReservations',
+                'approvedReservations'
+            )
         );
     }
 
     //Pengguna
     public function pengguna()
     {
-        $reservations = Reservation::with(['member', 'book'])
+
+        $reservations = Reservation::with([
+            'member',
+            'book'
+        ])
             ->latest()
             ->paginate(10);
 
+        $totalReservations = Reservation::count();
+
+        $waitingReservations = Reservation::where(
+            'status',
+            'Menunggu'
+        )->count();
+
+        $approvedReservations = Reservation::where(
+            'status',
+            'Disetujui'
+        )->count();
+
         return view(
             'pengunjung.reservations.pengunjung',
-            compact('reservations')
+            compact(
+                'reservations',
+                'totalReservations',
+                'waitingReservations',
+                'approvedReservations'
+            )
         );
     }
 
@@ -44,7 +85,7 @@ class ReservationController extends BaseController
     {
         $request->validate([
             'member_code'      => 'required',
-            'book_barcode'     => 'required',
+            'kode_buku'     => 'required',
             'reservation_date' => 'required|date',
         ]);
 
@@ -55,7 +96,7 @@ class ReservationController extends BaseController
 
         $book = Book::where(
             'barcode',
-            $request->book_barcode
+            $request->kode_buku
         )->firstOrFail();
 
         Reservation::create([
@@ -74,7 +115,7 @@ class ReservationController extends BaseController
         }
 
         return redirect()
-            ->route('reservations.index')
+            ->route('reservations.pustakawan')
             ->with('success', 'Reservasi buku berhasil dibuat.');
     }
     // ==========================
@@ -88,7 +129,7 @@ class ReservationController extends BaseController
         ]);
 
         return redirect()
-            ->route('reservations.index')
+            ->route('reservations.pustakawan')
             ->with('success', 'Reservasi berhasil disetujui.');
     }
 
@@ -103,7 +144,7 @@ class ReservationController extends BaseController
         ]);
 
         return redirect()
-            ->route('reservations.index')
+            ->route('reservations.pustakawan')
             ->with('success', 'Reservasi berhasil dibatalkan.');
     }
 }

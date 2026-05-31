@@ -15,6 +15,7 @@ use App\Http\Controllers\OpacController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardPustakawanController;
 
 
 /*
@@ -66,10 +67,9 @@ Route::get('/admin/dashboard',
 
 
 // PUSTAKAWAN
-Route::get('/pustakawan/dashboard',
-    function () {
-        return view('pustakawan.dashboard.index');
-    }
+Route::get(
+    '/pustakawan/dashboard',
+    [DashboardPustakawanController::class, 'index']
 )->name('pustakawan.dashboard');
 
 
@@ -173,7 +173,7 @@ Route::post('/returns/process',
 // RESERVASI PUSTAKAWAN
 Route::get('/reservations',
     [ReservationController::class, 'index']
-)->name('reservations.index');
+)->name('reservations.pustakawan');
 
 Route::post('/reservations/store',
     [ReservationController::class, 'store']
@@ -186,6 +186,11 @@ Route::put('/reservations/{reservation}/approve',
 Route::put('/reservations/{reservation}/cancel',
     [ReservationController::class, 'cancel']
 )->name('reservations.cancel');
+
+Route::get(
+    '/pustakawan/reservations',
+    [ReservationController::class, 'index']
+)->name('reservations.pustakawan');
 
 
 /*

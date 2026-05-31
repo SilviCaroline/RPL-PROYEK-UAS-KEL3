@@ -13,9 +13,46 @@ class MemberController extends BaseController
     | INDEX
     |--------------------------------------------------------------------------
     */
-    public function index()
+    public function index(request $request)
     {
         $members = Member::latest()->paginate(10);
+
+        $search = $request->search;
+
+        $members = Member::query()
+
+            ->when($search, function ($query) use ($search) {
+
+                $query->where(
+                    'member_code',
+                    'like',
+                    "%{$search}%"
+                )
+
+                    ->orWhere(
+                        'name',
+                        'like',
+                        "%{$search}%"
+                    )
+
+                    ->orWhere(
+                        'email',
+                        'like',
+                        "%{$search}%"
+                    )
+
+                    ->orWhere(
+                        'phone',
+                        'like',
+                        "%{$search}%"
+                    );
+            })
+
+            ->latest()
+
+            ->paginate(10)
+
+            ->withQueryString();
 
         return view(
             'admin.members.index',

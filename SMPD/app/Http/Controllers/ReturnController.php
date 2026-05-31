@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Fine;
 use App\Models\Loan;
 use App\Models\ReturnBook;
 use Illuminate\Http\Request;
@@ -17,38 +16,87 @@ class ReturnController extends BaseController
             'loan.member',
             'loan.book'
         ])
-        ->latest()
-        ->paginate(10);
+            ->latest()
+            ->paginate(10);
+
+        // Total Pengembalian
+        $todayReturns = ReturnBook::count();
+
+        // Total pengembalian terlambat
+        $lateReturns = ReturnBook::where(
+            'late_days',
+            '>',
+            0
+        )->count();
+
+        // Total denda terkumpul
+        $totalFine = ReturnBook::sum(
+            'fine_amount'
+        );
 
         return view(
             'pustakawan.returns.index',
-            compact('returns')
+            compact(
+                'returns',
+                'todayReturns',
+                'lateReturns',
+                'totalFine'
+            )
         );
     }
 
+
     public function process(Request $request)
     {
-        $request->validate([
-            'loan_code'    => 'required',
-            'book_barcode' => 'required',
-            'return_date'  => 'required|date',
-        ]);
 
-        $loan = Loan::with([
-            'book',
-            'member'
-        ])
-        ->where('loan_code', $request->loan_code)
-        ->firstOrFail();
+        $request->validate(
+            [
+                'loan_code'    => 'required',
+                'kode_buku' => 'required',
+                'return_date'  => 'required|date',
+            ],
+            [
+                'loan_code.required' =>
+                'Kode peminjaman wajib diisi.',
+
+                'kode_buku.required' =>
+                'Kode buku wajib diisi.',
+
+                'return_date.required' =>
+                'Tanggal pengembalian wajib diisi.',
+            ]
+        );
+
+        $loan = Loan::with(['book', 'member'])
+            ->where('loan_code', $request->loan_code)
+            ->first();
+
+        if (!$loan) {
+            return redirect()
+                ->back()
+                ->with('error', 'Kode peminjaman tidak ditemukan.');
+        }
+
+        if ($loan->book->barcode != $request->kode_buku) {
+            return redirect()
+                ->back()
+                ->with('error', 'Kode buku tidak sesuai.');
+        }
+
+        if ($loan->status == 'Dikembalikan') {
+            return redirect()
+                ->back()
+                ->with('error', 'Buku sudah dikembalikan.');
+        }
 
         $returnDate = strtotime($request->return_date);
-        $dueDate    = strtotime($loan->due_date);
+        $dueDate = strtotime($loan->due_date);
 
         $lateDays = 0;
 
         if ($returnDate > $dueDate) {
 
-            $lateDays = (int) floor(
+            $lateDays = floor(
                 ($returnDate - $dueDate) / 86400
             );
         }
@@ -62,33 +110,41 @@ class ReturnController extends BaseController
             $fineAmount
         ) {
 
+             if (ReturnBook::where(
+                    'loan_id',
+                    $loan->id
+                )->exists()
+            ) {
+
+                return redirect()
+                    ->back()
+                    ->with(
+                        'error',
+                        'Data pengembalian sudah pernah dibuat.'
+                    );
+            }
+
+            $loan->book->increment('stock');
+
             ReturnBook::create([
-
-                'return_code' => 'RT' . date('YmdHis'),
-                'loan_id'     => $loan->id,
+                'return_code' => 'RT' . now()->format('YmdHis'),
+                'loan_id' => $loan->id,
                 'return_date' => $request->return_date,
-                'late_days'   => $lateDays,
+                'late_days' => $lateDays,
                 'fine_amount' => $fineAmount,
-
             ]);
 
-            if ($fineAmount > 0) {
+            $loan->update([
+                'status' => 'Dikembalikan'
+            ]);
 
-                Fine::create([
-
-                    'loan_id' => $loan->id,
-                    'amount'  => $fineAmount,
-                    'status'  => 'Belum Dibayar',
-
-                ]);
-            }
         });
 
         return redirect()
             ->route('returns.index')
             ->with(
                 'success',
-                'Pengembalian berhasil diproses.'
+                'Pengembalian berhasil ditambahkan.'
             );
     }
 }

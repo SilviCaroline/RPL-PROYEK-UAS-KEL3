@@ -51,7 +51,7 @@
 
             <div>
                 <label class="block mb-2 font-medium">Barcode Buku</label>
-                <input type="text" name="book_barcode" value="{{ old('book_barcode') }}" placeholder="Contoh: BK0001"
+                <input type="text" name="kode_buku" value="{{ old('kode_buku') }}" placeholder="Contoh: BK0001"
                     class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none" required>
             </div>
 

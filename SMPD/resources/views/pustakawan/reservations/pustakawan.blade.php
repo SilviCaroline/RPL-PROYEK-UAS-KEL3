@@ -67,7 +67,7 @@
 
                         <div>
                             <label class="block mb-2 font-medium">Barcode Buku</label>
-                            <input type="text" name="book_barcode" placeholder="BK002"
+                            <input type="text" name="kode_buku" placeholder="BK002"
                                 class="w-full border rounded-lg px-4 py-3">
                         </div>
 
@@ -86,17 +86,17 @@
                 <div class="lg:col-span-2 grid md:grid-cols-3 gap-6">
                     <div class="bg-white rounded-2xl shadow p-6">
                         <p class="text-slate-500">Total Reservasi</p>
-                        <h2 class="text-3xl font-bold text-blue-950">18</h2>
+                        <h2 class="text-3xl font-bold text-blue-950">{{ $totalReservations }}</h2>
                     </div>
 
                     <div class="bg-white rounded-2xl shadow p-6">
                         <p class="text-slate-500">Menunggu</p>
-                        <h2 class="text-3xl font-bold text-orange-500">10</h2>
+                        <h2 class="text-3xl font-bold text-orange-500">{{ $waitingReservations }}</h2>
                     </div>
 
                     <div class="bg-white rounded-2xl shadow p-6">
                         <p class="text-slate-500">Disetujui</p>
-                        <h2 class="text-3xl font-bold text-green-600">8</h2>
+                        <h2 class="text-3xl font-bold text-green-600">{{ $approvedReservations }}</h2>
                     </div>
 
                     <div class="md:col-span-3 bg-white rounded-2xl shadow p-6">
@@ -109,50 +109,171 @@
                 </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-blue-950 text-white">
-                        <tr>
-                            <th class="p-4">Kode</th>
-                            <th class="p-4">Anggota</th>
-                            <th class="p-4">Buku</th>
-                            <th class="p-4">Tanggal</th>
-                            <th class="p-4">Status</th>
-                            <th class="p-4">Aksi</th>
-                        </tr>
-                    </thead>
+            <tbody>
 
-                    <tbody>
-                        @foreach ($reservations as $reservation)
-                            <tr class="border-b">
-                                <td class="p-4 font-semibold">{{ $reservation['code'] }}</td>
-                                <td class="p-4">{{ $reservation['member_name'] }}</td>
-                                <td class="p-4">{{ $reservation['book_title'] }}</td>
-                                <td class="p-4">{{ $reservation['reservation_date'] }}</td>
-                                <td class="p-4">
-                                    @if ($reservation['status'] == 'Menunggu')
-                                        <span
-                                            class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs">Menunggu</span>
-                                    @else
-                                        <span
-                                            class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">Disetujui</span>
-                                    @endif
-                                </td>
-                                <td class="p-4 flex gap-2">
-                                    <button
-                                        class="bg-green-600 text-white px-3 py-2 rounded-lg text-sm">Setujui</button>
-                                    <button class="bg-red-600 text-white px-3 py-2 rounded-lg text-sm">Batalkan</button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="bg-white rounded-2xl shadow overflow-hidden">
+
+                    <div class="px-6 py-4 border-b">
+                        <h2 class="text-xl font-bold text-blue-950">
+                            Daftar Reservasi
+                        </h2>
+                    </div>
+
+                    <div class="overflow-x-auto">
+
+                        <table class="w-full">
+
+                            <thead class="bg-blue-950 text-white">
+
+                                <tr>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Kode Reservasi
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Anggota
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Buku
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Tanggal
+                                    </th>
+
+                                    <th class="px-6 py-4 text-center">
+                                        Status
+                                    </th>
+
+                                    <th class="px-6 py-4 text-center">
+                                        Aksi
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @forelse($reservations as $reservation)
+                                    <tr class="border-b hover:bg-slate-50">
+
+                                        <td class="px-6 py-4 font-medium">
+                                            {{ $reservation->reservation_code }}
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            {{ $reservation->member->name }}
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            {{ $reservation->book->title }}
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            {{ \Carbon\Carbon::parse($reservation->reservation_date)->format('d M Y') }}
+                                        </td>
+
+                                        <td class="px-6 py-4 text-center">
+
+                                            @if ($reservation->status == 'Menunggu')
+                                                <span
+                                                    class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+                                                    Menunggu
+                                                </span>
+                                            @elseif($reservation->status == 'Disetujui')
+                                                <span
+                                                    class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                                                    Disetujui
+                                                </span>
+                                            @else
+                                                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm">
+                                                    Dibatalkan
+                                                </span>
+                                            @endif
+
+                                        </td>
+
+                                        <td class="px-6 py-4">
+
+                                            @if ($reservation->status == 'Menunggu')
+                                                <div class="flex justify-center gap-2">
+
+                                                    <form action="{{ route('reservations.approve', $reservation->id) }}"
+                                                        method="POST">
+
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <button
+                                                            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+
+                                                            Setujui
+
+                                                        </button>
+
+                                                    </form>
+
+                                                    <form action="{{ route('reservations.cancel', $reservation->id) }}"
+                                                        method="POST">
+
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <button
+                                                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">
+
+                                                            Tolak
+
+                                                        </button>
+
+                                                    </form>
+
+                                                </div>
+                                            @else
+                                                <span class="text-slate-400 text-sm">
+                                                    Tidak ada aksi
+                                                </span>
+                                            @endif
+
+                                        </td>
+
+                                    </tr>
+
+                                @empty
+
+                                    <tr>
+
+                                        <td colspan="6" class="text-center py-10 text-slate-500">
+
+                                            Belum ada data reservasi.
+
+                                        </td>
+
+                                    </tr>
+                                @endforelse
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
                 <div class="mt-6">
                     {{ $reservations->links() }}
                 </div>
-            </div>
 
-        </main>
+            </tbody>
+            <div class="mt-6">
+                {{ $reservations->links() }}
+            </div>
+    </div>
+
+    </main>
     </div>
 
 </body>

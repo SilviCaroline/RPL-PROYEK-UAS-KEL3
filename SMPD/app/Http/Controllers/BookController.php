@@ -1,20 +1,40 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseControllers;
+
 class BookController extends BaseControllers
 {
-    public function index()
-{
-    $books = Book::latest()->paginate(10);
+    public function index(Request $request)
+    {
+        $books = Book::latest()->paginate(10);
 
-    return view(
-        'admin.books.index',
-        compact('books')
-    );
-}
+        $search = $request->search;
+
+        $books = Book::with('category')
+
+            ->when($search, function ($query) use ($search) {
+
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('author', 'like', "%{$search}%")
+                    ->orWhere('barcode', 'like', "%{$search}%")
+                    ->orWhere('isbn', 'like', "%{$search}%");
+            })
+
+            ->latest()
+            ->paginate(10)
+
+            ->withQueryString();
+
+        return view(
+            'admin.books.index',
+            compact('books')
+        );
+    }
     public function create()
     {
         $categories = Category::all();
