@@ -59,7 +59,7 @@
                     <div class="bg-blue-950 text-white p-5">
 
                         <h2 class="text-2xl font-bold">
-                            LibrarySystem
+                            SMPD
                         </h2>
 
                         <p>

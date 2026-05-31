@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
-    <title>Register - LibrarySystem</title>
+    <title>Register - SMPD</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-slate-100 min-h-screen flex items-center justify-center">
 
     <div class="bg-white w-full max-w-lg rounded-2xl shadow-lg p-8">
@@ -45,8 +47,7 @@
 
             <input type="hidden" name="role" value="pengguna">
 
-            <button type="submit"
-                class="w-full bg-blue-950 text-white py-3 rounded-lg hover:bg-blue-900">
+            <button type="submit" class="w-full bg-blue-950 text-white py-3 rounded-lg hover:bg-blue-900">
                 Daftar
             </button>
         </form>
@@ -60,4 +61,5 @@
     </div>
 
 </body>
+
 </html>

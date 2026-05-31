@@ -1,5 +1,5 @@
 <aside class="w-72 bg-blue-950 text-white p-6 hidden md:flex flex-col min-h-screen">
-    <h1 class="text-2xl font-bold mb-8">LibrarySystem</h1>
+    <h1 class="text-2xl font-bold mb-8">SMPD</h1>
 
     <div class="mb-6 p-4 bg-blue-900 rounded-xl">
         <p class="text-sm text-blue-200">

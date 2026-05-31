@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Detail Buku - LibrarySystem</title>
+    <title>Detail Buku - SMPD</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 

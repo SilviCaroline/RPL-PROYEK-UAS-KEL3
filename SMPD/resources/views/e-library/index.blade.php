@@ -12,7 +12,7 @@
     <div class="flex min-h-screen">
         <aside class="w-72 bg-blue-950 text-white p-6 hidden md:block">
             <h1 class="text-2xl font-bold mb-8">
-                LibrarySystem
+                SMPD
             </h1>
 
             <div class="mb-6 p-4 bg-blue-900 rounded-xl">

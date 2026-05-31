@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>LibrarySystem</title>
+    <title>SMPD</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -81,74 +81,73 @@
 
 </head>
 
-<body class="bg-slate-100 text-slate-800">
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-lg">
 
-    {{-- NAVBAR --}}
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        {{-- LOGO --}}
+        <div class="flex items-center gap-4">
 
-            {{-- LOGO --}}
-            <div class="flex items-center gap-4">
-
-                <div
-                    class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-900 to-indigo-700 text-white flex items-center justify-center text-2xl shadow-xl">
-                    📚
-                </div>
-
-                <div>
-                    <h1 class="text-2xl font-black text-blue-950">
-                        LibrarySystem
-                    </h1>
-
-                    <p class="text-xs text-slate-500">
-                        Smart Digital Library
-                    </p>
-                </div>
-
+            <div
+                class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-900 to-indigo-700 text-white flex items-center justify-center text-2xl shadow-xl">
+                📚
             </div>
 
+            <div>
+                <h1 class="text-2xl font-black text-blue-950">
+                    SMPD
+                </h1>
 
-            {{-- MENU --}}
-            <div class="hidden md:flex items-center gap-10">
-
-                <a href="{{ route('landing') }}" class="font-semibold text-blue-950 border-b-2 border-blue-950 pb-1">
-                    Home
-                </a>
-
-                <a href="#fitur" class="hover:text-blue-900 transition duration-300 font-medium">
-                    Fitur
-                </a>
-
-                <a href="#tentang" class="hover:text-blue-900 transition duration-300 font-medium">
-                    Tentang
-                </a>
-
-                <a href="{{ route('opac.index') }}" class="hover:text-blue-900 transition duration-300 font-medium">
-                    OPAC
-                </a>
-
-            </div>
-
-
-            {{-- BUTTON --}}
-            <div class="flex gap-3">
-
-                <a href="{{ route('login') }}"
-                    class="px-5 py-3 rounded-xl border border-blue-950 text-blue-950 font-semibold hover:bg-blue-50 transition duration-300">
-                    Login
-                </a>
-
-                <a href="{{ route('register') }}"
-                    class="px-5 py-3 rounded-xl bg-blue-950 text-white font-semibold hover:bg-blue-900 shadow-xl transition duration-300">
-                    Daftar
-                </a>
-
+                <p class="text-xs text-slate-500">
+                    Sistem Manajemen Perpustakaan Daerah
+                </p>
             </div>
 
         </div>
 
-    </nav>
+        {{-- MENU --}}
+        <div class="hidden md:flex items-center gap-10">
+
+            <a href="{{ route('landing') }}"
+                class="font-medium text-slate-700 border-b-2 border-transparent pb-1 hover:text-blue-900 hover:border-blue-900 transition duration-300">
+                Home
+            </a>
+
+            <a href="#fitur"
+                class="font-medium text-slate-700 border-b-2 border-transparent pb-1 hover:text-blue-900 hover:border-blue-900 transition duration-300">
+                Fitur
+            </a>
+
+            <a href="#tentang"
+                class="font-medium text-slate-700 border-b-2 border-transparent pb-1 hover:text-blue-900 hover:border-blue-900 transition duration-300">
+                Tentang
+            </a>
+
+            <a href="{{ route('opac.index') }}"
+                class="font-medium text-slate-700 border-b-2 border-transparent pb-1 hover:text-blue-900 hover:border-blue-900 transition duration-300">
+                OPAC
+            </a>
+
+        </div>
+
+        {{-- BUTTON --}}
+        <div class="flex gap-3">
+
+            <a href="{{ route('login') }}"
+                class="px-5 py-3 rounded-xl border border-blue-950 text-blue-950 font-semibold hover:bg-blue-50 transition duration-300">
+                Login
+            </a>
+
+            <a href="{{ route('register') }}"
+                class="px-5 py-3 rounded-xl bg-blue-950 text-white font-semibold hover:bg-blue-900 shadow-xl transition duration-300">
+                Daftar
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
 
 
 
@@ -563,11 +562,11 @@
                         <div>
 
                             <h2 class="text-3xl font-black">
-                                LibrarySystem
+                                SMPD
                             </h2>
 
                             <p class="text-blue-200 text-sm">
-                                Smart Digital Library
+                                Sistem Manajemen Perpustakaan Daerah
                             </p>
 
                         </div>
@@ -710,7 +709,7 @@
                                 </p>
 
                                 <p class="text-sm">
-                                    librarysystem@gmail.com
+                                    SMPDtem@gmail.com
                                 </p>
 
                             </div>
@@ -753,7 +752,7 @@
                 class="border-t border-white/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-5">
 
                 <p class="text-blue-200 text-sm">
-                    © 2026 LibrarySystem — All Rights Reserved
+                    © 2026 SMPD — All Rights Reserved
                 </p>
 
                 <div class="flex items-center gap-5 text-blue-200 text-sm">

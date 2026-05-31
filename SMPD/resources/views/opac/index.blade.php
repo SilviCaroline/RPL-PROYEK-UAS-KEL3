@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Public OPAC - LibrarySystem</title>
+    <title>Public OPAC - SMPD</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -12,7 +12,7 @@
 
     <nav class="bg-white shadow-sm">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-blue-950">LibrarySystem</h1>
+            <h1 class="text-2xl font-bold text-blue-950">SMPD</h1>
 
             <div class="space-x-4">
                 <a href="{{ route('landing') }}" class="text-slate-700 hover:text-blue-900">Home</a>
