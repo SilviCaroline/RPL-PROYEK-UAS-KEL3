@@ -76,7 +76,7 @@
 
         <a href="{{ route('opac.index') }}"
             class="block px-4 py-3 rounded-lg hover:bg-blue-900 transition
-            {{ request()->routeIs('opac.*') ? 'bg-blue-900' : '' }}">
+            {{ request()->routeIs('opac.index') ? 'bg-blue-900' : '' }}">
 
             📚 Katalog Buku
 

@@ -147,11 +147,12 @@ class ReservationController extends BaseController
 
     public function cancel(Reservation $reservation)
     {
-    Notification::create([
-    'member_id' => $reservation->member_id,
-    'title' => 'Reservasi Ditolak',
-    'message' => 'Reservasi buku Anda ditolak oleh pustakawan.',
-    'type' => 'danger',
-    'is_read' => false,
-    ]);
+        Notification::create([
+            'member_id' => $reservation->member_id,
+            'title' => 'Reservasi Ditolak',
+            'message' => 'Reservasi buku Anda ditolak oleh pustakawan.',
+            'type' => 'danger',
+            'is_read' => false,
+        ]);
+    }
 }

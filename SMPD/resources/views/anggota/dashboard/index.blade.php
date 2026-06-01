@@ -12,130 +12,222 @@
 
     <div class="flex min-h-screen">
 
+        {{-- SIDEBAR --}}
         @include('sidebar.anggota')
 
-        <main class="flex-1 p-6 md:p-10">
+        {{-- CONTENT AREA --}}
+        <div class="flex-1">
 
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-blue-950">
-                    Dashboard anggota
-                </h1>
+            {{-- NAVBAR --}}
+            <nav class="bg-white border-b shadow-sm px-8 py-4">
 
-                <p class="text-slate-500">
-                    Selamat datang di sistem perpustakaan digital.
-                </p>
-            </div>
+                <div class="flex justify-between items-center">
 
-            {{-- STATISTIK --}}
-            <section class="grid md:grid-cols-4 gap-6 mb-8">
+                    <div>
+                        <h1 class="text-2xl font-bold text-blue-950">
+                            SMPD
+                        </h1>
 
-                <div class="bg-white p-6 rounded-2xl shadow">
-                    <p class="text-slate-500">📚 Pinjaman Aktif</p>
-                    <h2 class="text-3xl font-bold text-blue-950">
-                        {{ $stats['active_loans'] }}
-                    </h2>
+                        <p class="text-sm text-slate-500">
+                            Sistem Manajemen Perpustakaan Daerah
+                        </p>
+                    </div>
+
+                    <div class="flex items-center gap-4">
+
+                        <div class="text-right">
+
+                            <p class="text-xs text-slate-500">
+                                Login sebagai
+                            </p>
+
+                            <p class="font-semibold text-blue-950 capitalize">
+                                {{ session('role') }}
+                            </p>
+
+                        </div>
+
+                        <div
+                            class="w-11 h-11 rounded-full bg-blue-950 text-white flex items-center justify-center font-bold">
+
+                            {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow">
-                    <p class="text-slate-500">📖 Riwayat Pinjaman</p>
-                    <h2 class="text-3xl font-bold text-blue-950">
-                        {{ $stats['loan_history'] }}
-                    </h2>
+            </nav>
+
+            {{-- CONTENT --}}
+            <main class="p-6 md:p-10">
+
+                <div class="mb-8">
+
+                    <h1 class="text-3xl font-bold text-blue-950">
+                        Dashboard Anggota
+                    </h1>
+
+                    <p class="text-slate-500">
+                        Selamat datang di sistem perpustakaan digital.
+                    </p>
+
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl shadow">
-                    <p class="text-slate-500">🔖 Reservasi</p>
-                    <h2 class="text-3xl font-bold text-orange-500">
-                        {{ $stats['reservations'] }}
-                    </h2>
-                </div>
+                {{-- STATISTIK --}}
+                <section class="grid md:grid-cols-4 gap-6 mb-8">
 
-                <div class="bg-white p-6 rounded-2xl shadow">
-                    <p class="text-slate-500">💰 Denda</p>
-                    <h2 class="text-3xl font-bold text-red-600">
-                        Rp{{ number_format($stats['fine']) }}
-                    </h2>
-                </div>
+                    <div class="bg-white p-6 rounded-2xl shadow">
 
-            </section>
+                        <p class="text-slate-500">
+                            📚 Pinjaman Aktif
+                        </p>
 
-            {{-- STATISTIK TAMBAHAN --}}
-            <section class="grid lg:grid-cols-2 gap-8">
+                        <h2 class="text-3xl font-bold text-blue-950">
+                            {{ $stats['active_loans'] }}
+                        </h2>
 
-                {{-- BUKU POPULER --}}
-                <div class="bg-white rounded-2xl shadow p-6">
+                    </div>
 
-                    <h2 class="text-xl font-bold text-blue-950 mb-6">
-                        Buku Paling Populer
-                    </h2>
+                    <div class="bg-white p-6 rounded-2xl shadow">
 
-                    <div class="space-y-5">
+                        <p class="text-slate-500">
+                            📖 Riwayat Pinjaman
+                        </p>
 
-                        @foreach ($popularBooks as $book)
-                            <div>
+                        <h2 class="text-3xl font-bold text-blue-950">
+                            {{ $stats['loan_history'] }}
+                        </h2>
 
-                                <div class="flex justify-between mb-2">
-                                    <span>{{ $book['title'] }}</span>
-                                    <span>{{ $book['borrowed'] }} kali</span>
-                                </div>
+                    </div>
 
-                                <div class="w-full bg-slate-200 rounded-full h-3">
-                                    <div class="bg-blue-950 h-3 rounded-full"
-                                        style="width: {{ $book['borrowed'] * 2 }}%">
+                    <div class="bg-white p-6 rounded-2xl shadow">
+
+                        <p class="text-slate-500">
+                            🔖 Reservasi
+                        </p>
+
+                        <h2 class="text-3xl font-bold text-orange-500">
+                            {{ $stats['reservations'] }}
+                        </h2>
+
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow">
+
+                        <p class="text-slate-500">
+                            💰 Denda
+                        </p>
+
+                        <h2 class="text-3xl font-bold text-red-600">
+                            Rp{{ number_format($stats['fine']) }}
+                        </h2>
+
+                    </div>
+
+                </section>
+
+                {{-- STATISTIK TAMBAHAN --}}
+                <section class="grid lg:grid-cols-2 gap-8">
+
+                    {{-- BUKU POPULER --}}
+                    <div class="bg-white rounded-2xl shadow p-6">
+
+                        <h2 class="text-xl font-bold text-blue-950 mb-6">
+                            Buku Paling Populer
+                        </h2>
+
+                        <div class="space-y-5">
+
+                            @foreach ($popularBooks as $book)
+                                <div>
+
+                                    <div class="flex justify-between mb-2">
+
+                                        <span>
+                                            {{ $book['title'] }}
+                                        </span>
+
+                                        <span>
+                                            {{ $book['borrowed'] }} kali
+                                        </span>
+
                                     </div>
+
+                                    <div class="w-full bg-slate-200 rounded-full h-3">
+
+                                        <div class="bg-blue-950 h-3 rounded-full"
+                                            style="width: {{ $book['borrowed'] * 2 }}%">
+                                        </div>
+
+                                    </div>
+
                                 </div>
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                    {{-- PROFIL MEMBER --}}
+                    <div class="bg-white rounded-2xl shadow p-6">
+
+                        <h2 class="text-xl font-bold text-blue-950 mb-6">
+                            Statistik Saya
+                        </h2>
+
+                        <div class="space-y-4">
+
+                            <div class="flex justify-between border-b pb-3">
+
+                                <span>Total Buku Dibaca</span>
+
+                                <span class="font-bold">
+                                    {{ $stats['books_read'] }}
+                                </span>
 
                             </div>
-                        @endforeach
 
-                    </div>
+                            <div class="flex justify-between border-b pb-3">
 
-                </div>
+                                <span>Anggota Sejak</span>
 
-                {{-- PROFIL MEMBER --}}
-                <div class="bg-white rounded-2xl shadow p-6">
+                                <span class="font-bold">
+                                    {{ $stats['member_since'] }}
+                                </span>
 
-                    <h2 class="text-xl font-bold text-blue-950 mb-6">
-                        Statistik Saya
-                    </h2>
+                            </div>
 
-                    <div class="space-y-4">
+                            <div class="flex justify-between border-b pb-3">
 
-                        <div class="flex justify-between border-b pb-3">
-                            <span>Total Buku Dibaca</span>
-                            <span class="font-bold">
-                                {{ $stats['books_read'] }}
-                            </span>
-                        </div>
+                                <span>Status Member</span>
 
-                        <div class="flex justify-between border-b pb-3">
-                            <span>Anggota Sejak</span>
-                            <span class="font-bold">
-                                {{ $stats['member_since'] }}
-                            </span>
-                        </div>
+                                <span class="text-green-600 font-bold">
+                                    Aktif
+                                </span>
 
-                        <div class="flex justify-between border-b pb-3">
-                            <span>Status Member</span>
-                            <span class="text-green-600 font-bold">
-                                Aktif
-                            </span>
-                        </div>
+                            </div>
 
-                        <div class="flex justify-between">
-                            <span>Ranking Aktivitas</span>
-                            <span class="font-bold">
-                                Top 10
-                            </span>
+                            <div class="flex justify-between">
+
+                                <span>Ranking Aktivitas</span>
+
+                                <span class="font-bold">
+                                    Top 10
+                                </span>
+
+                            </div>
+
                         </div>
 
                     </div>
 
-                </div>
+                </section>
 
-            </section>
+            </main>
 
-        </main>
+        </div>
 
     </div>
 

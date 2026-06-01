@@ -14,67 +14,108 @@
 
         @include('sidebar.anggota')
 
-        <main class="flex-1 p-6 md:p-10">
+        <div class="flex-1">
 
-            <div class="mb-8">
+            <nav class="bg-white border-b shadow-sm px-8 py-4">
 
-                <h1 class="text-3xl font-bold text-blue-950">
-                    Riwayat Notifikasi
-                </h1>
+                <div class="flex justify-between items-center">
 
-                <p class="text-slate-500">
-                    Seluruh aktivitas dan informasi sistem.
-                </p>
+                    <div>
+                        <h1 class="text-2xl font-bold text-blue-950">
+                            SMPD
+                        </h1>
+                        <p class="text-sm text-slate-500">
+                            Sistem Manajemen Perpustakaan Daerah
+                        </p>
+                    </div>
 
-            </div>
+                    <div class="flex items-center gap-4">
 
-            @forelse($notifications as $notification)
-                <div class="bg-white rounded-2xl shadow p-5 mb-4">
+                        <div class="text-right">
 
-                    <div class="flex justify-between items-start">
+                            <p class="text-xs text-slate-500">
+                                Login sebagai
+                            </p>
 
-                        <div>
-
-                            <h2 class="font-bold text-lg">
-
-                                {{ $notification->title }}
-
-                            </h2>
-
-                            <p class="text-slate-600 mt-2">
-
-                                {{ $notification->message }}
-
+                            <p class="font-semibold text-blue-950 capitalize">
+                                {{ session('role') }}
                             </p>
 
                         </div>
 
-                        <span class="text-xs text-slate-400">
+                        <div
+                            class="w-11 h-11 rounded-full bg-blue-950 text-white flex items-center justify-center font-bold">
 
-                            {{ $notification->created_at }}
+                            {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
 
-                        </span>
+                        </div>
 
                     </div>
 
                 </div>
 
-            @empty
+            </nav>
+            <main class="flex-1 p-6 md:p-10">
 
-                <div class="bg-white rounded-2xl shadow p-6">
+                <div class="mb-8">
+
+                    <h1 class="text-3xl font-bold text-blue-950">
+                        Riwayat Notifikasi
+                    </h1>
 
                     <p class="text-slate-500">
-
-                        Belum ada notifikasi.
-
+                        Seluruh aktivitas dan informasi sistem.
                     </p>
 
                 </div>
-            @endforelse
 
-        </main>
+                @forelse($notifications as $notification)
+                    <div class="bg-white rounded-2xl shadow p-5 mb-4">
 
-    </div>
+                        <div class="flex justify-between items-start">
+
+                            <div>
+
+                                <h2 class="font-bold text-lg">
+
+                                    {{ $notification->title }}
+
+                                </h2>
+
+                                <p class="text-slate-600 mt-2">
+
+                                    {{ $notification->message }}
+
+                                </p>
+
+                            </div>
+
+                            <span class="text-xs text-slate-400">
+
+                                {{ $notification->created_at }}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                @empty
+
+                    <div class="bg-white rounded-2xl shadow p-6">
+
+                        <p class="text-slate-500">
+
+                            Belum ada notifikasi.
+
+                        </p>
+
+                    </div>
+                @endforelse
+
+            </main>
+
+        </div>
 
 </body>
 
