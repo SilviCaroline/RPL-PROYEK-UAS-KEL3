@@ -18,6 +18,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardPustakawanController;
 use App\Http\Controllers\DashboardAnggotaController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +58,25 @@ Route::get(
     '/logout',
     [AuthController::class, 'logout']
 )->name('logout');
+
+Route::get(
+    '/login',
+    [LoginController::class, 'login']
+)->name('login');
+
+Route::post(
+    '/login',
+    [LoginController::class, 'authenticate']
+)->name('login.post');
+
+Route::get(
+    '/register',
+    [RegisterController::class, 'create']
+)->name('register');
+
+Route::post('/register',
+    [RegisterController::class, 'store']
+)->name('register.store');
 
 
 /*
@@ -237,12 +258,6 @@ Route::get(
     '/reservations/anggota',
     [ReservationController::class, 'anggota']
 )->name('reservations.anggota');
-
-Route::post(
-    '/reservations/store',
-    [ReservationController::class, 'store']
-)->name('reservations.store');
-
 
 // E-LIBRARY
 Route::get(

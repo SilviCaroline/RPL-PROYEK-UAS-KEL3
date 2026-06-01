@@ -133,7 +133,7 @@
                                     Kode Buku
                                 </label>
 
-                                <input type="text" name="kode_buku" placeholder="BK001"
+                                <input type="text" name="barcode" placeholder="BK001"
                                     class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-900">
                             </div>
 
@@ -191,7 +191,7 @@
 
                         <div class="border rounded-xl p-4">
                             <h3 class="font-semibold text-blue-950">
-                                2. Verifikasi kode_buku Buku
+                                2. Verifikasi Barcode Buku
                             </h3>
                             <p class="text-slate-500 text-sm">
                                 Pastikan buku yang dikembalikan sesuai data peminjaman.

@@ -3,9 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Anggota</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard Anggota - SMPD</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="bg-slate-100">
@@ -15,10 +19,9 @@
         {{-- SIDEBAR --}}
         @include('sidebar.anggota')
 
-        {{-- CONTENT AREA --}}
         <div class="flex-1">
 
-            {{-- NAVBAR --}}
+            {{-- HEADER --}}
             <nav class="bg-white border-b shadow-sm px-8 py-4">
 
                 <div class="flex justify-between items-center">
@@ -60,9 +63,9 @@
 
             </nav>
 
-            {{-- CONTENT --}}
             <main class="p-6 md:p-10">
 
+                {{-- JUDUL --}}
                 <div class="mb-8">
 
                     <h1 class="text-3xl font-bold text-blue-950">
@@ -70,13 +73,30 @@
                     </h1>
 
                     <p class="text-slate-500">
-                        Selamat datang di sistem perpustakaan digital.
+                        Pantau aktivitas peminjaman, reservasi, dan statistik perpustakaan.
                     </p>
 
                 </div>
 
+                {{-- FILTER --}}
+                <div class="bg-white p-4 rounded-2xl shadow mb-8">
+
+                    <form method="GET" class="flex flex-wrap gap-3">
+
+                        <input type="month" name="periode" class="border rounded-lg px-4 py-2">
+
+                        <button class="bg-blue-950 text-white px-5 py-2 rounded-lg hover:bg-blue-900">
+
+                            Filter
+
+                        </button>
+
+                    </form>
+
+                </div>
+
                 {{-- STATISTIK --}}
-                <section class="grid md:grid-cols-4 gap-6 mb-8">
+                <div class="grid md:grid-cols-5 gap-6 mb-8">
 
                     <div class="bg-white p-6 rounded-2xl shadow">
 
@@ -121,115 +141,149 @@
                         </p>
 
                         <h2 class="text-3xl font-bold text-red-600">
-                            Rp{{ number_format($stats['fine']) }}
+                            Rp{{ number_format($stats['fine'], 0, ',', '.') }}
                         </h2>
 
                     </div>
 
-                </section>
+                    <div class="bg-white p-6 rounded-2xl shadow">
 
-                {{-- STATISTIK TAMBAHAN --}}
-                <section class="grid lg:grid-cols-2 gap-8">
+                        <p class="text-slate-500">
+                            🟢 Online
+                        </p>
+
+                        <h2 class="text-3xl font-bold text-green-600">
+                            {{ $onlineUsers }}
+                        </h2>
+
+                    </div>
+
+                </div>
+
+                {{-- GRAFIK --}}
+                <div class="bg-white rounded-2xl shadow p-6 mb-8">
+
+                    <h2 class="text-xl font-bold text-blue-950 mb-6">
+
+                        📈 Tren Peminjaman Saya
+
+                    </h2>
+
+                    <canvas id="loanChart"></canvas>
+
+                </div>
+
+                {{-- BUKU POPULER + ANGGOTA TERAKTIF --}}
+                <div class="grid lg:grid-cols-2 gap-8 mb-8">
 
                     {{-- BUKU POPULER --}}
                     <div class="bg-white rounded-2xl shadow p-6">
 
                         <h2 class="text-xl font-bold text-blue-950 mb-6">
-                            Buku Paling Populer
+
+                            🔥 Buku Terpopuler
+
                         </h2>
 
-                        <div class="space-y-5">
+                        @forelse($popularBooks as $book)
+                            <div class="flex justify-between border-b py-3">
 
-                            @foreach ($popularBooks as $book)
-                                <div>
+                                <span>
+                                    {{ $book->book->title ?? '-' }}
+                                </span>
 
-                                    <div class="flex justify-between mb-2">
+                                <span class="font-semibold text-blue-950">
+                                    {{ $book->total }}x
+                                </span>
 
-                                        <span>
-                                            {{ $book['title'] }}
-                                        </span>
+                            </div>
 
-                                        <span>
-                                            {{ $book['borrowed'] }} kali
-                                        </span>
+                        @empty
 
-                                    </div>
-
-                                    <div class="w-full bg-slate-200 rounded-full h-3">
-
-                                        <div class="bg-blue-950 h-3 rounded-full"
-                                            style="width: {{ $book['borrowed'] * 2 }}%">
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            @endforeach
-
-                        </div>
+                            <p class="text-slate-500">
+                                Belum ada data.
+                            </p>
+                        @endforelse
 
                     </div>
 
-                    {{-- PROFIL MEMBER --}}
+                    {{-- ANGGOTA TERAKTIF --}}
                     <div class="bg-white rounded-2xl shadow p-6">
 
                         <h2 class="text-xl font-bold text-blue-950 mb-6">
-                            Statistik Saya
+
+                            👑 Anggota Teraktif
+
                         </h2>
 
-                        <div class="space-y-4">
+                        @forelse($activeMembers as $member)
+                            <div class="flex justify-between border-b py-3">
 
-                            <div class="flex justify-between border-b pb-3">
+                                <span>
+                                    {{ $member->member->name ?? '-' }}
+                                </span>
 
-                                <span>Total Buku Dibaca</span>
-
-                                <span class="font-bold">
-                                    {{ $stats['books_read'] }}
+                                <span class="font-semibold text-green-600">
+                                    {{ $member->total }} buku
                                 </span>
 
                             </div>
 
-                            <div class="flex justify-between border-b pb-3">
+                        @empty
 
-                                <span>Anggota Sejak</span>
-
-                                <span class="font-bold">
-                                    {{ $stats['member_since'] }}
-                                </span>
-
-                            </div>
-
-                            <div class="flex justify-between border-b pb-3">
-
-                                <span>Status Member</span>
-
-                                <span class="text-green-600 font-bold">
-                                    Aktif
-                                </span>
-
-                            </div>
-
-                            <div class="flex justify-between">
-
-                                <span>Ranking Aktivitas</span>
-
-                                <span class="font-bold">
-                                    Top 10
-                                </span>
-
-                            </div>
-
-                        </div>
+                            <p class="text-slate-500">
+                                Belum ada data.
+                            </p>
+                        @endforelse
 
                     </div>
 
-                </section>
+                </div>
 
             </main>
 
         </div>
 
     </div>
+
+    {{-- CHART --}}
+    <script>
+        const ctx = document.getElementById('loanChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [
+                    @foreach ($loanChart as $item)
+                        '{{ $item['bulan'] }}',
+                    @endforeach
+                ],
+                datasets: [{
+                    label: 'Jumlah Peminjaman',
+                    data: [
+                        @foreach ($loanChart as $item)
+                            {{ $item['jumlah'] }},
+                        @endforeach
+                    ],
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 
 </body>
 

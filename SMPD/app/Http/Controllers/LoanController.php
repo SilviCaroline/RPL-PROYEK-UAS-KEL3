@@ -29,7 +29,7 @@ class LoanController extends BaseControllers
     {
         $request->validate([
             'member_code' => 'required',
-            'kode_buku' => 'required',
+            'barcode' => 'required',
             'loan_date' => 'required|date',
             'due_date' => 'required|date|after_or_equal:loan_date',
             'loan_date'   => 'required|date',
@@ -41,9 +41,9 @@ class LoanController extends BaseControllers
         if (!$member) {
             return back()->with('error', 'Anggota tidak ditemukan atau status tidak aktif.');
         }
-        $book = Book::where('kode_buku', $request->kode_buku)->first();
+        $book = Book::where('barcode', $request->barcode)->first();
         if (!$book) {
-            return back()->with('error', 'Buku dengan kode_buku tersebut tidak ditemukan.');
+            return back()->with('error', 'Buku dengan barcode tersebut tidak ditemukan.');
         }
         if ($book->stock <= 0) {
             return back()->with('error', 'Stok buku habis. Buku tidak dapat dipinjam.');

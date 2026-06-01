@@ -13,7 +13,7 @@
     <div class="bg-white rounded-2xl shadow p-8 mt-6">
         <h1 class="text-3xl font-bold text-blue-950 mb-2">Transaksi Peminjaman</h1>
         <p class="text-slate-500 mb-8">
-            Masukkan kode anggota dan kode_buku buku untuk memproses peminjaman.
+            Masukkan kode anggota dan barcode buku untuk memproses peminjaman.
         </p>
 
         @if(session('error'))
@@ -38,8 +38,8 @@
             <div class="md:col-span-2 bg-blue-50 border border-blue-100 rounded-2xl p-5">
                 <h2 class="font-bold text-blue-950 mb-2">Simulasi Scan</h2>
                 <p class="text-sm text-slate-600">
-                    Scanner kode_buku biasanya langsung mengetikkan kode ke field aktif.
-                    Klik field kode_buku/kode anggota, lalu scan atau input manual.
+                    Scanner barcode biasanya langsung mengetikkan kode ke field aktif.
+                    Klik field barcode/kode anggota, lalu scan atau input manual.
                 </p>
             </div>
 
@@ -50,8 +50,8 @@
             </div>
 
             <div>
-                <label class="block mb-2 font-medium">kode_buku Buku</label>
-                <input type="text" name="kode_buku" value="{{ old('kode_buku') }}" placeholder="Contoh: BK0001"
+                <label class="block mb-2 font-medium">Barcode Buku</label>
+                <input type="text" name="barcode" value="{{ old('barcode') }}" placeholder="Contoh: BK0001"
                     class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none" required>
             </div>
 

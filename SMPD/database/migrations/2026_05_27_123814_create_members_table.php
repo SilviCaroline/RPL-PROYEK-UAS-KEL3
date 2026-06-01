@@ -12,15 +12,40 @@ return new class extends Migration
     public function up(): void
 {
     Schema::create('members', function (Blueprint $table) {
-        $table->id();
-        $table->string('member_code')->unique();
-        $table->string('name');
-        $table->string('email')->unique();
-        $table->string('phone')->nullable();
-        $table->text('address')->nullable();
-        $table->enum('status', ['Aktif', 'Nonaktif'])->default('Aktif');
-        $table->timestamps();
-    });
+
+    $table->id();
+
+    $table->string('member_code')->unique();
+
+    $table->string('name');
+
+    $table->string('email')->unique();
+
+    $table->string('password');
+
+    $table->enum(
+        'role',
+        [
+            'anggota',
+            'pustakawan',
+            'admin'
+        ]
+    )->default('anggota');
+
+    $table->string('phone')->nullable();
+
+    $table->text('address')->nullable();
+
+    $table->enum(
+        'status',
+        [
+            'Aktif',
+            'Nonaktif'
+        ]
+    )->default('Aktif');
+
+    $table->timestamps();
+});
 }
 
     /**

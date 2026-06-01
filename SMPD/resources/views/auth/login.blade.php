@@ -3,117 +3,152 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Login - SMPD</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SMPD</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-slate-100 min-h-screen flex items-center justify-center">
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-6">
 
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-lg p-8">
+    <div class="w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden">
 
-        <h1 class="text-3xl font-bold text-blue-950 text-center mb-2">
-            Login
-        </h1>
+        <div class="grid md:grid-cols-2">
 
-        <p class="text-center text-slate-500 mb-8">
-            Masuk sebagai anggota, pustakawan, atau admin
-        </p>
+            {{-- SISI KIRI --}}
+            <div class="bg-blue-950 text-white p-12 flex flex-col justify-center">
 
-        {{-- Alert --}}
-        @if (session('error'))
-            <div class="bg-red-100 text-red-700 p-4 rounded-lg mb-6">
-                {{ session('error') }}
-            </div>
-        @endif
+                <h1 class="text-5xl font-bold mb-4">
+                    SMPD
+                </h1>
 
-        {{-- Form Login --}}
-        <form action="{{ route('login.post') }}" method="POST" class="space-y-5">
+                <h2 class="text-2xl font-semibold mb-4">
+                    Sistem Manajemen Perpustakaan Daerah
+                </h2>
 
-            @csrf
+                <p class="text-blue-100 leading-relaxed">
+                    Kelola peminjaman, pengembalian, reservasi buku,
+                    dan akses E-Library dalam satu platform.
+                </p>
 
-            {{-- Email --}}
-            <div>
+                <div class="mt-8 space-y-3">
 
-                <label class="block mb-2 font-medium">
-                    Email
-                </label>
+                    <div class="bg-white/10 rounded-xl p-4">
+                        📚 Ribuan Koleksi Buku
+                    </div>
 
-                <input type="email" name="email" placeholder="Masukkan email" required
-                    class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
+                    <div class="bg-white/10 rounded-xl p-4">
+                        🔔 Notifikasi Reservasi
+                    </div>
 
-            </div>
+                    <div class="bg-white/10 rounded-xl p-4">
+                        📖 E-Library Digital
+                    </div>
 
-            {{-- Password --}}
-            <div>
-
-                <label class="block mb-2 font-medium">
-                    Password
-                </label>
-
-                <input type="password" name="password" placeholder="Masukkan password" required
-                    class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
+                </div>
 
             </div>
 
-            {{-- Role --}}
-            <div>
+            {{-- SISI KANAN --}}
+            <div class="p-10">
 
-                <label class="block mb-2 font-medium">
-                    Login Sebagai
-                </label>
+                <h2 class="text-3xl font-bold text-blue-950 mb-2">
+                    Login
+                </h2>
 
-                <select name="role"
-                    class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
+                <p class="text-slate-500 mb-8">
+                    Masuk ke akun SMPD Anda.
+                </p>
 
-                    <option value="anggota">
-                        anggota / Anggota
-                    </option>
+                {{-- SUCCESS --}}
+                @if (session('success'))
+                    <div class="bg-green-100 border border-green-300 text-green-700 p-4 rounded-xl mb-5">
+                        {{ session('success') }}
+                    </div>
+                @endif
 
-                    <option value="pustakawan">
-                        Pustakawan
-                    </option>
+                {{-- ERROR --}}
+                @if (session('error'))
+                    <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-xl mb-5">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
-                    <option value="admin">
-                        Admin
-                    </option>
+                {{-- VALIDATION --}}
+                @if ($errors->any())
+                    <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-xl mb-5">
 
-                </select>
+                        <ul class="list-disc ml-5">
+
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+
+                        </ul>
+
+                    </div>
+                @endif
+
+                <form action="{{ route('login.post') }}" method="POST" class="space-y-5">
+
+                    @csrf
+
+                    <div>
+
+                        <label class="block mb-2 font-medium text-slate-700">
+                            Email
+                        </label>
+
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="Masukkan email"
+                            class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
+
+                    </div>
+
+                    <div>
+
+                        <label class="block mb-2 font-medium text-slate-700">
+                            Password
+                        </label>
+
+                        <input type="password" name="password" placeholder="Masukkan password"
+                            class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
+
+                    </div>
+
+                    <button type="submit"
+                        class="w-full bg-blue-950 hover:bg-blue-900 text-white py-3 rounded-xl font-semibold transition">
+
+                        Login
+
+                    </button>
+
+                </form>
+
+                <div class="mt-6 text-center">
+
+                    <span class="text-slate-500">
+                        Belum punya akun?
+                    </span>
+
+                    <a href="{{ route('register') }}" class="text-blue-950 font-semibold hover:underline">
+
+                        Daftar Sekarang
+
+                    </a>
+
+                </div>
+
+                <div class="mt-4 text-center">
+
+                    <a href="{{ route('landing') }}" class="text-sm text-slate-500 hover:text-blue-950">
+
+                        ← Kembali ke Landing Page
+
+                    </a>
+
+                </div>
 
             </div>
-
-            {{-- Button --}}
-            <button type="submit" class="w-full bg-blue-950 text-white py-3 rounded-lg hover:bg-blue-900">
-
-                Login
-
-            </button>
-
-        </form>
-
-        {{-- Register --}}
-        <p class="text-center text-sm text-slate-500 mt-6">
-
-            Belum punya akun?
-
-            <a href="{{ route('register') }}" class="text-blue-900 font-semibold">
-
-                Daftar di sini
-
-            </a>
-
-        </p>
-
-        {{-- Back --}}
-        <div class="mt-4 text-center">
-
-            <a href="{{ route('landing') }}" class="text-sm text-slate-500 hover:text-blue-900">
-
-                Kembali ke Landing Page
-
-            </a>
 
         </div>
 
