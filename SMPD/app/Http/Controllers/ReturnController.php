@@ -77,7 +77,7 @@ class ReturnController extends BaseController
                 ->with('error', 'Kode peminjaman tidak ditemukan.');
         }
 
-        if ($loan->book->barcode != $request->kode_buku) {
+        if ($loan->book->kode_buku != $request->kode_buku) {
             return redirect()
                 ->back()
                 ->with('error', 'Kode buku tidak sesuai.');

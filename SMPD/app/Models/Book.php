@@ -13,7 +13,7 @@ class Book extends Model
         'publisher',
         'year',
         'isbn',
-        'barcode',
+        'kode_buku',
         'stock',
         'description',
         'cover',

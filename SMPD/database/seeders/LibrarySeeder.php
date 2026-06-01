@@ -27,7 +27,7 @@ class LibrarySeeder extends Seeder
                 'publisher' => 'Penerbit ' . $i,
                 'year' => rand(2000, 2026),
                 'isbn' => '978602' . str_pad($i, 7, '0', STR_PAD_LEFT),
-                'barcode' => 'BK' . str_pad($i, 4, '0', STR_PAD_LEFT),
+                'kode_buku' => 'BK' . str_pad($i, 4, '0', STR_PAD_LEFT),
                 'stock' => rand(0, 10),
                 'description' => 'Deskripsi singkat buku perpustakaan nomor ' . $i,
                 'created_at' => now(),

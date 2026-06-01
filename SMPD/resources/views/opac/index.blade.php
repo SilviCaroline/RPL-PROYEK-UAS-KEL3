@@ -124,6 +124,10 @@
                                     </h3>
 
                                     <p class="text-sm text-slate-500 mt-1">
+                                        {{ $book->barcode ?? '-' }}
+                                    </p>
+
+                                    <p class="text-sm text-slate-500 mt-1">
                                         {{ $book->author }}
                                     </p>
 

@@ -122,19 +122,17 @@
 
         </a>
 
+        {{-- FOOTER --}}
+        <div class="mt-6">
+
+            <a href="{{ route('logout') }}"
+                class="block px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-center transition duration-300">
+
+                Logout
+
+            </a>
+
+        </div>
+
     </nav>
-
-
-    {{-- FOOTER --}}
-    <div class="mt-6">
-
-        <a href="{{ route('logout') }}"
-            class="block px-4 py-3 bg-red-600 hover:bg-red-700 rounded-lg text-center transition duration-300">
-
-            Logout
-
-        </a>
-
-    </div>
-
 </aside>

@@ -195,15 +195,15 @@
 
                         @csrf
 
-                        <div>
+                        <input type="hidden" name="from" value="anggota">
 
+                        <div>
                             <label class="block mb-2 font-medium">
                                 Kode Member
                             </label>
 
                             <input type="text" name="member_code" value="{{ old('member_code') }}"
                                 placeholder="MBR001" class="w-full border rounded-lg px-4 py-3">
-
                         </div>
 
                         <div>
@@ -212,8 +212,8 @@
                                 Kode Buku
                             </label>
 
-                            <input type="text" name="book_barcode" value="{{ old('book_barcode') }}"
-                                placeholder="BK001" class="w-full border rounded-lg px-4 py-3">
+                            <input type="text" name="barcode" value="{{ old('barcode') }}" placeholder="BK001"
+                                class="w-full border rounded-lg px-4 py-3">
 
                         </div>
 

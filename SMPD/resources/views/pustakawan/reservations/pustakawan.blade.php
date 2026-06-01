@@ -66,7 +66,7 @@
                         </div>
 
                         <div>
-                            <label class="block mb-2 font-medium">Barcode Buku</label>
+                            <label class="block mb-2 font-medium">kode_buku Buku</label>
                             <input type="text" name="kode_buku" placeholder="BK002"
                                 class="w-full border rounded-lg px-4 py-3">
                         </div>

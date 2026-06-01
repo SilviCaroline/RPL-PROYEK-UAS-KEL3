@@ -21,7 +21,7 @@ class BookController extends BaseControllers
 
                 $query->where('title', 'like', "%{$search}%")
                     ->orWhere('author', 'like', "%{$search}%")
-                    ->orWhere('barcode', 'like', "%{$search}%")
+                    ->orWhere('kode_buku', 'like', "%{$search}%")
                     ->orWhere('isbn', 'like', "%{$search}%");
             })
 
@@ -47,7 +47,7 @@ class BookController extends BaseControllers
             'author'      => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'stock'       => 'required|integer|min:0',
-            'barcode'     => 'required|string|unique:books,barcode',
+            'kode_buku'     => 'required|string|unique:books,kode_buku',
         ]);
         Book::create([
             'category_id' => $request->category_id,
@@ -56,14 +56,14 @@ class BookController extends BaseControllers
             'publisher' => $request->publisher,
             'year' => $request->year,
             'isbn' => $request->isbn,
-            'barcode' => $request->barcode,
+            'kode_buku' => $request->kode_buku,
             'stock' => $request->stock,
             'title'       => $request->title,
             'author'      => $request->author,
             'publisher'   => $request->publisher,
             'year'        => $request->year,
             'isbn'        => $request->isbn,
-            'barcode'     => $request->barcode,
+            'kode_buku'     => $request->kode_buku,
             'stock'       => $request->stock,
             'description' => $request->description,
         ]);
@@ -86,7 +86,7 @@ class BookController extends BaseControllers
             'author'      => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'stock'       => 'required|integer|min:0',
-            'barcode'     => 'required|string|unique:books,barcode,' . $book->id,
+            'kode_buku'     => 'required|string|unique:books,kode_buku,' . $book->id,
         ]);
         $book->update([
             'category_id' => $request->category_id,
@@ -95,14 +95,14 @@ class BookController extends BaseControllers
             'publisher' => $request->publisher,
             'year' => $request->year,
             'isbn' => $request->isbn,
-            'barcode' => $request->barcode,
+            'kode_buku' => $request->kode_buku,
             'stock' => $request->stock,
             'title'       => $request->title,
             'author'      => $request->author,
             'publisher'   => $request->publisher,
             'year'        => $request->year,
             'isbn'        => $request->isbn,
-            'barcode'     => $request->barcode,
+            'kode_buku'     => $request->kode_buku,
             'stock'       => $request->stock,
             'description' => $request->description,
         ]);

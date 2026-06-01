@@ -39,28 +39,49 @@
                 </div>
             @endif
 
-            <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
                 <div class="bg-white rounded-2xl shadow p-6">
-                    <p class="text-slate-500">Peminjaman Bulan Ini</p>
-                    <h2 class="text-3xl font-bold text-blue-950">120</h2>
+                    <p class="text-slate-500">
+                        Total Peminjaman
+                    </p>
+
+                    <h2 class="text-4xl font-bold text-blue-950 mt-2">
+                        {{ $totalLoans }}
+                    </h2>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow p-6">
-                    <p class="text-slate-500">Pengembalian</p>
-                    <h2 class="text-3xl font-bold text-blue-950">95</h2>
+                    <p class="text-slate-500">
+                        Total Pengembalian
+                    </p>
+
+                    <h2 class="text-4xl font-bold text-green-600 mt-2">
+                        {{ $totalReturns }}
+                    </h2>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow p-6">
-                    <p class="text-slate-500">Terlambat</p>
-                    <h2 class="text-3xl font-bold text-red-600">7</h2>
+                    <p class="text-slate-500">
+                        Total Terlambat
+                    </p>
+
+                    <h2 class="text-4xl font-bold text-red-600 mt-2">
+                        {{ $lateReturns }}
+                    </h2>
                 </div>
 
                 <div class="bg-white rounded-2xl shadow p-6">
-                    <p class="text-slate-500">Total Denda</p>
-                    <h2 class="text-3xl font-bold text-blue-950">Rp85.000</h2>
+                    <p class="text-slate-500">
+                        Total Denda
+                    </p>
+
+                    <h2 class="text-3xl font-bold text-amber-600 mt-2">
+                        Rp{{ number_format($totalFines, 0, ',', '.') }}
+                    </h2>
                 </div>
+
             </div>
-
             <div class="bg-white rounded-2xl shadow overflow-hidden">
                 <table class="w-full text-left">
                     <thead class="bg-blue-950 text-white">

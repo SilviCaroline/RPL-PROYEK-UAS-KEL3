@@ -191,7 +191,7 @@
 
                         <div class="border rounded-xl p-4">
                             <h3 class="font-semibold text-blue-950">
-                                2. Verifikasi Barcode Buku
+                                2. Verifikasi kode_buku Buku
                             </h3>
                             <p class="text-slate-500 text-sm">
                                 Pastikan buku yang dikembalikan sesuai data peminjaman.

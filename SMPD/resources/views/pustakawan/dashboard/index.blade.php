@@ -160,10 +160,6 @@
                                         </div>
 
                                         <div>
-                                            <h3 class="font-semibold text-slate-800">
-                                                {{ $book['title'] }}
-                                            </h3>
-
                                             <p class="text-sm text-slate-500">
                                                 Buku paling banyak dipinjam
                                             </p>
@@ -477,15 +473,45 @@
                                 <td class="py-3">
                                     <div class="flex space-x-2">
 
-                                        <a href="{{ route('reservations.approve', $reservation->id) }}"
-                                            class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-sm">
-                                            Setujui
-                                        </a>
+                                        @if ($reservation->status == 'Menunggu')
+                                            <div class="flex justify-center gap-2">
 
-                                        <a href="{{ route('reservations.cancel', $reservation->id) }}"
-                                            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm">
-                                            Batalkan
-                                        </a>
+                                                <form action="{{ route('reservations.approve', $reservation->id) }}"
+                                                    method="POST">
+
+                                                    @csrf
+                                                    @method('PUT')
+
+                                                    <button
+                                                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+
+                                                        Setujui
+
+                                                    </button>
+
+                                                </form>
+
+                                                <form action="{{ route('reservations.cancel', $reservation->id) }}"
+                                                    method="POST">
+
+                                                    @csrf
+                                                    @method('PUT')
+
+                                                    <button
+                                                        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">
+
+                                                        Tolak
+
+                                                    </button>
+
+                                                </form>
+
+                                            </div>
+                                        @else
+                                            <span class="text-slate-400 text-sm">
+                                                Tidak ada aksi
+                                            </span>
+                                        @endif
 
                                     </div>
                                 </td>

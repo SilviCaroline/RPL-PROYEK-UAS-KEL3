@@ -226,7 +226,7 @@
                         Platform perpustakaan digital modern
                         dengan sistem peminjaman,
                         e-library, reservasi buku,
-                        barcode scanner, dan laporan otomatis.
+                        kode_buku scanner, dan laporan otomatis.
 
                     </p>
 
@@ -652,7 +652,7 @@
 
                         <div class="flex items-center gap-3">
                             <span>🔍</span>
-                            <span>Barcode Scanner</span>
+                            <span>kode_buku Scanner</span>
                         </div>
 
                     </div>

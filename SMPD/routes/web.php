@@ -238,6 +238,11 @@ Route::get(
     [ReservationController::class, 'anggota']
 )->name('reservations.anggota');
 
+Route::post(
+    '/reservations/store',
+    [ReservationController::class, 'store']
+)->name('reservations.store');
+
 
 // E-LIBRARY
 Route::get(

@@ -85,7 +85,7 @@ class ReservationController extends BaseController
     {
         $request->validate([
             'member_code'      => 'required',
-            'kode_buku'     => 'required',
+            'barcode'     => 'required',
             'reservation_date' => 'required|date',
         ]);
 
@@ -96,7 +96,7 @@ class ReservationController extends BaseController
 
         $book = Book::where(
             'barcode',
-            $request->kode_buku
+            $request->barcode
         )->firstOrFail();
 
         Reservation::create([
@@ -107,16 +107,22 @@ class ReservationController extends BaseController
             'status'           => 'Menunggu',
         ]);
 
-        if (request()->is('reservations/anggota')) {
+        if ($request->from == 'anggota') {
 
             return redirect()
                 ->route('reservations.anggota')
-                ->with('success', 'Reservasi buku berhasil dibuat.');
+                ->with(
+                    'success',
+                    'Reservasi buku berhasil dibuat.'
+                );
         }
 
         return redirect()
             ->route('reservations.pustakawan')
-            ->with('success', 'Reservasi buku berhasil dibuat.');
+            ->with(
+                'success',
+                'Reservasi buku berhasil dibuat.'
+            );
     }
     // ==========================
     // APPROVE
@@ -137,7 +143,7 @@ class ReservationController extends BaseController
         ]);
 
         return redirect()
-            ->route('reservations.index')
+            ->route('reservations.pustakawan')
             ->with('success', 'Reservasi berhasil disetujui.');
     }
 
@@ -147,6 +153,10 @@ class ReservationController extends BaseController
 
     public function cancel(Reservation $reservation)
     {
+        $reservation->update([
+            'status' => 'Ditolak'
+        ]);
+
         Notification::create([
             'member_id' => $reservation->member_id,
             'title' => 'Reservasi Ditolak',
@@ -154,5 +164,12 @@ class ReservationController extends BaseController
             'type' => 'danger',
             'is_read' => false,
         ]);
+
+        return redirect()
+            ->route('reservations.pustakawan')
+            ->with(
+                'success',
+                'Reservasi berhasil ditolak.'
+            );
     }
 }

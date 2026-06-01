@@ -41,9 +41,9 @@ class LoanController extends BaseControllers
         if (!$member) {
             return back()->with('error', 'Anggota tidak ditemukan atau status tidak aktif.');
         }
-        $book = Book::where('barcode', $request->kode_buku)->first();
+        $book = Book::where('kode_buku', $request->kode_buku)->first();
         if (!$book) {
-            return back()->with('error', 'Buku dengan barcode tersebut tidak ditemukan.');
+            return back()->with('error', 'Buku dengan kode_buku tersebut tidak ditemukan.');
         }
         if ($book->stock <= 0) {
             return back()->with('error', 'Stok buku habis. Buku tidak dapat dipinjam.');

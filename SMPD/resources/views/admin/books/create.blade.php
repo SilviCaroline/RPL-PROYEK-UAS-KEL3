@@ -59,8 +59,8 @@
                 </div>
 
                 <div>
-                    <label class="block mb-2 font-medium">Barcode</label>
-                    <input type="text" name="barcode" placeholder="Contoh: BK0201"
+                    <label class="block mb-2 font-medium">kode_buku</label>
+                    <input type="text" name="kode_buku" placeholder="Contoh: BK0201"
                         class="w-full border rounded-lg px-4 py-3" required>
                 </div>
 

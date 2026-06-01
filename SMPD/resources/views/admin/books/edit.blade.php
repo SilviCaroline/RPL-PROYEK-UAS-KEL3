@@ -68,8 +68,8 @@
                 </div>
 
                 <div>
-                    <label class="block mb-2 font-medium">Barcode</label>
-                    <input type="text" name="barcode" value="{{ $book->barcode }}"
+                    <label class="block mb-2 font-medium">kode_buku</label>
+                    <input type="text" name="kode_buku" value="{{ $book->kode_buku }}"
                         class="w-full border rounded-lg px-4 py-3" required>
                 </div>
 

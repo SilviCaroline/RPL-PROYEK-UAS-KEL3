@@ -50,26 +50,68 @@
                                 Oleh {{ $book->author }}
                             </p>
 
-                            <div class="grid md:grid-cols-2 gap-4 mt-8">
-                                <div class="border rounded-xl p-4">
-                                    <p class="text-sm text-slate-500">Penerbit</p>
-                                    <h3 class="font-semibold">{{ $book->publisher ?? '-' }}</h3>
+                            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+
+                                <div class="border rounded-xl p-4 bg-white">
+                                    <p class="text-sm text-slate-500">
+                                        Penerbit
+                                    </p>
+
+                                    <h3 class="font-semibold text-slate-800">
+                                        {{ $book->publisher ?? '-' }}
+                                    </h3>
                                 </div>
 
-                                <div class="border rounded-xl p-4">
-                                    <p class="text-sm text-slate-500">Tahun Terbit</p>
-                                    <h3 class="font-semibold">{{ $book->year ?? '-' }}</h3>
+                                <div class="border rounded-xl p-4 bg-white">
+                                    <p class="text-sm text-slate-500">
+                                        Kode Buku
+                                    </p>
+
+                                    <h3 class="font-semibold text-slate-800">
+                                        {{ $book->barcode ?? '-' }}
+                                    </h3>
                                 </div>
 
-                                <div class="border rounded-xl p-4">
-                                    <p class="text-sm text-slate-500">ISBN</p>
-                                    <h3 class="font-semibold">{{ $book->isbn ?? '-' }}</h3>
+                                <div class="border rounded-xl p-4 bg-white">
+                                    <p class="text-sm text-slate-500">
+                                        Tahun Terbit
+                                    </p>
+
+                                    <h3 class="font-semibold text-slate-800">
+                                        {{ $book->year ?? '-' }}
+                                    </h3>
                                 </div>
 
-                                <div class="border rounded-xl p-4">
-                                    <p class="text-sm text-slate-500">Stok</p>
-                                    <h3 class="font-semibold">{{ $book->stock }} Buku</h3>
+                                <div class="border rounded-xl p-4 bg-white">
+                                    <p class="text-sm text-slate-500">
+                                        ISBN
+                                    </p>
+
+                                    <h3 class="font-semibold text-slate-800">
+                                        {{ $book->isbn ?? '-' }}
+                                    </h3>
                                 </div>
+
+                                <div class="border rounded-xl p-4 bg-white">
+                                    <p class="text-sm text-slate-500">
+                                        Stok
+                                    </p>
+
+                                    <h3 class="font-semibold text-green-600">
+                                        {{ $book->stock }} Buku
+                                    </h3>
+                                </div>
+
+                                <div class="border rounded-xl p-4 bg-white">
+                                    <p class="text-sm text-slate-500">
+                                        Penulis
+                                    </p>
+
+                                    <h3 class="font-semibold text-slate-800">
+                                        {{ $book->author ?? '-' }}
+                                    </h3>
+                                </div>
+
                             </div>
 
                             <div class="mt-8">

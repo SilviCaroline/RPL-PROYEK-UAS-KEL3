@@ -2430,16 +2430,16 @@
             "time": "2025-07-25T09:04:22+00:00"
         },
         {
-            "name": "milon/barcode",
+            "name": "milon/kode_buku",
             "version": "v13.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/milon/barcode.git",
+                "url": "https://github.com/milon/kode_buku.git",
                 "reference": "ce84b0ba0d9c0f19f1ef058cd39187bd9468dfc8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/milon/barcode/zipball/ce84b0ba0d9c0f19f1ef058cd39187bd9468dfc8",
+                "url": "https://api.github.com/repos/milon/kode_buku/zipball/ce84b0ba0d9c0f19f1ef058cd39187bd9468dfc8",
                 "reference": "ce84b0ba0d9c0f19f1ef058cd39187bd9468dfc8",
                 "shasum": ""
             },
@@ -2455,17 +2455,17 @@
             "extra": {
                 "laravel": {
                     "aliases": {
-                        "DNS1D": "Milon\\Barcode\\Facades\\DNS1DFacade",
-                        "DNS2D": "Milon\\Barcode\\Facades\\DNS2DFacade"
+                        "DNS1D": "Milon\\kode_buku\\Facades\\DNS1DFacade",
+                        "DNS2D": "Milon\\kode_buku\\Facades\\DNS2DFacade"
                     },
                     "providers": [
-                        "Milon\\Barcode\\BarcodeServiceProvider"
+                        "Milon\\kode_buku\\kode_bukuServiceProvider"
                     ]
                 }
             },
             "autoload": {
                 "psr-0": {
-                    "Milon\\Barcode": "src/"
+                    "Milon\\kode_buku": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2478,12 +2478,12 @@
                     "email": "contact@milon.im"
                 }
             ],
-            "description": "Barcode generator like Qr Code, PDF417, C39, C39+, C39E, C39E+, C93, S25, S25+, I25, I25+, C128, C128A, C128B, C128C, 2-Digits UPC-Based Extention, 5-Digits UPC-Based Extention, EAN 8, EAN 13, UPC-A, UPC-E, MSI (Variation of Plessey code)",
+            "description": "kode_buku generator like Qr Code, PDF417, C39, C39+, C39E, C39E+, C93, S25, S25+, I25, I25+, C128, C128A, C128B, C128C, 2-Digits UPC-Based Extention, 5-Digits UPC-Based Extention, EAN 8, EAN 13, UPC-A, UPC-E, MSI (Variation of Plessey code)",
             "keywords": [
                 "CODABAR",
                 "CODE 128",
                 "CODE 39",
-                "barcode",
+                "kode_buku",
                 "datamatrix",
                 "ean",
                 "laravel",
@@ -2492,8 +2492,8 @@
                 "qrcode"
             ],
             "support": {
-                "issues": "https://github.com/milon/barcode/issues",
-                "source": "https://github.com/milon/barcode/tree/v13.1"
+                "issues": "https://github.com/milon/kode_buku/issues",
+                "source": "https://github.com/milon/kode_buku/tree/v13.1"
             },
             "funding": [
                 {

@@ -105,7 +105,7 @@
                                 </th>
 
                                 <th class="p-4">
-                                    Barcode
+                                    kode_buku
                                 </th>
 
                                 <th class="p-4">
@@ -153,7 +153,7 @@
                                         <span
                                             class="font-mono text-sm bg-slate-100 px-2 py-1 rounded">
 
-                                            {{ $book->barcode }}
+                                            {{ $book->kode_buku }}
 
                                         </span>
 

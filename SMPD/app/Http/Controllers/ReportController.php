@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Session;
+use App\Models\Loan;
+use App\Models\ReturnBook;
+use App\Models\Reservation;
+use App\Models\Book;
+use Carbon\Carbon;
+use App\Models\Member;
 
 class ReportController extends BaseController
 {
@@ -46,21 +52,93 @@ class ReportController extends BaseController
         // PUSTAKAWAN REPORT
         // =========================
 
-        $reports = [
+        $totalLoans = Loan::count();
 
-            [
-                'month' => 'Mei 2026',
-                'total_loans' => 120,
-                'total_returns' => 95,
-                'late_returns' => 7,
-                'total_fines' => 85000,
-            ],
+        $totalReturns = ReturnBook::count();
 
-        ];
+        $lateReturns = ReturnBook::where(
+            'late_days',
+            '>',
+            0
+        )->count();
+
+        $totalFines = ReturnBook::sum(
+            'fine_amount'
+        );
+
+        $reports = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+
+            $date = Carbon::now()->subMonths($i);
+
+            $reports[] = [
+
+                'month' =>
+                $date->translatedFormat('F Y'),
+
+                'total_loans' =>
+                Loan::whereMonth(
+                    'loan_date',
+                    $date->month
+                )
+                ->whereYear(
+                    'loan_date',
+                    $date->year
+                )
+                ->count(),
+
+                'total_returns' =>
+                ReturnBook::whereMonth(
+                    'return_date',
+                    $date->month
+                )
+                ->whereYear(
+                    'return_date',
+                    $date->year
+                )
+                ->count(),
+
+                'late_returns' =>
+                ReturnBook::whereMonth(
+                    'return_date',
+                    $date->month
+                )
+                ->whereYear(
+                    'return_date',
+                    $date->year
+                )
+                ->where(
+                    'late_days',
+                    '>',
+                    0
+                )
+                ->count(),
+
+                'total_fines' =>
+                ReturnBook::whereMonth(
+                    'return_date',
+                    $date->month
+                )
+                ->whereYear(
+                    'return_date',
+                    $date->year
+                )
+                ->sum(
+                    'fine_amount'
+                ),
+            ];
+        }
 
         return view(
             'pustakawan.reports.index',
-            compact('reports')
+            compact(
+                'reports',
+                'totalLoans',
+                'totalReturns',
+                'lateReturns',
+                'totalFines'
+            )
         );
     }
 

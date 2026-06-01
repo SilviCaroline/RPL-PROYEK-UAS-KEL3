@@ -28,7 +28,7 @@
             <div class="flex justify-between items-center mb-8">
                 <div>
                     <h1 class="text-3xl font-bold text-blue-950">Peminjaman Buku</h1>
-                    <p class="text-slate-500">Kelola transaksi peminjaman dengan kode anggota dan barcode buku.</p>
+                    <p class="text-slate-500">Kelola transaksi peminjaman dengan kode anggota dan kode_buku buku.</p>
                 </div>
 
                 <a href="{{ route('loans.create') }}"
@@ -96,7 +96,7 @@
                                 </td>
                                 <td class="p-4">
                                     <p class="font-semibold">{{ $loan->book->title ?? '-' }}</p>
-                                    <p class="text-sm text-slate-500">{{ $loan->book->barcode ?? '-' }}</p>
+                                    <p class="text-sm text-slate-500">{{ $loan->book->kode_buku ?? '-' }}</p>
                                 </td>
                                 <td class="p-4">{{ $loan->loan_date }}</td>
                                 <td class="p-4">{{ $loan->due_date }}</td>
