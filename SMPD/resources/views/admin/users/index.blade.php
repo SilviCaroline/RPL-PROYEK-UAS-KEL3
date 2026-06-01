@@ -23,7 +23,7 @@
                     Hak Akses
                 </h1>
                 <p class="text-slate-500 mt-2">
-                    Kelola hak akses pengguna sistem perpustakaan.
+                    Kelola hak akses anggota sistem perpustakaan.
                 </p>
             </div>
 
@@ -83,7 +83,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                     {{-- Manajemen Sistem --}}
                                     <tr class="bg-slate-200">
                                         <td colspan="7" class="p-3 font-semibold">
@@ -91,7 +91,7 @@
                                         </td>
                                     </tr>
                                     <tr class="border-b">
-                                        <td class="p-3">Pengguna</td>
+                                        <td class="p-3">anggota</td>
                                         <td><input type="checkbox"></td>
                                         <td><input type="checkbox"></td>
                                         <td><input type="checkbox"></td>
@@ -193,4 +193,5 @@
         }
     </script>
 </body>
+
 </html>

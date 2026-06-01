@@ -7,6 +7,7 @@ use App\Models\Member;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use App\Models\Notification;
 
 class ReservationController extends BaseController
 {
@@ -43,10 +44,9 @@ class ReservationController extends BaseController
         );
     }
 
-    //Pengguna
-    public function pengguna()
+    //anggota
+    public function anggota()
     {
-
         $reservations = Reservation::with([
             'member',
             'book'
@@ -67,7 +67,7 @@ class ReservationController extends BaseController
         )->count();
 
         return view(
-            'pengunjung.reservations.pengunjung',
+            'anggota.reservations.anggota',
             compact(
                 'reservations',
                 'totalReservations',
@@ -107,10 +107,10 @@ class ReservationController extends BaseController
             'status'           => 'Menunggu',
         ]);
 
-        if (request()->is('reservations/pengunjung')) {
+        if (request()->is('reservations/anggota')) {
 
             return redirect()
-                ->route('reservations.pengunjung')
+                ->route('reservations.anggota')
                 ->with('success', 'Reservasi buku berhasil dibuat.');
         }
 
@@ -128,8 +128,16 @@ class ReservationController extends BaseController
             'status' => 'Disetujui',
         ]);
 
+        Notification::create([
+            'member_id' => $reservation->member_id,
+            'title' => 'Reservasi Disetujui',
+            'message' => 'Reservasi buku Anda telah disetujui dan E-Library sudah dapat diakses.',
+            'type' => 'success',
+            'is_read' => false,
+        ]);
+
         return redirect()
-            ->route('reservations.pustakawan')
+            ->route('reservations.index')
             ->with('success', 'Reservasi berhasil disetujui.');
     }
 
@@ -139,12 +147,11 @@ class ReservationController extends BaseController
 
     public function cancel(Reservation $reservation)
     {
-        $reservation->update([
-            'status' => 'Dibatalkan',
-        ]);
-
-        return redirect()
-            ->route('reservations.pustakawan')
-            ->with('success', 'Reservasi berhasil dibatalkan.');
-    }
+    Notification::create([
+    'member_id' => $reservation->member_id,
+    'title' => 'Reservasi Ditolak',
+    'message' => 'Reservasi buku Anda ditolak oleh pustakawan.',
+    'type' => 'danger',
+    'is_read' => false,
+    ]);
 }

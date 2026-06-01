@@ -17,7 +17,7 @@
         </h1>
 
         <p class="text-center text-slate-500 mb-8">
-            Registrasi akun pengguna perpustakaan
+            Registrasi akun anggota perpustakaan
         </p>
 
         <form action="{{ route('login') }}" method="GET" class="space-y-5">
@@ -45,7 +45,7 @@
                     class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
             </div>
 
-            <input type="hidden" name="role" value="pengguna">
+            <input type="hidden" name="role" value="anggota">
 
             <button type="submit" class="w-full bg-blue-950 text-white py-3 rounded-lg hover:bg-blue-900">
                 Daftar

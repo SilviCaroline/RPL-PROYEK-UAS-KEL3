@@ -22,7 +22,7 @@
         @elseif ($role == 'pustakawan')
             @include('sidebar.pustakawan')
         @else
-            @include('sidebar.pengunjung')
+            @include('sidebar.anggota')
         @endif
 
 
@@ -40,7 +40,7 @@
                         ← Kembali
                     </a>
                 @else
-                    <a href="{{ route('pengunjung.dashboard') }}" class="text-blue-900 font-semibold">
+                    <a href="{{ route('anggota.dashboard') }}" class="text-blue-900 font-semibold">
                         ← Kembali
                     </a>
                 @endif

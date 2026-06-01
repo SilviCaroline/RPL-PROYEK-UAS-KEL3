@@ -18,7 +18,7 @@ class UserController extends BaseController
                 'deskripsi' => 'Mengelola buku, anggota dan transaksi'
             ],
             [
-                'nama_role' => 'Pengunjung',
+                'nama_role' => 'anggota',
                 'deskripsi' => 'Melihat laporan dan monitoring'
             ]
         ];

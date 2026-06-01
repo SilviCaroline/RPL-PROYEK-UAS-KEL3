@@ -23,12 +23,12 @@
                 </p>
 
                 <h2 class="font-bold capitalize">
-                    Pengguna
+                    anggota
                 </h2>
             </div>
 
             <nav class="space-y-3">
-                <a href="{{ route('pengunjung.dashboard') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
+                <a href="{{ route('anggota.dashboard') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
                     Dashboard
                 </a>
 
@@ -40,7 +40,7 @@
                     Riwayat Peminjaman
                 </a>
 
-                <a href="{{ route('reservations.pengunjung') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
+                <a href="{{ route('reservations.anggota') }}" class="block px-4 py-3 hover:bg-blue-900 rounded-lg">
                     Reservasi Buku
                 </a>
 

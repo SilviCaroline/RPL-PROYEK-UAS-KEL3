@@ -11,10 +11,10 @@
 
     <div class="flex min-h-screen">
 
-        @include('sidebar.pengunjung')
+        @include('sidebar.anggota')
         <main class="flex-1 p-6 md:p-10">
             <h1 class="text-3xl font-bold text-blue-950 mb-2">Riwayat Peminjaman</h1>
-            <p class="text-slate-500 mb-8">Daftar riwayat peminjaman buku pengguna.</p>
+            <p class="text-slate-500 mb-8">Daftar riwayat peminjaman buku anggota.</p>
 
             <div class="bg-white rounded-2xl shadow overflow-x-auto">
                 <table class="w-full text-left">

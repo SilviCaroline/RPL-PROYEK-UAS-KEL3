@@ -23,26 +23,88 @@
                     </p>
                 </div>
 
-                <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full">
-                    Akses {{ $digitalBook->access }}
-                </span>
+                @if ($reservation)
+                    <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full">
+                        Akses Full PDF
+                    </span>
+                @else
+                    <span class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-full">
+                        Preview Only
+                    </span>
+                @endif
             </div>
 
-            <div class="bg-slate-200 rounded-2xl h-[650px] flex items-center justify-center">
-                <div class="text-center">
-                    <div class="text-7xl mb-4">📄</div>
-                    <h2 class="text-2xl font-bold text-blue-950">Preview PDF</h2>
-                    <p class="text-slate-600 mt-2">
-                        File: {{ $digitalBook->file }}
-                    </p>
-                    <p class="text-sm text-slate-500 mt-4">
-                        Nanti bagian ini bisa diganti iframe PDF asli dari storage Laravel.
-                    </p>
-                </div>
+            <div class="bg-slate-200 rounded-2xl p-8 min-h-[650px]">
+
+                @if (!$reservation)
+                    {{-- PREVIEW --}}
+                    <div class="h-full flex items-center justify-center">
+
+                        <div class="text-center max-w-2xl">
+
+                            <div class="text-8xl mb-6">
+                                📄
+                            </div>
+
+                            <h2 class="text-3xl font-bold text-blue-950 mb-4">
+                                Preview PDF
+                            </h2>
+
+                            <p class="text-slate-600 mb-6">
+                                Anda hanya dapat melihat preview buku.
+                                Untuk membaca versi lengkap PDF,
+                                silakan lakukan reservasi terlebih dahulu.
+                            </p>
+
+                            <div class="bg-white rounded-xl p-6 shadow mb-6">
+
+                                <h3 class="font-bold text-lg mb-2">
+                                    Preview Buku
+                                </h3>
+
+                                <p class="text-slate-500">
+                                    Halaman 1 - 3 tersedia untuk preview.
+                                </p>
+
+                            </div>
+
+                            <a href="{{ route('reservations.anggota') }}"
+                                class="inline-block bg-blue-950 text-white px-6 py-3 rounded-lg hover:bg-blue-900">
+                                Reservasi Buku
+                            </a>
+
+                            <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+
+                                <div class="font-semibold text-yellow-700">
+                                    ⚠ Informasi Akses
+                                </div>
+
+                                <p class="mt-2 text-sm text-slate-600">
+                                    Reservasi harus disetujui pustakawan
+                                    sebelum PDF dapat dibuka penuh.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    {{-- FULL PDF --}}
+                    <div>
+                        <div class="mb-4">
+                            <h2 class="text-xl font-bold text-green-700">
+                                ✓ Akses Full PDF Aktif
+                            </h2>
+                            <p class="text-slate-500">
+                                Anda telah mendapatkan akses untuk membaca buku digital ini.
+                            </p>
+                        </div>
+
+                        <iframe src="{{ asset('storage/' . $digitalBook->file_path) }}" width="100%" height="700"
+                            class="rounded-xl border">
+                        </iframe>
+                    </div>
+                @endif
             </div>
-        </div>
     </main>
-
 </body>
 
 </html>

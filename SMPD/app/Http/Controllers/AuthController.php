@@ -28,37 +28,27 @@ class AuthController extends BaseController
 
     public function loginPost(Request $request)
     {
-        // Ambil role dari form login
-        $role = $request->input('role', 'pengunjung');
+        $role = $request->input('role', 'anggota');
 
-        // Simpan role ke session
         Session::put('role', $role);
 
-        /*
-        |--------------------------------------------------------------------------
-        | REDIRECT BERDASARKAN ROLE
-        |--------------------------------------------------------------------------
-        */
+        $email = $request->email;
+        $username = explode('@', $email)[0];
 
-        // ADMIN
+        Session::put(
+            'username',
+            ucfirst($username)
+        );
+
         if ($role == 'admin') {
-
-            return redirect()
-                ->route('admin.dashboard');
-
+            return redirect()->route('admin.dashboard');
         }
 
-        // PUSTAKAWAN
         if ($role == 'pustakawan') {
-
-            return redirect()
-                ->route('pustakawan.dashboard');
-
+            return redirect()->route('pustakawan.dashboard');
         }
 
-        // PENGUNJUNG
-        return redirect()
-            ->route('pengunjung.dashboard');
+        return redirect()->route('anggota.dashboard');
     }
 
 

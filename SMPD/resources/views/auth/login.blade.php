@@ -19,7 +19,7 @@
         </h1>
 
         <p class="text-center text-slate-500 mb-8">
-            Masuk sebagai pengguna, pustakawan, atau admin
+            Masuk sebagai anggota, pustakawan, atau admin
         </p>
 
         {{-- Alert --}}
@@ -68,8 +68,8 @@
                 <select name="role"
                     class="w-full border rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
 
-                    <option value="pengunjung">
-                        Pengguna / Anggota
+                    <option value="anggota">
+                        anggota / Anggota
                     </option>
 
                     <option value="pustakawan">

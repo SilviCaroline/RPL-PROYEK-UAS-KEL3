@@ -23,7 +23,7 @@
                     </h1>
 
                     <p class="text-slate-500">
-                        Monitoring aktivitas sistem, server, dan pengguna.
+                        Monitoring aktivitas sistem, server, dan anggota.
                     </p>
                 </div>
 
@@ -123,7 +123,7 @@
 
                 <p class="text-slate-600">
                     Monitoring sistem digunakan untuk memantau performa aplikasi,
-                    aktivitas login, penggunaan server, dan kestabilan sistem
+                    aktivitas login, anggotaan server, dan kestabilan sistem
                     perpustakaan digital.
                 </p>
 
