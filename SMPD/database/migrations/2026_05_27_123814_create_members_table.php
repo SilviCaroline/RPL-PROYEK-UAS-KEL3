@@ -10,43 +10,38 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('members', function (Blueprint $table) {
+    {
+        Schema::create('members', function (Blueprint $table) {
 
-    $table->id();
+            $table->id();
 
-    $table->string('member_code')->unique();
+            $table->foreignId('role_id')
+                ->constrained('roles')
+                ->cascadeOnDelete();
 
-    $table->string('name');
+            $table->string('member_code')->unique();
 
-    $table->string('email')->unique();
+            $table->string('name');
 
-    $table->string('password');
+            $table->string('email')->unique();
 
-    $table->enum(
-        'role',
-        [
-            'anggota',
-            'pustakawan',
-            'admin'
-        ]
-    )->default('anggota');
+            $table->string('password');
 
-    $table->string('phone')->nullable();
+            $table->string('phone')->nullable();
 
-    $table->text('address')->nullable();
+            $table->text('address')->nullable();
 
-    $table->enum(
-        'status',
-        [
-            'Aktif',
-            'Nonaktif'
-        ]
-    )->default('Aktif');
+            $table->enum(
+                'status',
+                [
+                    'Aktif',
+                    'Nonaktif'
+                ]
+            )->default('Aktif');
 
-    $table->timestamps();
-});
-}
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

@@ -6,18 +6,38 @@ use Illuminate\Database\Eloquent\Model;
 
 class Member extends Model
 {
-     protected $fillable = [
+   protected $fillable = [
 
-        'member_code',
-        'name',
-        'email',
-        'password',
-        'role',
-        'phone',
-        'address',
-        'status',
-    ];
-     protected $hidden = [
-        'password'
-     ];
+      'role_id',
+
+      'member_code',
+
+      'name',
+
+      'email',
+
+      'password',
+
+      'phone',
+
+      'address',
+
+      'status',
+   ];
+
+   protected $hidden = [
+
+      'password'
+   ];
+
+   // ======================
+   // ROLE
+   // ======================
+
+   public function role()
+   {
+      return $this->belongsTo(
+         Role::class
+      );
+   }
 }

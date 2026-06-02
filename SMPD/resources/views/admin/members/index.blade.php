@@ -65,12 +65,11 @@
                     </form>
 
                     {{-- Tambah --}}
-                    <a href="{{ route('members.create') }}"
-                        class="bg-blue-950 hover:bg-blue-900 text-white px-5 py-3 rounded-xl">
-
-                        + Tambah Anggota
-
-                    </a>
+                    @if (hasPermission('users', 'create'))
+                        <a href="{{ route('members.create') }}">
+                            + Tambah Anggota
+                        </a>
+                    @endif
 
                 </div>
 
@@ -183,53 +182,38 @@
                                             </span>
                                         @else
                                             <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs">
-
                                                 Nonaktif
-
                                             </span>
                                         @endif
-
                                     </td>
-
                                     <td class="p-4">
-
                                         <div class="flex justify-center flex-wrap gap-2">
-
                                             {{-- Kartu --}}
                                             <a href="{{ route('members.card', $member->id) }}"
                                                 class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm">
-
                                                 Kartu
-
                                             </a>
 
                                             {{-- Edit --}}
-                                            <a href="{{ route('members.edit', $member->id) }}"
-                                                class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-2 rounded-lg text-sm">
-
-                                                Edit
-
-                                            </a>
+                                            @if (hasPermission('users', 'edit'))
+                                                <a href="{{ route('members.edit', $member->id) }}">
+                                                    Edit
+                                                </a>
+                                            @endif
 
                                             {{-- Hapus --}}
-                                            <form action="{{ route('members.destroy', $member->id) }}" method="POST">
-
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button type="submit" onclick="return confirm('Hapus anggota ini?')"
-                                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm">
-
-                                                    Hapus
-
-                                                </button>
-
-                                            </form>
-
+                                            @if (hasPermission('users', 'delete'))
+                                                <form action="{{ route('members.destroy', $member->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button>
+                                                        Hapus
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
-
                                     </td>
-
                                 </tr>
 
                             @empty

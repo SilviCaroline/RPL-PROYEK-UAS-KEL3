@@ -2,55 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Loan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller as BaseController;
 
 class StatisticController extends BaseController
 {
     public function index()
     {
-        $popularBooks = [
+        $totalLoans = Loan::count();
 
-            [
-                'title' => 'Laskar Pelangi',
-                'borrowed' => 45,
-            ],
+        $monthlyLoans = Loan::whereMonth(
+            'loan_date',
+            now()->month
+        )->count();
 
-            [
-                'title' => 'Atomic Habits',
-                'borrowed' => 38,
-            ],
+        $popularBooks = Loan::select(
+            'book_id',
+            DB::raw('COUNT(*) as total')
+        )
+            ->with('book')
+            ->groupBy('book_id')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get();
 
-            [
-                'title' => 'Bumi Manusia',
-                'borrowed' => 31,
-            ],
+        $activeMembers = Loan::select(
+            'member_id',
+            DB::raw('COUNT(*) as total')
+        )
+            ->with('member')
+            ->groupBy('member_id')
+            ->orderByDesc('total')
+            ->take(5)
+            ->get();
 
-        ];
+        $topBook =
+            $popularBooks->first();
 
-        $activeMembers = [
-
-            [
-                'name' => 'Diana Putri',
-                'total' => 18,
-            ],
-
-            [
-                'name' => 'Andi Saputra',
-                'total' => 15,
-            ],
-
-            [
-                'name' => 'Siti Aminah',
-                'total' => 12,
-            ],
-
-        ];
+        $topMember =
+            $activeMembers->first();
 
         return view(
             'admin.statistics.index',
             compact(
+                'totalLoans',
+                'monthlyLoans',
                 'popularBooks',
-                'activeMembers'
+                'activeMembers',
+                'topBook',
+                'topMember'
             )
         );
     }

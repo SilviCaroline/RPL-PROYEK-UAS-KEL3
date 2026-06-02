@@ -16,10 +16,12 @@ class LoginController extends BaseController
 
     public function authenticate(Request $request)
     {
-        $member = Member::where(
-            'email',
-            $request->email
-        )->first();
+        $member = Member::with('role')
+            ->where(
+                'email',
+                $request->email
+            )
+            ->first();
 
         if (
             !$member ||
@@ -37,32 +39,51 @@ class LoginController extends BaseController
         }
 
         session([
+
             'member_id' =>
             $member->id,
 
             'username' =>
             $member->name,
 
+            'role_id' =>
+            $member->role_id,
+
             'role' =>
-            $member->role,
+            $member->role->name,
+
         ]);
 
-        switch ($member->role) {
+        switch ($member->role->name) {
 
             case 'admin':
 
                 return redirect()
-                    ->route('admin.dashboard');
+                    ->route(
+                        'admin.dashboard'
+                    );
 
             case 'pustakawan':
 
                 return redirect()
-                    ->route('pustakawan.dashboard');
+                    ->route(
+                        'pustakawan.dashboard'
+                    );
 
             default:
 
                 return redirect()
-                    ->route('anggota.dashboard');
+                    ->route(
+                        'anggota.dashboard'
+                    );
         }
+    }
+
+    public function logout()
+    {
+        session()->flush();
+
+        return redirect()
+            ->route('login');
     }
 }

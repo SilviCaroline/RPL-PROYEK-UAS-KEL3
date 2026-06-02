@@ -88,16 +88,17 @@ class LibrarySeeder extends Seeder
 
         DB::table('members')->insert([
 
+            'role_id' => 1,
+
             'member_code' => 'ADM001',
 
             'name' => 'Administrator',
 
             'email' => 'admin@smpd.com',
 
-            'password' =>
-            Hash::make('admin123'),
-
-            'role' => 'admin',
+            'password' => Hash::make(
+                'admin123'
+            ),
 
             'phone' => '081111111111',
 
@@ -116,16 +117,17 @@ class LibrarySeeder extends Seeder
 
         DB::table('members')->insert([
 
+            'role_id' => 2,
+
             'member_code' => 'PST001',
 
             'name' => 'Pustakawan',
 
             'email' => 'pustakawan@smpd.com',
 
-            'password' =>
-            Hash::make('pustakawan123'),
-
-            'role' => 'pustakawan',
+            'password' => Hash::make(
+                'pustakawan123'
+            ),
 
             'phone' => '082222222222',
 
@@ -146,6 +148,8 @@ class LibrarySeeder extends Seeder
 
             DB::table('members')->insert([
 
+                'role_id' => 3,
+
                 'member_code' =>
                 'MBR' .
                     str_pad(
@@ -159,15 +163,10 @@ class LibrarySeeder extends Seeder
                 'Anggota ' . $i,
 
                 'email' =>
-                'anggota' .
-                    $i .
-                    '@email.com',
+                'anggota' . $i . '@email.com',
 
                 'password' =>
                 Hash::make('password123'),
-
-                'role' =>
-                'anggota',
 
                 'phone' =>
                 '08' .

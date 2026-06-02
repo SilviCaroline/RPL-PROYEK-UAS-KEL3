@@ -29,19 +29,21 @@
 
                 <div class="flex gap-3">
 
-                    <a href="{{ route('reports.export.pdf') }}"
-                        class="bg-red-600 text-white px-5 py-3 rounded-lg hover:bg-red-700">
+                    @if (hasPermission('reports', 'print'))
+                        <a href="{{ route('reports.export.pdf') }}"
+                            class="bg-red-600 text-white px-5 py-3 rounded-lg hover:bg-red-700">
+                            Export PDF
+                        </a>
+                    @endif
 
-                        Export PDF
+                    @if (hasPermission('reports', 'export'))
+                        <a href="{{ route('reports.export.excel') }}"
+                            class="bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700">
 
-                    </a>
+                            Export Excel
 
-                    <a href="{{ route('reports.export.excel') }}"
-                        class="bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700">
-
-                        Export Excel
-
-                    </a>
+                        </a>
+                    @endif
 
                 </div>
 

@@ -13,16 +13,24 @@ return Application::configure(
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
+
     ->withMiddleware(function (
         Middleware $middleware
     ): void {
 
-        //
+        $middleware->alias([
+
+            'permission' =>
+            \App\Http\Middleware\CheckPermission::class,
+
+        ]);
     })
+
     ->withExceptions(function (
         Exceptions $exceptions
     ): void {
 
         //
     })
+
     ->create();

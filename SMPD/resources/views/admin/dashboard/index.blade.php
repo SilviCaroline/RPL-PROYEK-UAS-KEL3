@@ -31,28 +31,29 @@
 
                 <div class="bg-white p-6 rounded-2xl shadow">
                     <p class="text-slate-500">Total Buku</p>
-                    <h2 class="text-3xl font-bold text-blue-950">200</h2>
+                    <h2 class="text-3xl font-bold text-blue-950">{{ $totalBooks }}</h2>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl shadow">
                     <p class="text-slate-500">Total Anggota</p>
-                    <h2 class="text-3xl font-bold text-blue-950">50</h2>
+                    <h2 class="text-3xl font-bold text-blue-950">{{ $totalMembers }}</h2>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl shadow">
                     <p class="text-slate-500">Total Pustakawan</p>
-                    <h2 class="text-3xl font-bold text-orange-500">5</h2>
+                    <h2 class="text-3xl font-bold text-orange-500">{{ $totalLibrarians }}</h2>
                 </div>
 
                 <div class="bg-white p-6 rounded-2xl shadow">
                     <p class="text-slate-500">Peminjaman Hari Ini</p>
-                    <h2 class="text-3xl font-bold text-green-600">18</h2>
+                    <h2 class="text-3xl font-bold text-green-600">{{ $todayLoans }}</h2>
                 </div>
 
             </section>
 
             <section class="grid lg:grid-cols-2 gap-8">
 
+                {{-- Statistik Sistem --}}
                 <div class="bg-white p-6 rounded-2xl shadow">
 
                     <h2 class="text-xl font-bold text-blue-950 mb-5">
@@ -64,24 +65,27 @@
                         <div>
                             <div class="flex justify-between mb-2">
                                 <span>Buku Dipinjam</span>
-                                <span>75%</span>
+                                <span>{{ $borrowPercent }}%</span>
                             </div>
 
                             <div class="w-full bg-slate-200 h-4 rounded-full">
-                                <div class="bg-blue-950 h-4 rounded-full" style="width:75%">
-                                </div>
+
+                                <div class="bg-blue-950 h-4 rounded-full" style="width: {{ $borrowPercent }}%"></div>
+
                             </div>
                         </div>
 
                         <div>
                             <div class="flex justify-between mb-2">
                                 <span>Reservasi</span>
-                                <span>45%</span>
+                                <span>{{ $reservationPercent }}%</span>
                             </div>
 
                             <div class="w-full bg-slate-200 h-4 rounded-full">
-                                <div class="bg-orange-500 h-4 rounded-full" style="width:45%">
+
+                                <div class="bg-orange-500 h-4 rounded-full" style="width: {{ $reservationPercent }}%">
                                 </div>
+
                             </div>
                         </div>
 
@@ -89,6 +93,7 @@
 
                 </div>
 
+                {{-- Aktivitas Sistem --}}
                 <div class="bg-white p-6 rounded-2xl shadow">
 
                     <h2 class="text-xl font-bold text-blue-950 mb-5">
@@ -97,16 +102,8 @@
 
                     <div class="space-y-4">
 
-                        <div class="border-b pb-3">
-                            12 buku baru ditambahkan.
-                        </div>
-
-                        <div class="border-b pb-3">
-                            5 anggota baru mendaftar.
-                        </div>
-
-                        <div class="border-b pb-3">
-                            Export laporan bulanan berhasil.
+                        <div class="border-b pb-3 text-slate-500">
+                            Belum ada aktivitas sistem.
                         </div>
 
                     </div>

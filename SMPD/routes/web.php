@@ -20,6 +20,8 @@ use App\Http\Controllers\DashboardAnggotaController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\DashboardAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,10 +41,10 @@ Route::get(
 |--------------------------------------------------------------------------
 */
 
-Route::get(
-    '/login',
-    [AuthController::class, 'login']
-)->name('login');
+// Route::get(
+//     '/login',
+//     [AuthController::class, 'login']
+// )->name('login');
 
 Route::post(
     '/login',
@@ -74,7 +76,8 @@ Route::get(
     [RegisterController::class, 'create']
 )->name('register');
 
-Route::post('/register',
+Route::post(
+    '/register',
     [RegisterController::class, 'store']
 )->name('register.store');
 
@@ -88,25 +91,26 @@ Route::post('/register',
 // ADMIN
 Route::get(
     '/admin/dashboard',
-    function () {
-        return view('admin.dashboard.index');
-    }
-)->name('admin.dashboard');
-
+    [DashboardAdminController::class, 'index']
+)
+    ->middleware('permission:dashboard,view')
+    ->name('admin.dashboard');
 
 // PUSTAKAWAN
 Route::get(
     '/pustakawan/dashboard',
     [DashboardPustakawanController::class, 'index']
-)->name('pustakawan.dashboard');
-
+)
+    ->middleware('permission:dashboard,view')
+    ->name('pustakawan.dashboard');
 
 // ANGGOTA
 Route::get(
     '/anggota/dashboard',
     [DashboardAnggotaController::class, 'index']
-)->name('anggota.dashboard');
-
+)
+    ->middleware('permission:dashboard,view')
+    ->name('anggota.dashboard');
 /*
 |--------------------------------------------------------------------------
 | OPAC PUBLIC
@@ -131,52 +135,154 @@ Route::get(
 */
 
 // BOOKS
-Route::resource(
+Route::get(
     '/books',
-    BookController::class
-);
+    [BookController::class, 'index']
+)
+    ->middleware('permission:books,view')
+    ->name('books.index');
+
+Route::get(
+    '/books/create',
+    [BookController::class, 'create']
+)
+    ->middleware('permission:books,create')
+    ->name('books.create');
+
+Route::post(
+    '/books',
+    [BookController::class, 'store']
+)
+    ->middleware('permission:books,create')
+    ->name('books.store');
+
+Route::get(
+    '/books/{book}',
+    [BookController::class, 'show']
+)
+    ->middleware('permission:books,view')
+    ->name('books.show');
+
+Route::get(
+    '/books/{book}/edit',
+    [BookController::class, 'edit']
+)
+    ->middleware('permission:books,edit')
+    ->name('books.edit');
+
+Route::put(
+    '/books/{book}',
+    [BookController::class, 'update']
+)
+    ->middleware('permission:books,edit')
+    ->name('books.update');
+
+Route::delete(
+    '/books/{book}',
+    [BookController::class, 'destroy']
+)
+    ->middleware('permission:books,delete')
+    ->name('books.destroy');
 
 // MEMBERS
-Route::resource(
+// MEMBERS
+
+Route::get(
     '/members',
-    MemberController::class
-);
+    [MemberController::class, 'index']
+)
+    ->middleware('permission:users,view')
+    ->name('members.index');
+
+Route::get(
+    '/members/create',
+    [MemberController::class, 'create']
+)
+    ->middleware('permission:users,create')
+    ->name('members.create');
+
+Route::post(
+    '/members',
+    [MemberController::class, 'store']
+)
+    ->middleware('permission:users,create')
+    ->name('members.store');
+
+Route::get(
+    '/members/{member}',
+    [MemberController::class, 'show']
+)
+    ->middleware('permission:users,view')
+    ->name('members.show');
+
+Route::get(
+    '/members/{member}/edit',
+    [MemberController::class, 'edit']
+)
+    ->middleware('permission:users,edit')
+    ->name('members.edit');
+
+Route::put(
+    '/members/{member}',
+    [MemberController::class, 'update']
+)
+    ->middleware('permission:users,edit')
+    ->name('members.update');
+
+Route::delete(
+    '/members/{member}',
+    [MemberController::class, 'destroy']
+)
+    ->middleware('permission:users,delete')
+    ->name('members.destroy');
 
 // MEMBER CARD
 Route::get(
-    '/members/{id}/card',
+    '/members/{member}/card',
     [MemberController::class, 'card']
-)->name('members.card');
+)
+    ->middleware('permission:users,print')
+    ->name('members.card');
 
 // REPORTS
 Route::get(
     '/reports',
     [ReportController::class, 'index']
-)->name('reports.index');
+)
+    ->middleware('permission:reports,view')
+    ->name('reports.index');
 
 // EXPORT PDF
 Route::get(
     '/reports/export/pdf',
     [ReportController::class, 'exportPdf']
-)->name('reports.export.pdf');
+)
+    ->middleware('permission:reports,print')
+    ->name('reports.export.pdf');
 
 // EXPORT EXCEL
 Route::get(
     '/reports/export/excel',
     [ReportController::class, 'exportExcel']
-)->name('reports.export.excel');
+)
+    ->middleware('permission:reports,export')
+    ->name('reports.export.excel');
 
 //STATISTICS
 Route::get(
     '/statistics',
     [StatisticController::class, 'index']
-)->name('statistics.index');
+)
+    ->middleware('permission:reports,view')
+    ->name('statistics.index');
 
 //MANAJEMEN HAK AKSES
 Route::get(
     '/users',
     [UserController::class, 'index']
-)->name('users.index');
+)
+    ->middleware('permission:users,view')
+    ->name('users.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -188,51 +294,69 @@ Route::get(
 Route::get(
     '/loans',
     [LoanController::class, 'index']
-)->name('loans.index');
+)
+    ->middleware('permission:loans,view')
+    ->name('loans.index');
 
 Route::get(
     '/loans/create',
     [LoanController::class, 'create']
-)->name('loans.create');
+)
+    ->middleware('permission:loans,create')
+    ->name('loans.create');
 
 Route::post(
     '/loans/store',
     [LoanController::class, 'store']
-)->name('loans.store');
+)
+    ->middleware('permission:loans,create')
+    ->name('loans.store');
 
 
 // RETURNS
 Route::get(
     '/returns',
     [ReturnController::class, 'index']
-)->name('returns.index');
+)
+    ->middleware('permission:returns,view')
+    ->name('returns.index');
 
 Route::post(
     '/returns/process',
     [ReturnController::class, 'process']
-)->name('returns.process');
+)
+    ->middleware('permission:returns,create')
+    ->name('returns.process');
 
 
 // RESERVASI PUSTAKAWAN
 Route::get(
     '/reservations',
     [ReservationController::class, 'index']
-)->name('reservations.pustakawan');
+)
+    ->middleware('permission:reservations,view')
+    ->name('reservations.pustakawan');
 
 Route::post(
     '/reservations/store',
     [ReservationController::class, 'store']
-)->name('reservations.store');
+)
+    ->middleware('permission:reservations,create')
+    ->name('reservations.store');
 
 Route::put(
     '/reservations/{reservation}/approve',
     [ReservationController::class, 'approve']
-)->name('reservations.approve');
+)
+    ->middleware('permission:reservations,edit')
+    ->name('reservations.approve');
 
 Route::put(
     '/reservations/{reservation}/cancel',
     [ReservationController::class, 'cancel']
-)->name('reservations.cancel');
+)
+    ->middleware('permission:reservations,edit')
+    ->name('reservations.cancel');
 
 Route::get(
     '/pustakawan/reservations',
@@ -275,3 +399,18 @@ Route::get(
     '/notifications',
     [NotificationController::class, 'index']
 )->name('notifications.index');
+
+// PERMISSION
+Route::get(
+    '/admin/permissions',
+    [PermissionController::class, 'index']
+)
+    ->middleware('permission:users,edit')
+    ->name('permissions.index');
+
+Route::post(
+    '/admin/permissions/update',
+    [PermissionController::class, 'update']
+)
+    ->middleware('permission:users,edit')
+    ->name('permissions.update');

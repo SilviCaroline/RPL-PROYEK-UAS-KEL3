@@ -2,27 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use Illuminate\Routing\Controller as BaseController;
 
 class UserController extends BaseController
 {
     public function index()
     {
-        $roles = [
-            [
-                'nama_role' => 'Admin',
-                'deskripsi' => 'Akses penuh ke semua fitur sistem'
-            ],
-            [
-                'nama_role' => 'Pustakawan',
-                'deskripsi' => 'Mengelola buku, anggota dan transaksi'
-            ],
-            [
-                'nama_role' => 'anggota',
-                'deskripsi' => 'Melihat laporan dan monitoring'
-            ]
-        ];
+        $roles = Role::all();
 
-        return view('admin.users.index', compact('roles'));
+        return view(
+            'admin.users.index',
+            compact('roles')
+        );
     }
 }

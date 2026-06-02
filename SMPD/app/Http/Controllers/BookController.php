@@ -37,6 +37,13 @@ class BookController extends BaseControllers
     }
     public function create()
     {
+        abort_unless(
+            hasPermission(
+                'books',
+                'create'
+            ),
+            403
+        );
         $categories = Category::all();
         return view('admin.books.create', compact('categories'));
     }
@@ -58,13 +65,6 @@ class BookController extends BaseControllers
             'isbn' => $request->isbn,
             'kode_buku' => $request->kode_buku,
             'stock' => $request->stock,
-            'title'       => $request->title,
-            'author'      => $request->author,
-            'publisher'   => $request->publisher,
-            'year'        => $request->year,
-            'isbn'        => $request->isbn,
-            'kode_buku'     => $request->kode_buku,
-            'stock'       => $request->stock,
             'description' => $request->description,
         ]);
         return redirect()->route('books.index')->with('success', 'Data buku berhasil ditambahkan.');
@@ -88,7 +88,7 @@ class BookController extends BaseControllers
             'stock'       => 'required|integer|min:0',
             'kode_buku'     => 'required|string|unique:books,kode_buku,' . $book->id,
         ]);
-        $book->update([
+        Book::create([
             'category_id' => $request->category_id,
             'title' => $request->title,
             'author' => $request->author,
@@ -97,13 +97,6 @@ class BookController extends BaseControllers
             'isbn' => $request->isbn,
             'kode_buku' => $request->kode_buku,
             'stock' => $request->stock,
-            'title'       => $request->title,
-            'author'      => $request->author,
-            'publisher'   => $request->publisher,
-            'year'        => $request->year,
-            'isbn'        => $request->isbn,
-            'kode_buku'     => $request->kode_buku,
-            'stock'       => $request->stock,
             'description' => $request->description,
         ]);
         return redirect()->route('books.index')->with('success', 'Data buku berhasil diperbarui.');

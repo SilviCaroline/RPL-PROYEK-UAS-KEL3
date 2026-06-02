@@ -28,23 +28,45 @@
 
             <div class="grid md:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white rounded-2xl shadow p-6">
-                    <p class="text-slate-500">Total Peminjaman</p>
-                    <h2 class="text-3xl font-bold text-blue-950">320</h2>
+                    <p class="text-slate-500">
+                        Total Peminjaman
+                    </p>
+                    <h2 class="text-3xl font-bold text-blue-950 mt-2">
+                        {{ $totalLoans }}
+                    </h2>
+                </div>
+                <div class="bg-white rounded-2xl shadow p-6">
+
+                    <p class="text-slate-500">
+                        Buku Terpopuler
+                    </p>
+
+                    <h2 class="text-lg font-bold text-blue-950 mt-2 line-clamp-2">
+                        {{ $topBook?->book?->title ?? '-' }}
+                    </h2>
+
+                </div>
+                <div class="bg-white rounded-2xl shadow p-6">
+
+                    <p class="text-slate-500">
+                        Anggota Teraktif
+                    </p>
+
+                    <h2 class="text-lg font-bold text-blue-950 mt-2 line-clamp-2">
+                        {{ $topMember?->member?->name ?? '-' }}
+                    </h2>
+
                 </div>
 
                 <div class="bg-white rounded-2xl shadow p-6">
-                    <p class="text-slate-500">Buku Terpopuler</p>
-                    <h2 class="text-2xl font-bold text-blue-950">Laskar Pelangi</h2>
-                </div>
 
-                <div class="bg-white rounded-2xl shadow p-6">
-                    <p class="text-slate-500">Anggota Teraktif</p>
-                    <h2 class="text-2xl font-bold text-blue-950">Diana Putri</h2>
-                </div>
+                    <p class="text-slate-500">
+                        Bulan Ini
+                    </p>
 
-                <div class="bg-white rounded-2xl shadow p-6">
-                    <p class="text-slate-500">Bulan Ini</p>
-                    <h2 class="text-3xl font-bold text-blue-950">120</h2>
+                    <h2 class="text-3xl font-bold text-blue-950 mt-2">
+                        {{ $monthlyLoans }}
+                    </h2>
                 </div>
             </div>
 
@@ -56,13 +78,13 @@
                         @foreach ($popularBooks as $book)
                             <div>
                                 <div class="flex justify-between mb-2">
-                                    <span class="font-semibold">{{ $book['title'] }}</span>
-                                    <span>{{ $book['borrowed'] }} kali</span>
+                                    <span class="font-semibold">{{ $book->book?->title ?? '-' }}</span>
+                                    <span> {{ $book->total }} kali</span>
                                 </div>
 
                                 <div class="w-full bg-slate-200 rounded-full h-3">
                                     <div class="bg-blue-950 h-3 rounded-full"
-                                        style="width: {{ $book['borrowed'] * 2 }}%">
+                                        style="width: {{ min($book->total * 5, 100) }}%">
                                     </div>
                                 </div>
                             </div>
@@ -77,13 +99,15 @@
                         @foreach ($activeMembers as $member)
                             <div>
                                 <div class="flex justify-between mb-2">
-                                    <span class="font-semibold">{{ $member['name'] }}</span>
-                                    <span>{{ $member['total'] }} pinjaman</span>
+                                    <span class="font-semibold">
+                                        {{ $member->member?->name ?? '-' }}
+                                    </span>
+                                    <span>{{ $member->total }} pinjaman</span>
                                 </div>
 
                                 <div class="w-full bg-slate-200 rounded-full h-3">
                                     <div class="bg-green-600 h-3 rounded-full"
-                                        style="width: {{ $member['total'] * 5 }}%">
+                                        style="width: {{ min($member->total * 5, 100) }}%">
                                     </div>
                                 </div>
                             </div>

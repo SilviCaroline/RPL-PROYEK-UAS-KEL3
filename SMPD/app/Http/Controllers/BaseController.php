@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
-use Illuminate\Routing\Controller as BaseControllerAlias;   
-class BaseController extends BaseControllerAlias
+
+use Illuminate\Routing\Controller as LaravelBaseController;
+
+class BaseController extends LaravelBaseController
 {
     protected function successRedirect($route, $message)
     {
