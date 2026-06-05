@@ -22,6 +22,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DashboardAdminController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -414,3 +415,19 @@ Route::post(
 )
     ->middleware('permission:users,edit')
     ->name('permissions.update');
+
+//PROFIL//
+Route::get(
+    '/profile',
+    [ProfileController::class, 'index']
+)->name('profile.index');
+
+Route::get(
+    '/profile/edit',
+    [ProfileController::class, 'edit']
+)->name('profile.edit');
+
+Route::put(
+    '/profile/update',
+    [ProfileController::class, 'update']
+)->name('profile.update');

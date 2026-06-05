@@ -27,6 +27,7 @@
                 <div class="flex justify-between items-center">
 
                     <div>
+
                         <h1 class="text-2xl font-bold text-blue-950">
                             SMPD
                         </h1>
@@ -34,26 +35,89 @@
                         <p class="text-sm text-slate-500">
                             Sistem Manajemen Perpustakaan Daerah
                         </p>
+
                     </div>
 
-                    <div class="flex items-center gap-4">
+                    <div class="relative">
 
-                        <div class="text-right">
+                        <button id="profileButton" onclick="toggleProfileMenu()"
+                            class="flex items-center gap-4 hover:bg-slate-100 px-4 py-2 rounded-xl transition">
 
-                            <p class="text-xs text-slate-500">
-                                Login sebagai
-                            </p>
+                            <div
+                                class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2 shadow-sm">
 
-                            <p class="font-semibold text-blue-950 capitalize">
-                                {{ session('role') }}
-                            </p>
+                                {{-- Info User --}}
+                                <div>
 
-                        </div>
+                                    <p class="text-xs text-slate-500">
+                                        Login sebagai
+                                    </p>
 
-                        <div
-                            class="w-11 h-11 rounded-full bg-blue-950 text-white flex items-center justify-center font-bold">
+                                    <p class="font-semibold text-blue-950 leading-tight">
+                                        {{ session('username') }}
+                                    </p>
 
-                            {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
+                                    <span
+                                        class="inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded-full
+                                        @if (session('role') == 'admin') bg-red-100 text-red-700
+                                        @elseif(session('role') == 'pustakawan')
+                                            bg-orange-100 text-orange-700
+                                        @else
+                                            bg-green-100 text-green-700 @endif">
+
+                                        {{ ucfirst(session('role')) }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="w-11 h-11 rounded-full bg-gradient-to-r from-blue-900 to-blue-600 text-white flex items-center justify-center font-bold shadow">
+
+                                {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
+
+                            </div>
+
+                        </button>
+
+                        <div id="profileMenu"
+                            class="hidden absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border overflow-hidden z-50">
+
+                            <div class="p-5 bg-slate-50 border-b">
+
+                                <div class="flex items-center gap-3">
+
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-blue-950 text-white flex items-center justify-center font-bold">
+
+                                        {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
+
+                                    </div>
+
+                                    <div>
+
+                                        <p class="font-bold text-blue-950">
+                                            {{ session('username') }}
+                                        </p>
+
+                                        <p class="text-sm text-slate-500 capitalize">
+                                            {{ session('role') }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <a href="{{ route('profile.index') }}"
+                                class="block px-5 py-3 hover:bg-slate-100 transition">
+
+                                👤 Profil Saya
+
+                            </a>
 
                         </div>
 
@@ -281,6 +345,29 @@
                         }
                     }
                 }
+            }
+        });
+
+
+        function toggleProfileMenu() {
+            document
+                .getElementById('profileMenu')
+                .classList
+                .toggle('hidden');
+        }
+
+        document.addEventListener('click', function(event) {
+            const menu =
+                document.getElementById('profileMenu');
+
+            const button =
+                document.getElementById('profileButton');
+
+            if (
+                !menu.contains(event.target) &&
+                !button.contains(event.target)
+            ) {
+                menu.classList.add('hidden');
             }
         });
     </script>

@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Models\Member;
 use Illuminate\Routing\Controller as BaseController;
 
 class UserController extends BaseController
 {
     public function index()
     {
-        $roles = Role::all();
+        $users = Member::with('role')
+            ->whereHas('role', function ($query) {
+                $query->whereIn('name', ['admin', 'pustakawan']);
+            })
+            ->orderBy('name')
+            ->get();
 
-        return view(
-            'admin.users.index',
-            compact('roles')
-        );
+        return view('admin.users.index', compact('users'));
     }
 }

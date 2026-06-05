@@ -3,67 +3,73 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\Member;
 use App\Models\Loan;
+use App\Models\Member;
 use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Routing\Controller as BaseController;
 
 class DashboardAdminController extends BaseController
 {
     public function index()
     {
+        // Statistik Utama
         $totalBooks = Book::count();
 
-        $totalMembers =
-            Member::whereHas(
-                'role',
-                fn($q) =>
-                $q->where(
-                    'name',
-                    'anggota'
-                )
+        $totalMembers = Member::where('role_id', 3)->count();
+
+        $totalLibrarians = Member::where('role_id', 2)->count();
+
+        $todayLoans = Loan::whereDate(
+            'created_at',
+            Carbon::today()
+        )->count();
+
+        $activeUsers = Member::where(
+            'status',
+            'Aktif'
+        )->count();
+
+        // Progress Bar
+        $totalLoans = Loan::count();
+
+        $borrowPercent = $totalBooks > 0
+            ? round(($totalLoans / $totalBooks) * 100)
+            : 0;
+
+        $borrowPercent = min($borrowPercent, 100);
+
+        $reservationPercent = $totalMembers > 0
+            ? round(
+                (Reservation::count() / $totalMembers) * 100
+            )
+            : 0;
+
+        $reservationPercent = min(
+            $reservationPercent,
+            100
+        );
+
+        // Aktivitas Terbaru
+        $activities = Loan::latest()
+            ->take(10)
+            ->get();
+
+        // Grafik 7 Hari Terakhir
+        $chartLabels = [];
+        $chartData = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+
+            $date = Carbon::now()->subDays($i);
+
+            $chartLabels[] = $date->format('d M');
+
+            $chartData[] = Loan::whereDate(
+                'created_at',
+                $date->toDateString()
             )->count();
-
-        $totalLibrarians =
-            Member::whereHas(
-                'role',
-                fn($q) =>
-                $q->where(
-                    'name',
-                    'pustakawan'
-                )
-            )->count();
-
-        $todayLoans =
-            Loan::whereDate(
-                'loan_date',
-                today()
-            )->count();
-
-        $borrowedBooks =
-            Loan::where(
-                'status',
-                'Dipinjam'
-            )->count();
-
-        $totalReservations =
-            Reservation::count();
-
-        // =====================
-        // PERSENTASE DASHBOARD
-        // =====================
-
-        $borrowPercent =
-            round(
-                ($borrowedBooks / max($totalBooks, 1))
-                    * 100
-            );
-
-        $reservationPercent =
-            round(
-                ($totalReservations / max($totalBooks, 1))
-                    * 100
-            );
+        }
 
         return view(
             'admin.dashboard.index',
@@ -72,10 +78,12 @@ class DashboardAdminController extends BaseController
                 'totalMembers',
                 'totalLibrarians',
                 'todayLoans',
-                'borrowedBooks',
-                'totalReservations',
+                'activeUsers',
                 'borrowPercent',
-                'reservationPercent'
+                'reservationPercent',
+                'activities',
+                'chartLabels',
+                'chartData'
             )
         );
     }

@@ -46,8 +46,12 @@
 
                 <div class="bg-white p-6 rounded-2xl shadow">
                     <p class="text-slate-500">Peminjaman Hari Ini</p>
-                    <h2 class="text-3xl font-bold text-green-600">{{ $todayLoans }}</h2>
+                    <div class="bg-white p-6 rounded-2xl shadow">
+                        <h2 class="text-3xl font-bold text-green-600">{{ $todayLoans }}</h2>
+                    </div>
                 </div>
+
+
 
             </section>
 
@@ -93,6 +97,24 @@
 
                 </div>
 
+                <section class="mt-8">
+
+                    <div class="bg-white p-6 rounded-2xl shadow">
+
+                        <h2 class="text-xl font-bold text-blue-950 mb-5">
+                            Grafik Aktivitas Sistem
+                        </h2>
+
+                        <div class="relative h-[320px]">
+
+                            <canvas id="activityChart"></canvas>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
                 {{-- Aktivitas Sistem --}}
                 <div class="bg-white p-6 rounded-2xl shadow">
 
@@ -100,21 +122,97 @@
                         Aktivitas Sistem
                     </h2>
 
-                    <div class="space-y-4">
+                    @forelse($activities as $activity)
+                        <div class="border-b pb-3">
 
-                        <div class="border-b pb-3 text-slate-500">
-                            Belum ada aktivitas sistem.
+                            <p class="font-medium text-slate-700">
+                                {{ $activity->title ?? 'Aktivitas Sistem' }}
+                            </p>
+
+                            <p class="text-sm text-slate-500">
+                                {{ $activity->created_at->diffForHumans() }}
+                            </p>
+
                         </div>
 
-                    </div>
+                    @empty
+
+                        <div class="text-slate-500">
+
+                            Belum ada aktivitas sistem.
+
+                        </div>
+                    @endforelse
 
                 </div>
 
-            </section>
+    </div>
 
-        </main>
+    </section>
+
+    </main>
 
     </div>
+
+    <script>
+        const ctx =
+            document.getElementById('activityChart');
+
+        new Chart(ctx, {
+
+            type: 'line',
+
+            data: {
+
+                labels: @json($chartLabels),
+
+                datasets: [{
+
+                    label: 'Jumlah Peminjaman',
+
+                    data: @json($chartData),
+
+                    borderColor: '#172554',
+
+                    backgroundColor: 'rgba(23,37,84,0.15)',
+
+                    fill: true,
+
+                    tension: 0.4
+
+                }]
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                scales: {
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        min: 0,
+
+                        ticks: {
+
+                            precision: 0,
+
+                            stepSize: 1
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        });
+    </script>
 
 </body>
 

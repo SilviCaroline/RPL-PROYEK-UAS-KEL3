@@ -106,21 +106,59 @@
 
                     <div>
 
-                        <label class="block mb-2 font-medium text-slate-700">
-                            Password
-                        </label>
+                        <div class="mb-6">
 
-                        <input type="password" name="password" placeholder="Masukkan password"
-                            class="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none">
+                            <label class="block mb-2 font-medium text-slate-700">
+                                Password
+                            </label>
 
-                    </div>
+                            <div class="relative">
 
-                    <button type="submit"
-                        class="w-full bg-blue-950 hover:bg-blue-900 text-white py-3 rounded-xl font-semibold transition">
+                                <div class="relative">
 
-                        Login
+                                    <input type="password" id="password" name="password"
+                                        placeholder="Masukkan password"
+                                        class="w-full border rounded-xl px-4 py-3 pr-12 focus:ring-2 focus:ring-blue-900 outline-none">
 
-                    </button>
+                                    <button type="button" onclick="togglePassword()"
+                                        class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-blue-950">
+
+                                        <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
+                                            c4.478 0 8.268 2.943 9.542 7
+                                            -1.274 4.057-5.064 7-9.542 7
+                                            -4.477 0-8.268-2.943-9.542-7z" />
+
+                                        </svg>
+
+                                        <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 hidden"
+                                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M3 3l18 18" />
+
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M10.58 10.58a2 2 0 102.83 2.83" />
+
+                                        </svg>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <button type="submit"
+                                class="mt-6 w-full bg-blue-950 hover:bg-blue-900 text-white py-3 rounded-xl font-semibold transition">
+
+                                Login
+
+                            </button>
 
                 </form>
 
@@ -153,6 +191,39 @@
         </div>
 
     </div>
+
+    <script>
+        function togglePassword() {
+
+            const password =
+                document.getElementById('password');
+
+            const eyeOpen =
+                document.getElementById('eyeOpen');
+
+            const eyeClosed =
+                document.getElementById('eyeClosed');
+
+            if (password.type === 'password') {
+
+                password.type = 'text';
+
+                eyeOpen.classList.add('hidden');
+
+                eyeClosed.classList.remove('hidden');
+
+            } else {
+
+                password.type = 'password';
+
+                eyeOpen.classList.remove('hidden');
+
+                eyeClosed.classList.add('hidden');
+
+            }
+
+        }
+    </script>
 
 </body>
 
