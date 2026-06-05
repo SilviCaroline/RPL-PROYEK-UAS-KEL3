@@ -85,7 +85,7 @@ class ReservationController extends BaseController
     {
         $request->validate([
             'member_code'      => 'required',
-            'barcode'     => 'required',
+            'kode_buku'     => 'required',
             'reservation_date' => 'required|date',
         ]);
 
@@ -95,8 +95,8 @@ class ReservationController extends BaseController
         )->firstOrFail();
 
         $book = Book::where(
-            'barcode',
-            $request->barcode
+            'kode_buku',
+            $request->kode_buku
         )->firstOrFail();
 
         Reservation::create([

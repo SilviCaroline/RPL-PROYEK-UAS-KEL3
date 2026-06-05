@@ -47,6 +47,7 @@ class BookController extends BaseControllers
         $categories = Category::all();
         return view('admin.books.create', compact('categories'));
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -74,11 +75,13 @@ class BookController extends BaseControllers
         $book->load('category');
         return view('admin.books.show', compact('book'));
     }
+
     public function edit(Book $book)
     {
         $categories = Category::all();
         return view('admin.books.edit', compact('book', 'categories'));
     }
+
     public function update(Request $request, Book $book)
     {
         $request->validate([
@@ -86,9 +89,10 @@ class BookController extends BaseControllers
             'author'      => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'stock'       => 'required|integer|min:0',
-            'kode_buku'     => 'required|string|unique:books,kode_buku,' . $book->id,
+            'kode_buku'   => 'required|string|unique:books,kode_buku,' . $book->id,
         ]);
-        Book::create([
+
+        $book->update([
             'category_id' => $request->category_id,
             'title' => $request->title,
             'author' => $request->author,
@@ -99,11 +103,17 @@ class BookController extends BaseControllers
             'stock' => $request->stock,
             'description' => $request->description,
         ]);
-        return redirect()->route('books.index')->with('success', 'Data buku berhasil diperbarui.');
+
+        return redirect()
+            ->route('books.index')
+            ->with(
+                'Success',
+                'Data buku berhasil diperbarui.'
+            );
     }
     public function destroy(Book $book)
     {
         $book->delete();
-        return redirect()->route('books.index')->with('success', 'Data buku berhasil dihapus.');
+        return redirect()->route('books.index')->with('Success', 'Data buku berhasil dihapus.');
     }
 }

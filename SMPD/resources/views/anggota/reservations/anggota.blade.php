@@ -212,7 +212,7 @@
                                 Kode Buku
                             </label>
 
-                            <input type="text" name="barcode" value="{{ old('barcode') }}" placeholder="BK001"
+                            <input type="text" name="kode_buku" value="{{ old('kode_buku') }}" placeholder="BK001"
                                 class="w-full border rounded-lg px-4 py-3">
 
                         </div>

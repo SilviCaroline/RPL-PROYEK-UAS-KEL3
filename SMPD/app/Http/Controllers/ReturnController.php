@@ -52,14 +52,14 @@ class ReturnController extends BaseController
         $request->validate(
             [
                 'loan_code'    => 'required',
-                'barcode' => 'required',
+                'kode_buku' => 'required',
                 'return_date'  => 'required|date',
             ],
             [
                 'loan_code.required' =>
                 'Kode peminjaman wajib diisi.',
 
-                'barcode.required' =>
+                'kode_buku.required' =>
                 'Kode buku wajib diisi.',
 
                 'return_date.required' =>
@@ -77,7 +77,7 @@ class ReturnController extends BaseController
                 ->with('error', 'Kode peminjaman tidak ditemukan.');
         }
 
-        if ($loan->book->barcode != $request->barcode) {
+        if ($loan->book->kode_buku != $request->kode_buku) {
             return redirect()
                 ->back()
                 ->with('error', 'Kode buku tidak sesuai.');
@@ -110,11 +110,10 @@ class ReturnController extends BaseController
             $fineAmount
         ) {
 
-             if (ReturnBook::where(
-                    'loan_id',
-                    $loan->id
-                )->exists()
-            ) {
+            if (ReturnBook::where(
+                'loan_id',
+                $loan->id
+            )->exists()) {
 
                 return redirect()
                     ->back()
@@ -137,7 +136,6 @@ class ReturnController extends BaseController
             $loan->update([
                 'status' => 'Dikembalikan'
             ]);
-
         });
 
         return redirect()

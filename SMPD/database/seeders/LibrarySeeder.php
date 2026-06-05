@@ -62,7 +62,7 @@ class LibrarySeeder extends Seeder
                         STR_PAD_LEFT
                     ),
 
-                'barcode' =>
+                'kode_buku' =>
                 'BK' .
                     str_pad(
                         $i,

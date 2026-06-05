@@ -26,7 +26,6 @@
 
         {{-- Content --}}
         <main class="flex-1 p-6 md:p-10">
-
             {{-- Header --}}
             <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-8">
 
@@ -46,31 +45,25 @@
                     <form action="{{ route('members.index') }}" method="GET" class="flex gap-2">
 
                         <input type="text" name="search" value="{{ request('search') }}"
-                            placeholder="Cari kode, nama, email..."
+                            placeholder="Cari kode, nama, email, ..."
                             class="border border-slate-300 rounded-xl px-4 py-2 w-72 focus:outline-none focus:ring-2 focus:ring-blue-300">
 
                         <button type="submit" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-xl">
-
                             Cari
-
                         </button>
-
                         <a href="{{ route('members.index') }}"
                             class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded-xl">
-
                             Reset
-
                         </a>
-
                     </form>
 
                     {{-- Tambah --}}
-                    @if (hasPermission('users', 'create'))
-                        <a href="{{ route('members.create') }}">
+                    @if (hasPermission('members', 'create'))
+                        <a href="{{ route('members.create') }}"
+                            class="bg-blue-950 hover:bg-blue-900 text-white px-5 py-3 rounded-xl">
                             + Tambah Anggota
                         </a>
                     @endif
-
                 </div>
 
             </div>
@@ -191,27 +184,32 @@
                                             {{-- Kartu --}}
                                             <a href="{{ route('members.card', $member->id) }}"
                                                 class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm">
-                                                Kartu
+                                                Lihat Kartu
                                             </a>
 
                                             {{-- Edit --}}
                                             @if (hasPermission('users', 'edit'))
-                                                <a href="{{ route('members.edit', $member->id) }}">
+                                                <a href="{{ route('members.edit', $member->id) }}"
+                                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm">
                                                     Edit
                                                 </a>
                                             @endif
 
                                             {{-- Hapus --}}
-                                            @if (hasPermission('users', 'delete'))
-                                                <form action="{{ route('members.destroy', $member->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button>
-                                                        Hapus
-                                                    </button>
-                                                </form>
-                                            @endif
+                                            <form action="{{ route('members.destroy', $member->id) }}" method="POST"
+                                                onsubmit="return confirm('Yakin hapus anggota ini?')">
+
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button type="submit"
+                                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm">
+
+                                                    Hapus
+
+                                                </button>
+
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

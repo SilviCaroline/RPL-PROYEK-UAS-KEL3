@@ -121,9 +121,10 @@ class MemberController extends BaseController
 
     public function show(Member $member)
     {
+        $members = Member::paginate(10);
         return view(
-            'admin.members.show',
-            compact('member')
+            'admin.members.index',
+            compact('members')
         );
     }
 

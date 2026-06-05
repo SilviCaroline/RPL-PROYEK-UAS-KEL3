@@ -10,22 +10,22 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('books', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-        $table->string('title');
-        $table->string('author');
-        $table->string('publisher')->nullable();
-        $table->year('year')->nullable();
-        $table->string('isbn')->nullable();
-        $table->string('barcode')->unique();
-        $table->integer('stock')->default(0);
-        $table->text('description')->nullable();
-        $table->string('cover')->nullable();
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('books', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+            $table->string('title');
+            $table->string('author');
+            $table->string('publisher')->nullable();
+            $table->year('year')->nullable();
+            $table->string('isbn')->nullable();
+            $table->string('kode_buku')->unique();
+            $table->integer('stock')->default(0);
+            $table->text('description')->nullable();
+            $table->string('cover')->nullable();
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

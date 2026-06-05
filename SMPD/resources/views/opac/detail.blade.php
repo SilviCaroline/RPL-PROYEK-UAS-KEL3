@@ -68,7 +68,7 @@
                                     </p>
 
                                     <h3 class="font-semibold text-slate-800">
-                                        {{ $book->barcode ?? '-' }}
+                                        {{ $book->kode_buku ?? '-' }}
                                     </h3>
                                 </div>
 
