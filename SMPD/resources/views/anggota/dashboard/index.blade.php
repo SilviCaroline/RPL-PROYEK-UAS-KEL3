@@ -19,7 +19,7 @@
         {{-- SIDEBAR --}}
         @include('sidebar.anggota')
 
-        <div class="flex-1">
+        <div class="flex-1 min-w-0">
 
             {{-- HEADER --}}
             <nav class="bg-white border-b shadow-sm px-8 py-4">
@@ -27,15 +27,12 @@
                 <div class="flex justify-between items-center">
 
                     <div>
-
                         <h1 class="text-2xl font-bold text-blue-950">
                             SMPD
                         </h1>
-
                         <p class="text-sm text-slate-500">
                             Sistem Manajemen Perpustakaan Daerah
                         </p>
-
                     </div>
 
                     <div class="relative">
@@ -147,7 +144,8 @@
 
                     <form method="GET" class="flex flex-wrap gap-3">
 
-                        <input type="month" name="periode" class="border rounded-lg px-4 py-2">
+                        <input type="month" name="periode" value="{{ request('periode') }}"
+                            class="border rounded-lg px-4 py-2">
 
                         <button class="bg-blue-950 text-white px-5 py-2 rounded-lg hover:bg-blue-900">
 

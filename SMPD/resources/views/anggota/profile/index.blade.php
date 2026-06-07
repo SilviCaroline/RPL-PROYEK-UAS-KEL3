@@ -16,142 +16,156 @@
     <div class="flex min-h-screen">
 
         @include('sidebar.anggota')
+        <div class="flex-1">
 
-        <main class="flex-1 p-6 md:p-10">
-
-            <div class="mb-8">
-
-                <h1 class="text-3xl font-bold text-blue-950">
-
-                    Profil Saya
-
-                </h1>
-
-                <p class="text-slate-500">
-
-                    Informasi akun anggota perpustakaan.
-
-                </p>
-
-            </div>
-
-            @if (session('success'))
-                <div class="bg-green-100 border border-green-300 text-green-700 p-4 rounded-xl mb-6">
-
-                    {{ session('success') }}
-
-                </div>
-            @endif
-
-            <div class="bg-white rounded-2xl shadow p-8">
-
-                <div class="flex items-center gap-5 mb-8">
-
-                    <div
-                        class="w-20 h-20 rounded-full bg-blue-950 text-white flex items-center justify-center text-3xl font-bold">
-
-                        {{ strtoupper(substr($member->name, 0, 1)) }}
-
-                    </div>
-
+            <nav class="bg-white border-b shadow-sm px-8 py-4">
+                <div class="flex justify-between items-center">
                     <div>
-
-                        <h2 class="text-2xl font-bold text-blue-950">
-
-                            {{ $member->name }}
-
-                        </h2>
-
-                        <p class="text-slate-500">
-
-                            {{ ucfirst($member->role->name) }}
-
+                        <h1 class="text-2xl font-bold text-blue-950">
+                            SMPD
+                        </h1>
+                        <p class="text-sm text-slate-500">
+                            Sistem Manajemen Perpustakaan Daerah
                         </p>
-
                     </div>
+                </div>
+            </nav>
+            <main class="flex-1 p-6 md:p-10">
+
+
+                <div class="mb-8">
+
+                    <h1 class="text-3xl font-bold text-blue-950">
+
+                        Profil Saya
+
+                    </h1>
+
+                    <p class="text-slate-500">
+
+                        Informasi akun anggota perpustakaan.
+
+                    </p>
 
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-6">
+                @if (session('success'))
+                    <div class="bg-green-100 border border-green-300 text-green-700 p-4 rounded-xl mb-6">
 
-                    <div>
+                        {{ session('success') }}
 
-                        <label class="text-slate-500 text-sm">
-                            Kode Anggota
-                        </label>
+                    </div>
+                @endif
 
-                        <p class="font-semibold">
-                            {{ $member->member_code }}
-                        </p>
+                <div class="bg-white rounded-2xl shadow p-8">
+
+                    <div class="flex items-center gap-5 mb-8">
+
+                        <div
+                            class="w-20 h-20 rounded-full bg-blue-950 text-white flex items-center justify-center text-3xl font-bold">
+
+                            {{ strtoupper(substr($member->name, 0, 1)) }}
+
+                        </div>
+
+                        <div>
+
+                            <h2 class="text-2xl font-bold text-blue-950">
+
+                                {{ $member->name }}
+
+                            </h2>
+
+                            <p class="text-slate-500">
+
+                                {{ ucfirst($member->role->name) }}
+
+                            </p>
+
+                        </div>
 
                     </div>
 
-                    <div>
+                    <div class="grid md:grid-cols-2 gap-6">
 
-                        <label class="text-slate-500 text-sm">
-                            Email
-                        </label>
+                        <div>
 
-                        <p class="font-semibold">
-                            {{ $member->email }}
-                        </p>
+                            <label class="text-slate-500 text-sm">
+                                Kode Anggota
+                            </label>
+
+                            <p class="font-semibold">
+                                {{ $member->member_code }}
+                            </p>
+
+                        </div>
+
+                        <div>
+
+                            <label class="text-slate-500 text-sm">
+                                Email
+                            </label>
+
+                            <p class="font-semibold">
+                                {{ $member->email }}
+                            </p>
+
+                        </div>
+
+                        <div>
+
+                            <label class="text-slate-500 text-sm">
+                                Nomor HP
+                            </label>
+
+                            <p class="font-semibold">
+                                {{ $member->phone ?? '-' }}
+                            </p>
+
+                        </div>
+
+                        <div>
+
+                            <label class="text-slate-500 text-sm">
+                                Status
+                            </label>
+
+                            <p class="font-semibold text-green-600">
+                                {{ $member->status }}
+                            </p>
+
+                        </div>
+
+                        <div class="md:col-span-2">
+
+                            <label class="text-slate-500 text-sm">
+                                Alamat
+                            </label>
+
+                            <p class="font-semibold">
+                                {{ $member->address ?? '-' }}
+                            </p>
+
+                        </div>
 
                     </div>
 
-                    <div>
+                    <div class="mt-8">
 
-                        <label class="text-slate-500 text-sm">
-                            Nomor HP
-                        </label>
+                        <a href="{{ route('profile.edit') }}"
+                            class="bg-blue-950 hover:bg-blue-900 text-white px-6 py-3 rounded-xl">
 
-                        <p class="font-semibold">
-                            {{ $member->phone ?? '-' }}
-                        </p>
+                            Edit Profil
 
-                    </div>
-
-                    <div>
-
-                        <label class="text-slate-500 text-sm">
-                            Status
-                        </label>
-
-                        <p class="font-semibold text-green-600">
-                            {{ $member->status }}
-                        </p>
-
-                    </div>
-
-                    <div class="md:col-span-2">
-
-                        <label class="text-slate-500 text-sm">
-                            Alamat
-                        </label>
-
-                        <p class="font-semibold">
-                            {{ $member->address ?? '-' }}
-                        </p>
+                        </a>
 
                     </div>
 
                 </div>
 
-                <div class="mt-8">
+            </main>
 
-                    <a href="{{ route('profile.edit') }}"
-                        class="bg-blue-950 hover:bg-blue-900 text-white px-6 py-3 rounded-xl">
-
-                        Edit Profil
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </main>
-
-    </div>
+        </div>
 
 </body>
 

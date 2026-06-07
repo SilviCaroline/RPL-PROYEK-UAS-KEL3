@@ -5,41 +5,101 @@ namespace App\Http\Controllers;
 use App\Models\Loan;
 use App\Models\Reservation;
 use App\Models\ReturnBook;
-use App\Models\Book;
 use App\Models\Member;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\Request;
 
-class DashboardAnggotaController extends BaseController{
-    public function index()
+class DashboardAnggotaController extends BaseController
+{
+    public function index(Request $request)
     {
         $memberId = session('member_id');
 
-        $activeLoans = Loan::where(
-            'member_id',
-            $memberId
-        )
-            ->where('status', 'Dipinjam')
+        $periode = $request->periode;
+
+        $bulan = null;
+        $tahun = null;
+
+        if ($periode) {
+
+            [$tahun, $bulan] =
+                explode('-', $periode);
+        }
+
+        $loanQuery = Loan::query();
+
+        if ($periode) {
+
+            $loanQuery
+                ->whereYear('loan_date', $tahun)
+                ->whereMonth('loan_date', $bulan);
+        }
+
+        $loanQuery = Loan::query();
+
+        if ($periode) {
+
+            $loanQuery
+                ->whereYear(
+                    'loan_date',
+                    $tahun
+                )
+                ->whereMonth(
+                    'loan_date',
+                    $bulan
+                );
+        }
+        $activeLoans =
+            (clone $loanQuery)
+            ->where(
+                'status',
+                'Dipinjam'
+            )
             ->count();
 
-        $loanHistory = Loan::where(
-            'member_id',
-            $memberId
-        )->count();
+        $loanHistory =
+            (clone $loanQuery)
+            ->count();
 
-        $reservations = Reservation::where(
-            'member_id',
-            $memberId
-        )->count();
+        $reservationQuery =
+            Reservation::query();
 
-        $fine = ReturnBook::whereHas(
-            'loan',
-            fn($q) =>
-            $q->where(
-                'member_id',
-                $memberId
-            )
-        )->sum('fine_amount');
+        if ($periode) {
+
+            $reservationQuery
+                ->whereYear(
+                    'created_at',
+                    $tahun
+                )
+                ->whereMonth(
+                    'created_at',
+                    $bulan
+                );
+        }
+
+        $reservations =
+            $reservationQuery->count();
+
+        $fineQuery =
+            ReturnBook::query();
+
+        if ($periode) {
+
+            $fineQuery
+                ->whereYear(
+                    'created_at',
+                    $tahun
+                )
+                ->whereMonth(
+                    'created_at',
+                    $bulan
+                );
+        }
+
+        $fine =
+            $fineQuery
+            ->sum('fine_amount');
 
         $stats = [
             'active_loans' => $activeLoans,
@@ -49,10 +109,14 @@ class DashboardAnggotaController extends BaseController{
         ];
 
         // Buku populer
-        $popularBooks = Loan::select(
-            'book_id',
-            DB::raw('COUNT(*) as total')
-        )
+        $popularBooks =
+            (clone $loanQuery)
+            ->select(
+                'book_id',
+                DB::raw(
+                    'COUNT(*) as total'
+                )
+            )
             ->with('book')
             ->groupBy('book_id')
             ->orderByDesc('total')
@@ -60,10 +124,14 @@ class DashboardAnggotaController extends BaseController{
             ->get();
 
         // Anggota teraktif
-        $activeMembers = Loan::select(
-            'member_id',
-            DB::raw('COUNT(*) as total')
-        )
+        $activeMembers =
+            (clone $loanQuery)
+            ->select(
+                'member_id',
+                DB::raw(
+                    'COUNT(*) as total'
+                )
+            )
             ->with('member')
             ->groupBy('member_id')
             ->orderByDesc('total')
@@ -80,25 +148,55 @@ class DashboardAnggotaController extends BaseController{
         // Grafik peminjaman saya
         $loanChart = [];
 
-        for ($i = 5; $i >= 0; $i--) {
-            $date = now()->subMonths($i);
+        if ($periode) {
 
-            $loanChart[] = [
-                'bulan' => $date->format('M'),
-                'jumlah' => Loan::where(
-                    'member_id',
-                    $memberId
-                )
-                    ->whereMonth(
+            $days =
+                cal_days_in_month(
+                    CAL_GREGORIAN,
+                    $bulan,
+                    $tahun
+                );
+
+            for ($d = 1; $d <= $days; $d++) {
+
+                $loanChart[] = [
+
+                    'bulan' => $d,
+
+                    'jumlah' => Loan::whereDate(
+                        'loan_date',
+                        sprintf(
+                            '%s-%s-%02d',
+                            $tahun,
+                            $bulan,
+                            $d
+                        )
+                    )->count()
+                ];
+            }
+        } else {
+
+            for ($i = 5; $i >= 0; $i--) {
+
+                $date = now()->subMonths($i);
+
+                $loanChart[] = [
+
+                    'bulan' =>
+                    $date->format('M'),
+
+                    'jumlah' =>
+                    Loan::whereMonth(
                         'loan_date',
                         $date->month
                     )
-                    ->whereYear(
-                        'loan_date',
-                        $date->year
-                    )
-                    ->count()
-            ];
+                        ->whereYear(
+                            'loan_date',
+                            $date->year
+                        )
+                        ->count()
+                ];
+            }
         }
 
         return view(

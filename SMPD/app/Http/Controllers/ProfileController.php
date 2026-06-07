@@ -60,7 +60,7 @@ class ProfileController extends BaseController
         ]);
 
         return redirect()
-            ->route('anggota.profile.index')
+            ->route('profile.index')
             ->with(
                 'success',
                 'Profil berhasil diperbarui.'

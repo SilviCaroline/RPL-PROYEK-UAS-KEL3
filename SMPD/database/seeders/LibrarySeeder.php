@@ -215,5 +215,55 @@ class LibrarySeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+
+        // =====================
+        // LOANS
+        // =====================
+
+        for ($i = 1; $i <= 150; $i++) {
+
+            $loanDate = now()->subDays(rand(1, 180));
+
+            $dueDate = (clone $loanDate)->addDays(7);
+
+            $status = collect([
+                'Dipinjam',
+                'Dikembalikan',
+                'Terlambat'
+            ])->random();
+
+            DB::table('loans')->insert([
+
+                'loan_code' =>
+                'LON' .
+                    str_pad(
+                        $i,
+                        5,
+                        '0',
+                        STR_PAD_LEFT
+                    ),
+
+                'member_id' =>
+                rand(3, 52),
+
+                'book_id' =>
+                rand(1, 200),
+
+                'loan_date' =>
+                $loanDate,
+
+                'due_date' =>
+                $dueDate,
+
+                'status' =>
+                $status,
+
+                'created_at' =>
+                now(),
+
+                'updated_at' =>
+                now(),
+            ]);
+        }
     }
 }
