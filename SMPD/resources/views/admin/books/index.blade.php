@@ -84,14 +84,6 @@
                         Daftar Buku
                     </h2>
 
-                    <form method="GET">
-
-                        <input type="text" name="search" value="{{ request('search') }}"
-                            placeholder="Cari judul buku..."
-                            class="border border-slate-300 rounded-xl px-4 py-2 w-full md:w-72 focus:ring-2 focus:ring-blue-300 focus:outline-none">
-
-                    </form>
-
                 </div>
 
                 {{-- Table --}}

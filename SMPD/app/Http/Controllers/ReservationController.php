@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Member;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Models\Loan;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Notification;
 
@@ -47,24 +48,34 @@ class ReservationController extends BaseController
     //anggota
     public function anggota()
     {
+        $memberId = session('member_id');
+
         $reservations = Reservation::with([
             'member',
             'book'
         ])
+            ->where('member_id', $memberId)
             ->latest()
             ->paginate(10);
 
-        $totalReservations = Reservation::count();
+        $totalReservations = Reservation::where(
+            'member_id',
+            $memberId
+        )->count();
 
         $waitingReservations = Reservation::where(
-            'status',
-            'Menunggu'
-        )->count();
+            'member_id',
+            $memberId
+        )
+            ->where('status', 'Menunggu')
+            ->count();
 
         $approvedReservations = Reservation::where(
-            'status',
-            'Disetujui'
-        )->count();
+            'member_id',
+            $memberId
+        )
+            ->where('status', 'Disetujui')
+            ->count();
 
         return view(
             'anggota.reservations.anggota',
@@ -131,20 +142,32 @@ class ReservationController extends BaseController
     public function approve(Reservation $reservation)
     {
         $reservation->update([
-            'status' => 'Disetujui',
+            'status' => 'Disetujui'
         ]);
 
-        Notification::create([
+        Loan::create([
+            'loan_code' => 'LON' . now()->format('YmdHis'),
+            'member_id' => $reservation->member_id,
+            'book_id' => $reservation->book_id,
+            'loan_date' => now(),
+            'due_date' => now()->addDays(7),
+            'status' => 'Dipinjam',
+        ]);
+
+        $notification = Notification::create([
             'member_id' => $reservation->member_id,
             'title' => 'Reservasi Disetujui',
-            'message' => 'Reservasi buku Anda telah disetujui dan E-Library sudah dapat diakses.',
+            'message' => 'Reservasi buku Anda telah disetujui dan buku berhasil dipinjam.',
             'type' => 'success',
             'is_read' => false,
         ]);
 
         return redirect()
             ->route('reservations.pustakawan')
-            ->with('success', 'Reservasi berhasil disetujui.');
+            ->with(
+                'success',
+                'Reservasi berhasil disetujui.'
+            );
     }
 
     // ==========================
@@ -154,7 +177,7 @@ class ReservationController extends BaseController
     public function cancel(Reservation $reservation)
     {
         $reservation->update([
-            'status' => 'Ditolak'
+            'status' => 'Dibatalkan'
         ]);
 
         Notification::create([

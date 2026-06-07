@@ -23,15 +23,11 @@
             </p>
 
             <h2 class="font-bold text-lg mt-1">
-
                 {{ session('username') }}
-
             </h2>
 
             <span class="inline-block mt-2 px-3 py-1 text-xs bg-blue-800 rounded-full">
-
                 Administrator
-
             </span>
 
         </div>
@@ -39,61 +35,48 @@
     </div>
 
     {{-- MENU --}}
-    <nav class="flex-1 px-4 space-y-2">
+    <nav class="px-4 space-y-2">
 
         <a href="{{ route('admin.dashboard') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl transition
             {{ request()->routeIs('admin.dashboard') ? 'bg-blue-800 text-white' : 'hover:bg-blue-900 text-blue-100' }}">
-
             📊 Dashboard
-
         </a>
 
         <a href="{{ route('users.index') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl transition
             {{ request()->routeIs('users.*') ? 'bg-blue-800 text-white' : 'hover:bg-blue-900 text-blue-100' }}">
-
             👤 Manajemen User
-
         </a>
 
         <a href="{{ route('books.index') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl transition
             {{ request()->routeIs('books.*') ? 'bg-blue-800 text-white' : 'hover:bg-blue-900 text-blue-100' }}">
-
             📚 Manajemen Buku
-
         </a>
 
         <a href="{{ route('members.index') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl transition
             {{ request()->routeIs('members.*') ? 'bg-blue-800 text-white' : 'hover:bg-blue-900 text-blue-100' }}">
-
             👥 Manajemen Anggota
-
         </a>
 
         <a href="{{ route('reports.index') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl transition
             {{ request()->routeIs('reports.*') ? 'bg-blue-800 text-white' : 'hover:bg-blue-900 text-blue-100' }}">
-
             📈 Laporan Sistem
-
         </a>
 
-        {{-- RBAC --}}
         <a href="{{ route('permissions.index') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl transition
             {{ request()->routeIs('permissions.*') ? 'bg-blue-800 text-white' : 'hover:bg-blue-900 text-blue-100' }}">
-
             🔐 Hak Akses
-
         </a>
 
     </nav>
 
-    {{-- FOOTER --}}
-    <div class="p-4 border-t border-blue-900">
+    {{-- LOGOUT --}}
+    <div class="px-4 mt-4">
 
         <a href="{{ route('logout') }}"
             class="block w-full text-center px-4 py-3 bg-red-600 hover:bg-red-700 rounded-xl transition font-semibold">

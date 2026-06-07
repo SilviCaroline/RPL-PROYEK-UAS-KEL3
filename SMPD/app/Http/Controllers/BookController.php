@@ -21,7 +21,7 @@ class BookController extends BaseControllers
 
                 $query->where('title', 'like', "%{$search}%")
                     ->orWhere('author', 'like', "%{$search}%")
-                    ->orWhere('kode_buku', 'like', "%{$search}%")
+                    ->orWhere('barcode', 'like', "%{$search}%")
                     ->orWhere('isbn', 'like', "%{$search}%");
             })
 
@@ -37,17 +37,9 @@ class BookController extends BaseControllers
     }
     public function create()
     {
-        abort_unless(
-            hasPermission(
-                'books',
-                'create'
-            ),
-            403
-        );
         $categories = Category::all();
         return view('admin.books.create', compact('categories'));
     }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -55,7 +47,7 @@ class BookController extends BaseControllers
             'author'      => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'stock'       => 'required|integer|min:0',
-            'kode_buku'     => 'required|string|unique:books,kode_buku',
+            'barcode'     => 'required|string|unique:books,barcode',
         ]);
         Book::create([
             'category_id' => $request->category_id,
@@ -64,8 +56,15 @@ class BookController extends BaseControllers
             'publisher' => $request->publisher,
             'year' => $request->year,
             'isbn' => $request->isbn,
-            'kode_buku' => $request->kode_buku,
+            'barcode' => $request->barcode,
             'stock' => $request->stock,
+            'title'       => $request->title,
+            'author'      => $request->author,
+            'publisher'   => $request->publisher,
+            'year'        => $request->year,
+            'isbn'        => $request->isbn,
+            'barcode'     => $request->barcode,
+            'stock'       => $request->stock,
             'description' => $request->description,
         ]);
         return redirect()->route('books.index')->with('success', 'Data buku berhasil ditambahkan.');
@@ -75,13 +74,11 @@ class BookController extends BaseControllers
         $book->load('category');
         return view('admin.books.show', compact('book'));
     }
-
     public function edit(Book $book)
     {
         $categories = Category::all();
         return view('admin.books.edit', compact('book', 'categories'));
     }
-
     public function update(Request $request, Book $book)
     {
         $request->validate([
@@ -89,9 +86,8 @@ class BookController extends BaseControllers
             'author'      => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'stock'       => 'required|integer|min:0',
-            'kode_buku'   => 'required|string|unique:books,kode_buku,' . $book->id,
+            'barcode'     => 'required|string|unique:books,barcode,' . $book->id,
         ]);
-
         $book->update([
             'category_id' => $request->category_id,
             'title' => $request->title,
@@ -99,21 +95,22 @@ class BookController extends BaseControllers
             'publisher' => $request->publisher,
             'year' => $request->year,
             'isbn' => $request->isbn,
-            'kode_buku' => $request->kode_buku,
+            'barcode' => $request->barcode,
             'stock' => $request->stock,
+            'title'       => $request->title,
+            'author'      => $request->author,
+            'publisher'   => $request->publisher,
+            'year'        => $request->year,
+            'isbn'        => $request->isbn,
+            'barcode'     => $request->barcode,
+            'stock'       => $request->stock,
             'description' => $request->description,
         ]);
-
-        return redirect()
-            ->route('books.index')
-            ->with(
-                'Success',
-                'Data buku berhasil diperbarui.'
-            );
+        return redirect()->route('books.index')->with('success', 'Data buku berhasil diperbarui.');
     }
     public function destroy(Book $book)
     {
         $book->delete();
-        return redirect()->route('books.index')->with('Success', 'Data buku berhasil dihapus.');
+        return redirect()->route('books.index')->with('success', 'Data buku berhasil dihapus.');
     }
 }

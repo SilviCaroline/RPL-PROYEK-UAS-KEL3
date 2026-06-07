@@ -3,25 +3,38 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
-use Illuminate\Routing\Controller as BaseControllers;
+use Illuminate\Routing\Controller as BaseController;
 
-class LoanHistoryController extends BaseControllers
+class LoanHistoryController extends BaseController
 {
     // Pustakawan - semua histori
     public function index()
     {
-        $loans = Loan::with(['member', 'book'])
+        $loans = Loan::with([
+            'member',
+            'book'
+        ])
             ->latest()
             ->paginate(10);
-        return view('loanhistory.index', compact('loans'));
-        $loans = Loan::with(['member', 'book'])->latest()->paginate(10);
-        return view('anggota.loanhistory.index', compact('loans'));
+
+        return view(
+            'loanhistory.index',
+            compact('loans')
+        );
     }
 
-    // anggota - histori peminjaman
+    // Anggota - hanya histori miliknya
     public function anggota()
     {
-        $loans = Loan::latest()->paginate(10);
+        $loans = Loan::with([
+            'book'
+        ])
+            ->where(
+                'member_id',
+                session('member_id')
+            )
+            ->latest()
+            ->paginate(10);
 
         return view(
             'anggota.loanhistory.index',

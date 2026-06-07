@@ -28,8 +28,21 @@
                             Sistem Manajemen Perpustakaan Daerah
                         </p>
                     </div>
-                </div>
+
+                    <div class="flex items-center gap-4">
+
+                        {{-- Jam --}}
+                        <div class="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-700">
+
+                            🕒
+
+                            <span id="clock"></span>
+
+                        </div>
+
+                    </div>
             </nav>
+
             <main class="flex-1 p-6 md:p-10">
 
 
@@ -166,6 +179,17 @@
             </main>
 
         </div>
+
+        <script>
+            function updateClock() {
+                const now = new Date();
+                document.getElementById('clock').innerHTML =
+                    now.toLocaleTimeString('id-ID');
+            }
+
+            setInterval(updateClock, 1000);
+            updateClock();
+        </script>
 
 </body>
 

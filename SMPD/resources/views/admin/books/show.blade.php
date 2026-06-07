@@ -26,11 +26,16 @@
 
             <div class="grid md:grid-cols-2 gap-5 mt-8">
                 <div class="border rounded-xl p-5">
-                    <p class="text-slate-500">kode_buku Buku</p>
-                    <h2 class="text-2xl font-bold">{{ $book->kode_buku }}</h2>
+                    <p class="text-slate-500">Barcode Buku</p>
+                    <h2 class="text-2xl font-bold">
+                        {{ $book->kode_buku }}
+                    </h2>
+
                     <div class="mt-4 bg-white p-4 rounded-lg text-center">
                         {!! DNS1D::getBarcodeHTML($book->kode_buku, 'C128', 2, 70) !!}
-                        <p class="mt-3 font-bold">{{ $book->kode_buku }}</p>
+                        <p class="mt-3 font-bold">
+                            {{ $book->kode_buku }}
+                        </p>
                     </div>
                 </div>
 

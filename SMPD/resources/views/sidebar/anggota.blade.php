@@ -1,5 +1,7 @@
 @php
-    $notificationCount = \App\Models\Notification::where('is_read', false)->count();
+    $notificationCount = \App\Models\Notification::where('member_id', session('member_id'))
+        ->where('is_read', false)
+        ->count();
 @endphp
 
 <aside class="w-72 bg-blue-950 text-white p-6 hidden md:flex flex-col min-h-screen">
@@ -33,7 +35,6 @@
 
     </div>
 
-
     {{-- USER PROFILE --}}
     <div class="mb-6 bg-blue-900 rounded-xl p-4">
 
@@ -61,7 +62,6 @@
         </div>
 
     </div>
-
 
     {{-- MENU --}}
     <nav class="space-y-2 flex-1">
@@ -106,7 +106,7 @@
 
         </a>
 
-        <a href="{{ route('members.card', 1) }}"
+        <a href="{{ route('members.card', session('member_id')) }}"
             class="block px-4 py-3 rounded-lg hover:bg-blue-900 transition
             {{ request()->routeIs('members.card') ? 'bg-blue-900' : '' }}">
 
@@ -135,4 +135,5 @@
         </div>
 
     </nav>
+
 </aside>

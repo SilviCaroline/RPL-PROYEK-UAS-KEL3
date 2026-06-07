@@ -3,19 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notification;
-use Illuminate\Routing\Controller as BaseController;
 
-class NotificationController extends BaseController
+class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::latest()->paginate(10);
+        Notification::where(
+            'member_id',
+            session('member_id')
+        )->update([
+            'is_read' => true
+        ]);
 
-        Notification::query()
-            ->where('is_read', false)
-            ->update([
-                'is_read' => true
-            ]);
+        $notifications = Notification::where(
+            'member_id',
+            session('member_id')
+        )
+            ->latest()
+            ->get();
 
         return view(
             'anggota.notifications.index',

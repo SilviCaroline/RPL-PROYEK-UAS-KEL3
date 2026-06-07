@@ -51,7 +51,27 @@
                             </p>
 
                             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+                                <div class="border rounded-xl p-4 bg-white">
 
+                                    <p class="text-sm text-slate-500">
+                                        Barcode Buku
+                                    </p>
+
+                                    <h3 class="font-semibold text-slate-800">
+                                        {{ $book->kode_buku }}
+                                    </h3>
+
+                                    <div class="mt-4 text-center">
+
+                                        {!! DNS1D::getBarcodeHTML($book->kode_buku, 'C128', 2, 60) !!}
+
+                                        <p class="font-bold mt-2">
+                                            {{ $book->kode_buku }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
                                 <div class="border rounded-xl p-4 bg-white">
                                     <p class="text-sm text-slate-500">
                                         Penerbit

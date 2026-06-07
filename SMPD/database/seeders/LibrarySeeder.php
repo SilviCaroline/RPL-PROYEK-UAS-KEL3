@@ -10,9 +10,24 @@ class LibrarySeeder extends Seeder
 {
     public function run(): void
     {
-        // =====================
-        // CATEGORY
-        // =====================
+        // ==================================
+        // RESET DATA
+        // ==================================
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
+        DB::table('reservations')->truncate();
+        DB::table('loans')->truncate();
+        DB::table('digital_books')->truncate();
+        DB::table('members')->truncate();
+        DB::table('books')->truncate();
+        DB::table('categories')->truncate();
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+
+        // ==================================
+        // CATEGORIES
+        // ==================================
 
         $categories = [
             'Novel',
@@ -31,9 +46,9 @@ class LibrarySeeder extends Seeder
             ]);
         }
 
-        // =====================
+        // ==================================
         // BOOKS
-        // =====================
+        // ==================================
 
         for ($i = 1; $i <= 200; $i++) {
 
@@ -41,50 +56,36 @@ class LibrarySeeder extends Seeder
 
                 'category_id' => rand(1, 5),
 
-                'title' =>
-                'Buku Perpustakaan ' . $i,
+                'title' => 'Buku Perpustakaan ' . $i,
 
-                'author' =>
-                'Penulis ' . $i,
+                'author' => 'Penulis ' . $i,
 
-                'publisher' =>
-                'Penerbit ' . $i,
+                'publisher' => 'Penerbit ' . $i,
 
-                'year' =>
-                rand(2000, 2026),
+                'year' => rand(2000, 2026),
 
                 'isbn' =>
                 '978602' .
-                    str_pad(
-                        $i,
-                        7,
-                        '0',
-                        STR_PAD_LEFT
-                    ),
+                    str_pad($i, 7, '0', STR_PAD_LEFT),
 
                 'kode_buku' =>
                 'BK' .
-                    str_pad(
-                        $i,
-                        4,
-                        '0',
-                        STR_PAD_LEFT
-                    ),
+                    str_pad($i, 4, '0', STR_PAD_LEFT),
 
-                'stock' =>
-                rand(1, 10),
+                'stock' => rand(1, 15),
 
                 'description' =>
                 'Deskripsi singkat buku perpustakaan nomor ' . $i,
 
                 'created_at' => now(),
+
                 'updated_at' => now(),
             ]);
         }
 
-        // =====================
+        // ==================================
         // ADMIN
-        // =====================
+        // ==================================
 
         DB::table('members')->insert([
 
@@ -96,9 +97,7 @@ class LibrarySeeder extends Seeder
 
             'email' => 'admin@smpd.com',
 
-            'password' => Hash::make(
-                'admin123'
-            ),
+            'password' => Hash::make('admin123'),
 
             'phone' => '081111111111',
 
@@ -111,9 +110,9 @@ class LibrarySeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // =====================
+        // ==================================
         // PUSTAKAWAN
-        // =====================
+        // ==================================
 
         DB::table('members')->insert([
 
@@ -125,9 +124,7 @@ class LibrarySeeder extends Seeder
 
             'email' => 'pustakawan@smpd.com',
 
-            'password' => Hash::make(
-                'pustakawan123'
-            ),
+            'password' => Hash::make('pustakawan123'),
 
             'phone' => '082222222222',
 
@@ -140,9 +137,9 @@ class LibrarySeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        // =====================
-        // ANGGOTA
-        // =====================
+        // ==================================
+        // MEMBERS
+        // ==================================
 
         for ($i = 1; $i <= 50; $i++) {
 
@@ -152,34 +149,22 @@ class LibrarySeeder extends Seeder
 
                 'member_code' =>
                 'MBR' .
-                    str_pad(
-                        $i,
-                        4,
-                        '0',
-                        STR_PAD_LEFT
-                    ),
+                    str_pad($i, 4, '0', STR_PAD_LEFT),
 
-                'name' =>
-                'Anggota ' . $i,
+                'name' => 'Anggota ' . $i,
 
-                'email' =>
-                'anggota' . $i . '@email.com',
+                'email' => 'anggota' . $i . '@email.com',
 
-                'password' =>
-                Hash::make('password123'),
+                'password' => Hash::make('password123'),
 
                 'phone' =>
                 '08' .
-                    rand(
-                        1000000000,
-                        9999999999
-                    ),
+                    rand(1000000000, 9999999999),
 
                 'address' =>
                 'Alamat anggota ' . $i,
 
-                'status' =>
-                'Aktif',
+                'status' => 'Aktif',
 
                 'created_at' => now(),
 
@@ -187,28 +172,23 @@ class LibrarySeeder extends Seeder
             ]);
         }
 
-        // =====================
+        // ==================================
         // DIGITAL BOOKS
-        // =====================
+        // ==================================
 
         for ($i = 1; $i <= 10; $i++) {
 
             DB::table('digital_books')->insert([
 
-                'category_id' =>
-                rand(1, 5),
+                'category_id' => rand(1, 5),
 
-                'title' =>
-                'Digital Book ' . $i,
+                'title' => 'Digital Book ' . $i,
 
-                'author' =>
-                'Author Digital ' . $i,
+                'author' => 'Author Digital ' . $i,
 
-                'file' =>
-                'digital-book-' . $i . '.pdf',
+                'file' => 'digital-book-' . $i . '.pdf',
 
-                'access' =>
-                'Anggota',
+                'access' => 'Anggota',
 
                 'created_at' => now(),
 
@@ -216,18 +196,21 @@ class LibrarySeeder extends Seeder
             ]);
         }
 
-        // =====================
+        // ==================================
         // LOANS
-        // =====================
+        // ==================================
 
         for ($i = 1; $i <= 150; $i++) {
 
-            $loanDate = now()->subDays(rand(1, 180));
+            $loanDate = now()->subDays(rand(1, 365));
 
             $dueDate = (clone $loanDate)->addDays(7);
 
             $status = collect([
                 'Dipinjam',
+                'Dipinjam',
+                'Dipinjam',
+                'Dikembalikan',
                 'Dikembalikan',
                 'Terlambat'
             ])->random();
@@ -236,33 +219,61 @@ class LibrarySeeder extends Seeder
 
                 'loan_code' =>
                 'LON' .
-                    str_pad(
-                        $i,
-                        5,
-                        '0',
-                        STR_PAD_LEFT
-                    ),
+                    str_pad($i, 5, '0', STR_PAD_LEFT),
 
-                'member_id' =>
-                rand(3, 52),
+                'member_id' => rand(3, 52),
 
-                'book_id' =>
-                rand(1, 200),
+                'book_id' => rand(1, 200),
 
-                'loan_date' =>
-                $loanDate,
+                'loan_date' => $loanDate,
 
-                'due_date' =>
-                $dueDate,
+                'due_date' => $dueDate,
 
-                'status' =>
-                $status,
+                'status' => $status,
 
-                'created_at' =>
-                now(),
+                'created_at' => now(),
 
-                'updated_at' =>
-                now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        // ==================================
+        // RESERVATIONS
+        // ==================================
+
+        for ($i = 1; $i <= 100; $i++) {
+
+            $reservationDate =
+                now()->subDays(rand(1, 365));
+
+            $status = collect([
+                'Disetujui',
+                'Disetujui',
+                'Disetujui',
+                'Disetujui',
+                'Menunggu',
+                'Menunggu',
+                'Dibatalkan'
+            ])->random();
+
+            DB::table('reservations')->insert([
+
+                'reservation_code' =>
+                'RES' .
+                    str_pad($i, 5, '0', STR_PAD_LEFT),
+
+                'member_id' => rand(3, 52),
+
+                'book_id' => rand(1, 200),
+
+                'reservation_date' =>
+                $reservationDate,
+
+                'status' => $status,
+
+                'created_at' => now(),
+
+                'updated_at' => now(),
             ]);
         }
     }

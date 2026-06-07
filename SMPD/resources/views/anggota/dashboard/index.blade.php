@@ -22,35 +22,59 @@
         <div class="flex-1 min-w-0">
 
             {{-- HEADER --}}
-            <nav class="bg-white border-b shadow-sm px-8 py-4">
+            <nav class="bg-white border-b border-slate-200 shadow-sm px-8 py-4">
 
                 <div class="flex justify-between items-center">
 
-                    <div>
-                        <h1 class="text-2xl font-bold text-blue-950">
-                            SMPD
-                        </h1>
-                        <p class="text-sm text-slate-500">
-                            Sistem Manajemen Perpustakaan Daerah
-                        </p>
+                    {{-- Logo dan Info --}}
+                    <div class="flex items-center gap-4">
+
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center text-white text-2xl shadow">
+
+                            📚
+
+                        </div>
+
+                        <div>
+
+                            <h1 class="text-2xl font-bold text-blue-950">
+                                SMPD
+                            </h1>
+
+                            <p class="text-sm text-slate-500">
+                                Sistem Manajemen Perpustakaan Daerah
+                            </p>
+
+                        </div>
+
                     </div>
 
-                    <div class="relative">
+                    {{-- Menu kanan --}}
+                    <div class="flex items-center gap-4">
 
-                        <button id="profileButton" onclick="toggleProfileMenu()"
-                            class="flex items-center gap-4 hover:bg-slate-100 px-4 py-2 rounded-xl transition">
+                        {{-- Jam --}}
+                        <div class="hidden lg:flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 text-slate-700">
 
-                            <div
-                                class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-2xl px-4 py-2 shadow-sm">
+                            🕒
 
-                                {{-- Info User --}}
-                                <div>
+                            <span id="clock"></span>
+
+                        </div>
+
+                        {{-- Profile --}}
+                        <div class="relative">
+
+                            <button id="profileButton" onclick="toggleProfileMenu()"
+                                class="flex items-center gap-3 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-2xl transition">
+
+                                <div class="text-right">
 
                                     <p class="text-xs text-slate-500">
                                         Login sebagai
                                     </p>
 
-                                    <p class="font-semibold text-blue-950 leading-tight">
+                                    <p class="font-semibold text-blue-950">
                                         {{ session('username') }}
                                     </p>
 
@@ -61,60 +85,65 @@
                                             bg-orange-100 text-orange-700
                                         @else
                                             bg-green-100 text-green-700 @endif">
-
                                         {{ ucfirst(session('role')) }}
 
                                     </span>
 
                                 </div>
 
-                            </div>
+                                <div
+                                    class="w-12 h-12 rounded-full bg-blue-950 text-white font-bold flex items-center justify-center shadow">
 
-                            <div
-                                class="w-11 h-11 rounded-full bg-gradient-to-r from-blue-900 to-blue-600 text-white flex items-center justify-center font-bold shadow">
+                                    {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
 
-                                {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
+                                </div>
 
-                            </div>
+                            </button>
 
-                        </button>
+                            {{-- Dropdown --}}
+                            <div id="profileMenu"
+                                class="hidden absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-2xl border overflow-hidden z-50">
 
-                        <div id="profileMenu"
-                            class="hidden absolute right-0 mt-3 w-72 bg-white rounded-2xl shadow-xl border overflow-hidden z-50">
+                                <div class="bg-blue-950 text-white p-5">
 
-                            <div class="p-5 bg-slate-50 border-b">
+                                    <div class="flex items-center gap-3">
 
-                                <div class="flex items-center gap-3">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-white text-blue-950 flex items-center justify-center font-bold">
 
-                                    <div
-                                        class="w-12 h-12 rounded-full bg-blue-950 text-white flex items-center justify-center font-bold">
+                                            {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
 
-                                        {{ strtoupper(substr(session('username', 'A'), 0, 1)) }}
+                                        </div>
 
-                                    </div>
+                                        <div>
 
-                                    <div>
+                                            <p class="font-bold">
+                                                {{ session('username') }}
+                                            </p>
 
-                                        <p class="font-bold text-blue-950">
-                                            {{ session('username') }}
-                                        </p>
+                                            <p class="text-sm text-blue-200">
+                                                {{ session('role') }}
+                                            </p>
 
-                                        <p class="text-sm text-slate-500 capitalize">
-                                            {{ session('role') }}
-                                        </p>
+                                        </div>
 
                                     </div>
 
                                 </div>
 
+                                <a href="{{ route('profile.index') }}" class="block px-5 py-3 hover:bg-slate-100">
+
+                                    👤 Profil Saya
+
+                                </a>
+
+                                <a href="{{ route('logout') }}" class="block px-5 py-3 text-red-600 hover:bg-red-50">
+
+                                    🚪 Logout
+
+                                </a>
+
                             </div>
-
-                            <a href="{{ route('profile.index') }}"
-                                class="block px-5 py-3 hover:bg-slate-100 transition">
-
-                                👤 Profil Saya
-
-                            </a>
 
                         </div>
 
@@ -175,7 +204,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow">
 
                         <p class="text-slate-500">
-                            📖 Riwayat Pinjaman
+                            📖 Total Pinjaman
                         </p>
 
                         <h2 class="text-3xl font-bold text-blue-950">
@@ -187,7 +216,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow">
 
                         <p class="text-slate-500">
-                            🔖 Reservasi
+                            🔖 Total Reservasi
                         </p>
 
                         <h2 class="text-3xl font-bold text-orange-500">
@@ -199,7 +228,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow">
 
                         <p class="text-slate-500">
-                            💰 Denda
+                            💰 Denda Saya
                         </p>
 
                         <h2 class="text-3xl font-bold text-red-600">
@@ -346,6 +375,14 @@
             }
         });
 
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerHTML =
+                now.toLocaleTimeString('id-ID');
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
 
         function toggleProfileMenu() {
             document
