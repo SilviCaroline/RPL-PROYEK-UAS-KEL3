@@ -50,6 +50,8 @@ class ReservationController extends BaseController
     {
         $memberId = session('member_id');
 
+        $member = Member::findOrFail($memberId);
+
         $reservations = Reservation::with([
             'member',
             'book'
@@ -80,6 +82,7 @@ class ReservationController extends BaseController
         return view(
             'anggota.reservations.anggota',
             compact(
+                'member',
                 'reservations',
                 'totalReservations',
                 'waitingReservations',
@@ -95,27 +98,61 @@ class ReservationController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'member_code'      => 'required',
-            'kode_buku'     => 'required',
+
+            'kode_buku' => 'required',
+
             'reservation_date' => 'required|date',
+
         ]);
 
-        $member = Member::where(
-            'member_code',
-            $request->member_code
-        )->firstOrFail();
+        $member = Member::findOrFail(
+            session('member_id')
+        );
 
         $book = Book::where(
             'kode_buku',
             $request->kode_buku
         )->firstOrFail();
 
+        $existingReservation = Reservation::where(
+            'member_id',
+            $member->id
+        )
+            ->where(
+                'book_id',
+                $book->id
+            )
+            ->where(
+                'status',
+                'Menunggu'
+            )
+            ->exists();
+
+        if ($existingReservation) {
+
+            return back()->withErrors([
+                'kode_buku' =>
+                'Buku ini sudah Anda reservasi.'
+            ]);
+        }
+
         Reservation::create([
-            'reservation_code' => 'RSV' . date('YmdHis'),
-            'member_id'        => $member->id,
-            'book_id'          => $book->id,
-            'reservation_date' => $request->reservation_date,
-            'status'           => 'Menunggu',
+
+            'reservation_code' =>
+            'RSV' . now()->format('YmdHis'),
+
+            'member_id' =>
+            $member->id,
+
+            'book_id' =>
+            $book->id,
+
+            'reservation_date' =>
+            $request->reservation_date,
+
+            'status' =>
+            'Menunggu',
+
         ]);
 
         if ($request->from == 'anggota') {

@@ -51,7 +51,11 @@ class DashboardAdminController extends BaseController
         );
 
         // Aktivitas Terbaru
-        $activities = Loan::latest()
+        $activities = Loan::with([
+            'member',
+            'book'
+        ])
+            ->latest()
             ->take(10)
             ->get();
 

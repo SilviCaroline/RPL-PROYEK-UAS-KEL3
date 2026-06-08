@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="id">
 
 <head>
@@ -14,29 +15,35 @@
 </head>
 
 <body class="bg-slate-100">
-
     <div class="flex min-h-screen">
 
         @include('sidebar.anggota')
 
         <main class="flex-1 p-6 md:p-10">
 
+            {{-- Header --}}
             <div class="mb-8">
 
                 <h1 class="text-3xl font-bold text-blue-950">
-
                     Edit Profil
-
                 </h1>
 
                 <p class="text-slate-500">
-
-                    Perbarui data pribadi Anda.
-
+                    Perbarui data pribadi dan password akun Anda.
                 </p>
 
             </div>
 
+            {{-- Success Message --}}
+            @if (session('success'))
+                <div class="bg-green-100 border border-green-300 text-green-700 p-4 rounded-xl mb-6">
+
+                    {{ session('success') }}
+
+                </div>
+            @endif
+
+            {{-- Error Message --}}
             @if ($errors->any())
 
                 <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-xl mb-6">
@@ -60,6 +67,7 @@
                     @csrf
                     @method('PUT')
 
+                    {{-- DATA PROFIL --}}
                     <div class="grid md:grid-cols-2 gap-6">
 
                         <div>
@@ -128,16 +136,74 @@
 
                     </div>
 
-                    <div class="mt-8 flex gap-4">
+                    {{-- GARIS PEMBATAS --}}
+                    <hr class="my-8">
 
-                        <button type="submit" class="bg-blue-950 hover:bg-blue-900 text-white px-6 py-3 rounded-xl">
+                    {{-- PASSWORD --}}
+                    <div>
+
+                        <h2 class="text-xl font-bold text-blue-950 mb-6">
+
+                            Ganti Password
+
+                        </h2>
+
+                        <div class="grid md:grid-cols-2 gap-6">
+
+                            <div class="md:col-span-2">
+
+                                <label class="block mb-2 font-medium">
+
+                                    Password Lama
+
+                                </label>
+
+                                <input type="password" name="current_password"
+                                    class="w-full border rounded-xl px-4 py-3">
+
+                            </div>
+
+                            <div>
+
+                                <label class="block mb-2 font-medium">
+
+                                    Password Baru
+
+                                </label>
+
+                                <input type="password" name="password" class="w-full border rounded-xl px-4 py-3">
+
+                            </div>
+
+                            <div>
+
+                                <label class="block mb-2 font-medium">
+
+                                    Konfirmasi Password Baru
+
+                                </label>
+
+                                <input type="password" name="password_confirmation"
+                                    class="w-full border rounded-xl px-4 py-3">
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {{-- BUTTON --}}
+                    <div class="mt-8 flex flex-wrap gap-4">
+
+                        <button type="submit"
+                            class="bg-blue-950 hover:bg-blue-900 text-white px-6 py-3 rounded-xl transition">
 
                             Simpan Perubahan
 
                         </button>
 
                         <a href="{{ route('profile.index') }}"
-                            class="bg-slate-200 hover:bg-slate-300 px-6 py-3 rounded-xl">
+                            class="bg-slate-200 hover:bg-slate-300 px-6 py-3 rounded-xl transition">
 
                             Batal
 

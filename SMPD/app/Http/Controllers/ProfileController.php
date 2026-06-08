@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller as BaseController;
 
 class ProfileController extends BaseController
@@ -40,20 +41,58 @@ class ProfileController extends BaseController
         );
 
         $request->validate([
+
             'name' => 'required|string|max:255',
+
             'phone' => 'nullable|string|max:20',
+
             'address' => 'nullable|string|max:1000',
-        ]);
 
-        $member->update([
-
-            'name' => $request->name,
-
-            'phone' => $request->phone,
-
-            'address' => $request->address,
+            'password' => 'nullable|confirmed|min:6',
 
         ]);
+
+        /*
+    |--------------------------------------------------------------------------
+    | UPDATE DATA PROFIL
+    |--------------------------------------------------------------------------
+    */
+
+        $member->name = $request->name;
+
+        $member->phone = $request->phone;
+
+        $member->address = $request->address;
+
+        /*
+    |--------------------------------------------------------------------------
+    | UPDATE PASSWORD
+    |--------------------------------------------------------------------------
+    */
+
+        if ($request->filled('password')) {
+
+            if (
+                !Hash::check(
+                    $request->current_password,
+                    $member->password
+                )
+            ) {
+
+                return back()
+                    ->withErrors([
+                        'current_password' =>
+                        'Password lama tidak sesuai.'
+                    ])
+                    ->withInput();
+            }
+
+            $member->password = Hash::make(
+                $request->password
+            );
+        }
+
+        $member->save();
 
         session([
             'username' => $request->name

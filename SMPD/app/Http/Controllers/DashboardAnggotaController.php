@@ -6,9 +6,9 @@ use App\Models\Loan;
 use App\Models\Reservation;
 use App\Models\ReturnBook;
 use App\Models\Member;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Http\Request;
 
 class DashboardAnggotaController extends BaseController
 {
@@ -16,27 +16,29 @@ class DashboardAnggotaController extends BaseController
     {
         $memberId = session('member_id');
 
+        if (!$memberId) {
+            return redirect()->route('login');
+        }
+
         $periode = $request->periode;
 
         $bulan = null;
         $tahun = null;
 
         if ($periode) {
-
-            [$tahun, $bulan] =
-                explode('-', $periode);
+            [$tahun, $bulan] = explode('-', $periode);
         }
 
-        $loanQuery = Loan::query();
+        /*
+        |--------------------------------------------------------------------------
+        | QUERY PINJAMAN SAYA
+        |--------------------------------------------------------------------------
+        */
 
-        if ($periode) {
-
-            $loanQuery
-                ->whereYear('loan_date', $tahun)
-                ->whereMonth('loan_date', $bulan);
-        }
-
-        $loanQuery = Loan::query();
+        $loanQuery = Loan::where(
+            'member_id',
+            $memberId
+        );
 
         if ($periode) {
 
@@ -50,112 +52,149 @@ class DashboardAnggotaController extends BaseController
                     $bulan
                 );
         }
-        $activeLoans =
-            (clone $loanQuery)
-            ->where(
-                'status',
-                'Dipinjam'
-            )
+
+        /*
+        |--------------------------------------------------------------------------
+        | STATISTIK SAYA
+        |--------------------------------------------------------------------------
+        */
+
+        $activeLoans = (clone $loanQuery)
+            ->where('status', 'Dipinjam')
             ->count();
 
-        $loanHistory =
-            (clone $loanQuery)
+        $loanHistory = (clone $loanQuery)
             ->count();
 
-        $reservationQuery =
-            Reservation::query();
+        /*
+        |--------------------------------------------------------------------------
+        | RESERVASI SAYA
+        |--------------------------------------------------------------------------
+        */
+
+        $reservationQuery = Reservation::where(
+            'member_id',
+            $memberId
+        );
 
         if ($periode) {
 
             $reservationQuery
-                ->whereYear(
-                    'created_at',
-                    $tahun
-                )
-                ->whereMonth(
-                    'created_at',
-                    $bulan
-                );
+                ->whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $bulan);
         }
 
-        $reservations =
-            $reservationQuery->count();
+        $reservations = $reservationQuery->count();
 
-        $fineQuery =
-            ReturnBook::query();
+        /*
+        |--------------------------------------------------------------------------
+        | DENDA SAYA
+        |--------------------------------------------------------------------------
+        */
+
+        $fineQuery = ReturnBook::whereHas(
+            'loan',
+            function ($query) use ($memberId) {
+
+                $query->where(
+                    'member_id',
+                    $memberId
+                );
+            }
+        );
 
         if ($periode) {
 
             $fineQuery
-                ->whereYear(
-                    'created_at',
-                    $tahun
-                )
-                ->whereMonth(
-                    'created_at',
-                    $bulan
-                );
+                ->whereYear('created_at', $tahun)
+                ->whereMonth('created_at', $bulan);
         }
 
-        $fine =
-            $fineQuery
-            ->sum('fine_amount');
+        $fine = $fineQuery->sum('fine_amount');
+
+        /*
+        |--------------------------------------------------------------------------
+        | STATISTIK
+        |--------------------------------------------------------------------------
+        */
 
         $stats = [
+
             'active_loans' => $activeLoans,
+
             'loan_history' => $loanHistory,
+
             'reservations' => $reservations,
+
             'fine' => $fine,
+
         ];
 
-        // Buku populer
-        $popularBooks =
-            (clone $loanQuery)
-            ->select(
-                'book_id',
-                DB::raw(
-                    'COUNT(*) as total'
-                )
-            )
+        /*
+        |--------------------------------------------------------------------------
+        | BUKU TERPOPULER (GLOBAL)
+        |--------------------------------------------------------------------------
+        */
+
+        $popularBooks = Loan::select(
+            'book_id',
+            DB::raw('COUNT(*) as total')
+        )
             ->with('book')
             ->groupBy('book_id')
             ->orderByDesc('total')
             ->take(5)
             ->get();
 
-        // Anggota teraktif
-        $activeMembers =
-            (clone $loanQuery)
-            ->select(
-                'member_id',
-                DB::raw(
-                    'COUNT(*) as total'
-                )
-            )
+        /*
+        |--------------------------------------------------------------------------
+        | ANGGOTA TERAKTIF (GLOBAL)
+        |--------------------------------------------------------------------------
+        */
+
+        $activeMembers = Loan::select(
+            'member_id',
+            DB::raw('COUNT(*) as total')
+        )
             ->with('member')
             ->groupBy('member_id')
             ->orderByDesc('total')
             ->take(5)
             ->get();
 
-        // Online user (simulasi)
-        $onlineUsers = Member::where(
-            'updated_at',
-            '>=',
-            now()->subMinutes(10)
-        )->count();
+        /*
+        |--------------------------------------------------------------------------
+        | ANGGOTA ONLINE
+        |--------------------------------------------------------------------------
+        |
+        | Jika belum punya kolom last_seen,
+        | sementara gunakan updated_at.
+        |
+        */
 
-        // Grafik peminjaman saya
+        $onlineUsers = Member::where('role_id', 3)
+            ->where(
+                'updated_at',
+                '>=',
+                now()->subMinutes(10)
+            )
+            ->count();
+
+        /*
+        |--------------------------------------------------------------------------
+        | GRAFIK PEMINJAMAN KESELURUHAN
+        |--------------------------------------------------------------------------
+        */
+
         $loanChart = [];
 
         if ($periode) {
 
-            $days =
-                cal_days_in_month(
-                    CAL_GREGORIAN,
-                    $bulan,
-                    $tahun
-                );
+            $days = cal_days_in_month(
+                CAL_GREGORIAN,
+                $bulan,
+                $tahun
+            );
 
             for ($d = 1; $d <= $days; $d++) {
 
@@ -172,6 +211,7 @@ class DashboardAnggotaController extends BaseController
                             $d
                         )
                     )->count()
+
                 ];
             }
         } else {
@@ -182,11 +222,9 @@ class DashboardAnggotaController extends BaseController
 
                 $loanChart[] = [
 
-                    'bulan' =>
-                    $date->format('M'),
+                    'bulan' => $date->format('M'),
 
-                    'jumlah' =>
-                    Loan::whereMonth(
+                    'jumlah' => Loan::whereMonth(
                         'loan_date',
                         $date->month
                     )
@@ -195,6 +233,7 @@ class DashboardAnggotaController extends BaseController
                             $date->year
                         )
                         ->count()
+
                 ];
             }
         }

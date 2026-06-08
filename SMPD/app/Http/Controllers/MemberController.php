@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller as BaseController;
 
 class MemberController extends BaseController
@@ -13,10 +14,8 @@ class MemberController extends BaseController
     | INDEX
     |--------------------------------------------------------------------------
     */
-    public function index(request $request)
+    public function index(Request $request)
     {
-        $members = Member::latest()->paginate(10);
-
         $search = $request->search;
 
         $members = Member::query()
@@ -70,34 +69,65 @@ class MemberController extends BaseController
         return view('admin.members.create');
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | STORE
     |--------------------------------------------------------------------------
     */
-
     public function store(Request $request)
     {
         $request->validate([
 
-            'member_code' => 'required|string|unique:members,member_code',
+            'name' =>
+            'required|string|max:255',
 
-            'name' => 'required|string|max:255',
+            'email' =>
+            'required|email|unique:members,email',
 
-            'email' => 'required|email|unique:members,email',
+            'phone' =>
+            'required|string|max:20',
 
-            'status' => 'required|in:Aktif,Nonaktif',
+            'address' =>
+            'required|string',
+
+            'status' =>
+            'required|in:Aktif,Nonaktif',
 
         ]);
 
+        // Generate Kode Anggota Otomatis
+
+        $lastMember = Member::latest('id')->first();
+
+        if ($lastMember) {
+
+            $number = (int) substr(
+                $lastMember->member_code,
+                3
+            );
+
+            $memberCode = 'MBR' . str_pad(
+                $number + 1,
+                4,
+                '0',
+                STR_PAD_LEFT
+            );
+        } else {
+
+            $memberCode = 'MBR0001';
+        }
+
         Member::create([
 
-            'member_code' => $request->member_code,
+            'role_id' => 3,
+
+            'member_code' => $memberCode,
 
             'name' => $request->name,
 
             'email' => $request->email,
+
+            'password' => Hash::make('123456'),
 
             'phone' => $request->phone,
 
@@ -108,33 +138,33 @@ class MemberController extends BaseController
         ]);
 
         return redirect()
-            ->route('members.index')
-            ->with('success', 'Data anggota berhasil ditambahkan.');
-    }
 
+            ->route('members.index')
+
+            ->with(
+                'success',
+                'Data anggota berhasil ditambahkan.'
+            );
+    }
 
     /*
     |--------------------------------------------------------------------------
     | SHOW
     |--------------------------------------------------------------------------
     */
-
     public function show(Member $member)
     {
-        $members = Member::paginate(10);
         return view(
-            'admin.members.index',
-            compact('members')
+            'admin.members.show',
+            compact('member')
         );
     }
-
 
     /*
     |--------------------------------------------------------------------------
     | EDIT
     |--------------------------------------------------------------------------
     */
-
     public function edit(Member $member)
     {
         return view(
@@ -143,19 +173,16 @@ class MemberController extends BaseController
         );
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | UPDATE
     |--------------------------------------------------------------------------
     */
-
-    public function update(Request $request, Member $member)
-    {
+    public function update(
+        Request $request,
+        Member $member
+    ) {
         $request->validate([
-
-            'member_code' =>
-            'required|string|unique:members,member_code,' . $member->id,
 
             'name' =>
             'required|string|max:255',
@@ -163,14 +190,18 @@ class MemberController extends BaseController
             'email' =>
             'required|email|unique:members,email,' . $member->id,
 
+            'phone' =>
+            'required|string|max:20',
+
+            'address' =>
+            'required|string',
+
             'status' =>
             'required|in:Aktif,Nonaktif',
 
         ]);
 
         $member->update([
-
-            'member_code' => $request->member_code,
 
             'name' => $request->name,
 
@@ -185,33 +216,39 @@ class MemberController extends BaseController
         ]);
 
         return redirect()
-            ->route('members.index')
-            ->with('success', 'Data anggota berhasil diperbarui.');
-    }
 
+            ->route('members.index')
+
+            ->with(
+                'success',
+                'Data anggota berhasil diperbarui.'
+            );
+    }
 
     /*
     |--------------------------------------------------------------------------
     | DELETE
     |--------------------------------------------------------------------------
     */
-
     public function destroy(Member $member)
     {
         $member->delete();
 
         return redirect()
-            ->route('members.index')
-            ->with('success', 'Data anggota berhasil dihapus.');
-    }
 
+            ->route('members.index')
+
+            ->with(
+                'success',
+                'Data anggota berhasil dihapus.'
+            );
+    }
 
     /*
     |--------------------------------------------------------------------------
     | MEMBER CARD
     |--------------------------------------------------------------------------
     */
-
     public function card($id)
     {
         $member = Member::findOrFail($id);

@@ -293,8 +293,10 @@
                                 Kode Anggota
                             </label>
 
-                            <input type="text" name="member_code" value="{{ old('member_code') }}"
-                                placeholder="MBR001" class="w-full border rounded-lg px-4 py-3">
+                            <input type="text" value="{{ $member->member_code }}" readonly
+                                class="w-full border rounded-lg px-4 py-3 bg-slate-100 cursor-not-allowed">
+
+                            <input type="hidden" name="member_code" value="{{ $member->member_code }}">
                         </div>
 
                         <div>

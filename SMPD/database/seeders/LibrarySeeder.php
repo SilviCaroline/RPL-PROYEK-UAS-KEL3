@@ -276,5 +276,50 @@ class LibrarySeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+
+        $loans = DB::table('loans')->get();
+
+        foreach ($loans->take(100) as $index => $loan) {
+
+            // Tanggal pengembalian bisa lebih cepat,
+            // tepat waktu, atau terlambat
+
+            $returnDate = \Carbon\Carbon::parse($loan->due_date)
+                ->addDays(rand(-5, 10));
+
+            // Hitung keterlambatan
+
+            $lateDays = max(
+                0,
+                \Carbon\Carbon::parse($loan->due_date)
+                    ->diffInDays($returnDate, false)
+            );
+
+            DB::table('return_books')->insert([
+
+                'return_code' =>
+                'RTN' . str_pad($index + 1, 5, '0', STR_PAD_LEFT),
+
+                'loan_id' => $loan->id,
+
+                'return_date' => $returnDate,
+
+                'late_days' => $lateDays,
+
+                'fine_amount' => $lateDays * 5000,
+
+                'created_at' => now(),
+
+                'updated_at' => now(),
+            ]);
+
+            // Update status loan menjadi dikembalikan
+
+            DB::table('loans')
+                ->where('id', $loan->id)
+                ->update([
+                    'status' => 'Dikembalikan'
+                ]);
+        }
     }
 }

@@ -51,14 +51,10 @@
                         <button type="submit" class="bg-slate-700 hover:bg-slate-800 text-white px-4 py-2 rounded-xl">
                             Cari
                         </button>
-                        <a href="{{ route('members.index') }}"
-                            class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2 rounded-xl">
-                            Reset
-                        </a>
                     </form>
 
                     {{-- Tambah --}}
-                    @if (hasPermission('members', 'create'))
+                    @if (hasPermission('users', 'create'))
                         <a href="{{ route('members.create') }}"
                             class="bg-blue-950 hover:bg-blue-900 text-white px-5 py-3 rounded-xl">
                             + Tambah Anggota
@@ -186,14 +182,6 @@
                                                 class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm">
                                                 Lihat Kartu
                                             </a>
-
-                                            {{-- Edit --}}
-                                            @if (hasPermission('users', 'edit'))
-                                                <a href="{{ route('members.edit', $member->id) }}"
-                                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-sm">
-                                                    Edit
-                                                </a>
-                                            @endif
 
                                             {{-- Hapus --}}
                                             <form action="{{ route('members.destroy', $member->id) }}" method="POST"

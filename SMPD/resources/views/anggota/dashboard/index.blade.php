@@ -256,7 +256,7 @@
 
                     <h2 class="text-xl font-bold text-blue-950 mb-6">
 
-                        📈 Tren Peminjaman Saya
+                        📈 Tren Peminjaman
 
                     </h2>
 
@@ -264,6 +264,7 @@
 
                 </div>
 
+                {{-- BUKU POPULER + ANGGOTA TERAKTIF --}}
                 {{-- BUKU POPULER + ANGGOTA TERAKTIF --}}
                 <div class="grid lg:grid-cols-2 gap-8 mb-8">
 
@@ -277,14 +278,18 @@
                         </h2>
 
                         @forelse($popularBooks as $book)
-                            <div class="flex justify-between border-b py-3">
+                            <div class="flex justify-between items-center border-b py-3">
 
-                                <span>
+                                <span class="text-slate-700">
+
                                     {{ $book->book->title ?? '-' }}
+
                                 </span>
 
-                                <span class="font-semibold text-blue-950">
+                                <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-950 text-sm font-semibold">
+
                                     {{ $book->total }}x
+
                                 </span>
 
                             </div>
@@ -292,7 +297,9 @@
                         @empty
 
                             <p class="text-slate-500">
-                                Belum ada data.
+
+                                Belum ada data buku populer.
+
                             </p>
                         @endforelse
 
@@ -303,19 +310,23 @@
 
                         <h2 class="text-xl font-bold text-blue-950 mb-6">
 
-                            👑 Anggota Teraktif
+                            🏆 Anggota Teraktif
 
                         </h2>
 
                         @forelse($activeMembers as $member)
-                            <div class="flex justify-between border-b py-3">
+                            <div class="flex justify-between items-center border-b py-3">
 
-                                <span>
-                                    {{ $member->member->name ?? '-' }}
+                                <span class="text-slate-700">
+
+                                    {{ optional($member->member)->name ?? 'Anggota #' . $member->member_id }}
+
                                 </span>
 
-                                <span class="font-semibold text-green-600">
-                                    {{ $member->total }} buku
+                                <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+
+                                    {{ $member->total }} Pinjaman
+
                                 </span>
 
                             </div>
@@ -323,7 +334,9 @@
                         @empty
 
                             <p class="text-slate-500">
-                                Belum ada data.
+
+                                Belum ada data anggota aktif.
+
                             </p>
                         @endforelse
 
@@ -331,81 +344,75 @@
 
                 </div>
 
-            </main>
+                {{-- CHART --}}
+                <script>
+                    const ctx = document.getElementById('loanChart');
 
-        </div>
-
-    </div>
-
-    {{-- CHART --}}
-    <script>
-        const ctx = document.getElementById('loanChart');
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [
-                    @foreach ($loanChart as $item)
-                        '{{ $item['bulan'] }}',
-                    @endforeach
-                ],
-                datasets: [{
-                    label: 'Jumlah Peminjaman',
-                    data: [
-                        @foreach ($loanChart as $item)
-                            {{ $item['jumlah'] }},
-                        @endforeach
-                    ],
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        min: 0,
-                        ticks: {
-                            precision: 0
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [
+                                @foreach ($loanChart as $item)
+                                    '{{ $item['bulan'] }}',
+                                @endforeach
+                            ],
+                            datasets: [{
+                                label: 'Jumlah Peminjaman',
+                                data: [
+                                    @foreach ($loanChart as $item)
+                                        {{ $item['jumlah'] }},
+                                    @endforeach
+                                ],
+                                borderWidth: 3,
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    min: 0,
+                                    ticks: {
+                                        precision: 0
+                                    }
+                                }
+                            }
                         }
+                    });
+
+                    function updateClock() {
+                        const now = new Date();
+                        document.getElementById('clock').innerHTML =
+                            now.toLocaleTimeString('id-ID');
                     }
-                }
-            }
-        });
 
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerHTML =
-                now.toLocaleTimeString('id-ID');
-        }
+                    setInterval(updateClock, 1000);
+                    updateClock();
 
-        setInterval(updateClock, 1000);
-        updateClock();
+                    function toggleProfileMenu() {
+                        document
+                            .getElementById('profileMenu')
+                            .classList
+                            .toggle('hidden');
+                    }
 
-        function toggleProfileMenu() {
-            document
-                .getElementById('profileMenu')
-                .classList
-                .toggle('hidden');
-        }
+                    document.addEventListener('click', function(event) {
+                        const menu =
+                            document.getElementById('profileMenu');
 
-        document.addEventListener('click', function(event) {
-            const menu =
-                document.getElementById('profileMenu');
+                        const button =
+                            document.getElementById('profileButton');
 
-            const button =
-                document.getElementById('profileButton');
-
-            if (
-                !menu.contains(event.target) &&
-                !button.contains(event.target)
-            ) {
-                menu.classList.add('hidden');
-            }
-        });
-    </script>
+                        if (
+                            !menu.contains(event.target) &&
+                            !button.contains(event.target)
+                        ) {
+                            menu.classList.add('hidden');
+                        }
+                    });
+                </script>
 
 </body>
 
