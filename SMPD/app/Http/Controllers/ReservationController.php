@@ -17,7 +17,8 @@ class ReservationController extends BaseController
     {
         $reservations = Reservation::with([
             'member',
-            'book'
+            'book',
+            'digitalBook'
         ])
             ->latest()
             ->paginate(10);
@@ -54,7 +55,8 @@ class ReservationController extends BaseController
 
         $reservations = Reservation::with([
             'member',
-            'book'
+            'book',
+            'digitalBook'
         ])
             ->where('member_id', $memberId)
             ->latest()
@@ -98,16 +100,73 @@ class ReservationController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-
-            'kode_buku' => 'required',
-
             'reservation_date' => 'required|date',
-
+            'book_type' => 'required|in:fisik,digital',
         ]);
 
         $member = Member::findOrFail(
             session('member_id')
         );
+
+        // ======================
+        // RESERVASI EBOOK
+        // ======================
+
+        if ($request->book_type == 'digital') {
+
+            $existingReservation = Reservation::where(
+                'member_id',
+                $member->id
+            )
+                ->where(
+                    'digital_book_id',
+                    $request->digital_book_id
+                )
+                ->where(
+                    'status',
+                    'Menunggu'
+                )
+                ->exists();
+
+            if ($existingReservation) {
+
+                return back()->withErrors([
+                    'ebook' => 'E-book ini sudah Anda reservasi.'
+                ]);
+            }
+
+            Reservation::create([
+
+                'reservation_code' =>
+                'RSV' . now()->format('YmdHis'),
+
+                'member_id' =>
+                $member->id,
+
+                'digital_book_id' =>
+                $request->digital_book_id,
+
+                'book_type' =>
+                'digital',
+
+                'reservation_date' =>
+                now(),
+
+                'status' =>
+                'Menunggu',
+            ]);
+
+            return redirect()
+                ->route('reservations.anggota')
+                ->with(
+                    'success',
+                    'Reservasi e-book berhasil dibuat.'
+                );
+        }
+
+        // ======================
+        // RESERVASI BUKU FISIK
+        // ======================
 
         $book = Book::where(
             'kode_buku',
@@ -147,12 +206,14 @@ class ReservationController extends BaseController
             'book_id' =>
             $book->id,
 
+            'book_type' =>
+            'fisik',
+
             'reservation_date' =>
             $request->reservation_date,
 
             'status' =>
             'Menunggu',
-
         ]);
 
         if ($request->from == 'anggota') {
@@ -172,24 +233,45 @@ class ReservationController extends BaseController
                 'Reservasi buku berhasil dibuat.'
             );
     }
+
     // ==========================
     // APPROVE
     // ==========================
 
     public function approve(Reservation $reservation)
     {
-        $reservation->update([
-            'status' => 'Disetujui'
-        ]);
+        if ($reservation->book_type == 'digital') {
 
-        Loan::create([
-            'loan_code' => 'LON' . now()->format('YmdHis'),
-            'member_id' => $reservation->member_id,
-            'book_id' => $reservation->book_id,
-            'loan_date' => now(),
-            'due_date' => now()->addDays(7),
-            'status' => 'Dipinjam',
-        ]);
+            $reservation->update([
+                'status' => 'Disetujui',
+                'access_until' => now()->addDays(7),
+            ]);
+        } else {
+
+            $reservation->update([
+                'status' => 'Disetujui',
+            ]);
+
+            Loan::create([
+                'loan_code' =>
+                'LON' . now()->format('YmdHis'),
+
+                'member_id' =>
+                $reservation->member_id,
+
+                'book_id' =>
+                $reservation->book_id,
+
+                'loan_date' =>
+                now(),
+
+                'due_date' =>
+                now()->addDays(7),
+
+                'status' =>
+                'Dipinjam',
+            ]);
+        }
 
         $notification = Notification::create([
             'member_id' => $reservation->member_id,

@@ -395,6 +395,11 @@ Route::get(
     [ELibraryController::class, 'read']
 )->name('elibrary.read');
 
+Route::get(
+    '/elibrary/{digitalBook}',
+    [ELibraryController::class, 'show']
+)->name('elibrary.show');
+
 // NOTIFIKASI
 Route::get(
     '/notifications',

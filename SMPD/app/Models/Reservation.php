@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\DigitalBook;
 
 class Reservation extends Model
 {
@@ -10,7 +11,10 @@ class Reservation extends Model
         'reservation_code',
         'member_id',
         'book_id',
+        'digital_book_id',
+        'book_type',
         'reservation_date',
+        'access_until',
         'status',
     ];
 
@@ -22,5 +26,12 @@ class Reservation extends Model
     public function book()
     {
         return $this->belongsTo(Book::class);
+    }
+
+    public function digitalBook()
+    {
+        return $this->belongsTo(
+            DigitalBook::class
+        );
     }
 }

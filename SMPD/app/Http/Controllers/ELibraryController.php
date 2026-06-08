@@ -18,11 +18,25 @@ class ELibraryController extends BaseControllers
     {
         $digitalBook = DigitalBook::findOrFail($id);
 
-        $memberId = 1; // sementara dummy
+        $memberId = session('member_id');
 
-        $reservation = Reservation::where('book_id', $digitalBook->book_id)
-            ->where('member_id', $memberId)
-            ->where('status', 'Disetujui')
+        $reservation = Reservation::where(
+            'digital_book_id',
+            $digitalBook->id
+        )
+            ->where(
+                'member_id',
+                $memberId
+            )
+            ->where(
+                'status',
+                'Disetujui'
+            )
+            ->where(
+                'access_until',
+                '>=',
+                now()
+            )
             ->first();
 
         return view(
@@ -31,6 +45,18 @@ class ELibraryController extends BaseControllers
                 'digitalBook',
                 'reservation'
             )
+        );
+    }
+
+    public function show($id)
+    {
+        $digitalBook = DigitalBook::with(
+            'category'
+        )->findOrFail($id);
+
+        return view(
+            'e-library.show',
+            compact('digitalBook')
         );
     }
 }

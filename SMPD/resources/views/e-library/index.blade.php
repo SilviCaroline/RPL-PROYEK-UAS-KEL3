@@ -171,13 +171,23 @@
                                     {{ $book->author }}
                                 </p>
 
-                                <p class="text-sm text-slate-500 mt-3">
-                                    Akses: {{ $book->access }}
+                                <p class="text-sm text-slate-500 mt-2">
+                                    Kode Buku :
+                                    <span class="font-semibold text-blue-900">
+                                        {{ $book->kode_buku }}
+                                    </span>
                                 </p>
 
-                                <a href="{{ route('elibrary.read', $book->id) }}"
-                                    class="block mt-5 text-center bg-blue-950 text-white py-3 rounded-lg hover:bg-blue-900">
-                                    Baca PDF
+                                <p class="text-sm text-slate-500 mt-1">
+                                    Akses :
+                                    {{ $book->access }}
+                                </p>
+
+                                <a href="{{ route('elibrary.show', $book->id) }}"
+                                    class="mt-4 inline-flex items-center justify-center w-full bg-blue-950 text-white py-3 rounded-xl hover:bg-blue-900 transition">
+
+                                    📘 Detail E-Book
+
                                 </a>
                             </div>
                         </div>

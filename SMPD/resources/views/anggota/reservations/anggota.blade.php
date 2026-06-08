@@ -322,10 +322,12 @@
 
                         </div>
 
+                        <input type="hidden" name="book_type" value="fisik">
+
                         <div class="md:col-span-3">
 
                             <button type="submit"
-                                class="bg-blue-950 text-white px-6 py-3 rounded-lg hover:bg-blue-900 transition">
+                                class="bg-blue-950 text-white px-5 py-3 rounded-lg hover:bg-blue-900">
 
                                 Ajukan Reservasi
 
@@ -372,7 +374,14 @@
                                     </td>
 
                                     <td class="p-4">
-                                        {{ $reservation->book->title ?? '-' }}
+                                        @if ($reservation->book_type == 'digital')
+                                            {{ $reservation->digitalBook->title ?? '-' }}
+                                            <span class="text-xs text-blue-600">
+                                                (E-Book)
+                                            </span>
+                                        @else
+                                            {{ $reservation->book->title ?? '-' }}
+                                        @endif
                                     </td>
 
                                     <td class="p-4">

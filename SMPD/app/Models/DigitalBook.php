@@ -10,6 +10,11 @@ class DigitalBook extends Model
         'category_id',
         'title',
         'author',
+        'kode_buku',
+        'publisher',
+        'year',
+        'isbn',
+        'description',
         'file',
         'access',
     ];

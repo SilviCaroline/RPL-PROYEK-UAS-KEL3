@@ -186,12 +186,28 @@ class LibrarySeeder extends Seeder
 
                 'author' => 'Author Digital ' . $i,
 
-                'file' => 'digital-book-' . $i . '.pdf',
+                'publisher' => 'Penerbit Digital ' . $i,
 
-                'access' => 'Anggota',
+                'year' => rand(2020, 2026),
+
+                'isbn' =>
+                '978602' .
+                    str_pad($i, 7, '0', STR_PAD_LEFT),
+
+                'kode_buku' =>
+                'EBK' .
+                    str_pad($i, 4, '0', STR_PAD_LEFT),
+
+                'description' =>
+                'Deskripsi ebook nomor ' . $i,
+
+                'file' =>
+                'digital-book-' . $i . '.pdf',
+
+                'access' =>
+                'Anggota',
 
                 'created_at' => now(),
-
                 'updated_at' => now(),
             ]);
         }

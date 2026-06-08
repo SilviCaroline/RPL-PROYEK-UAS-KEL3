@@ -10,6 +10,8 @@ class Loan extends Model
         'loan_code',
         'member_id',
         'book_id',
+        'digital_book_id',
+        'book_type',
         'loan_date',
         'due_date',
         'status',

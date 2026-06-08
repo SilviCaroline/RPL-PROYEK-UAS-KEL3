@@ -23,7 +23,7 @@
                     </p>
                 </div>
 
-                @if ($reservation)
+                @if ($reservation && $reservation->access_until >= now())
                     <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full">
                         Akses Full PDF
                     </span>
@@ -36,7 +36,7 @@
 
             <div class="bg-slate-200 rounded-2xl p-8 min-h-[650px]">
 
-                @if (!$reservation)
+                @if (!$reservation || !$reservation->access_until || $reservation->access_until < now())
                     {{-- PREVIEW --}}
                     <div class="h-full flex items-center justify-center">
 
@@ -69,8 +69,10 @@
                             </div>
 
                             <a href="{{ route('reservations.anggota') }}"
-                                class="inline-block bg-blue-950 text-white px-6 py-3 rounded-lg hover:bg-blue-900">
-                                Reservasi Buku
+                                class="inline-block bg-blue-950 text-white px-6 py-3 rounded-lg">
+
+                                Reservasi Ebook Ini
+
                             </a>
 
                             <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -86,7 +88,7 @@
                             </div>
                         </div>
                     </div>
-                @else
+                @elseif($reservation && $reservation->access_until && $reservation->access_until >= now())
                     {{-- FULL PDF --}}
                     <div>
                         <div class="mb-4">
@@ -98,7 +100,7 @@
                             </p>
                         </div>
 
-                        <iframe src="{{ asset('storage/' . $digitalBook->file_path) }}" width="100%" height="700"
+                        <iframe src="{{ asset('storage/' . $digitalBook->file) }}" width="100%" height="700"
                             class="rounded-xl border">
                         </iframe>
                     </div>

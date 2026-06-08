@@ -10,17 +10,32 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('digital_books', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-        $table->string('title');
-        $table->string('author');
-        $table->string('file');
-        $table->enum('access', ['Anggota', 'Publik'])->default('Anggota');
-        $table->timestamps();
-    });
-}
+    {
+        Schema::create('digital_books', function (Blueprint $table) {
+
+            $table->id();
+
+            $table->foreignId('category_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->string('title');
+
+            $table->string('author');
+
+            $table->string('file');
+
+            $table->enum(
+                'access',
+                [
+                    'Anggota',
+                    'Publik'
+                ]
+            )->default('Anggota');
+
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.
