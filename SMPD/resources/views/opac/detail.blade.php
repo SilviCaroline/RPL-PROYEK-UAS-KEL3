@@ -141,36 +141,81 @@
                                 </p>
                             </div>
 
-                            <div class="mt-8 flex gap-4">
-                                <div class="mt-8 flex gap-4">
+                            <div class="mt-8">
 
-                                    @if (session('role') == 'anggota')
-                                        <a href="{{ route('reservations.anggota') }}"
-                                            class="bg-blue-950 text-white px-6 py-3 rounded-lg hover:bg-blue-900">
+                                @if (session('role') == 'anggota')
 
-                                            Ajukan Reservasi
+                                    @if ($book->stock > 0)
+                                        <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-4">
+
+                                            Buku tersedia.
+                                            Silakan datang ke perpustakaan untuk meminjam.
+
+                                        </div>
+                                    @else
+                                        <div class="bg-orange-100 text-orange-700 p-4 rounded-lg mb-4">
+
+                                            Buku sedang dipinjam.
+                                            Anda dapat melakukan reservasi.
+
+                                        </div>
+                                    @endif
+
+                                    <div class="flex gap-4">
+
+                                        @if ($book->stock <= 0)
+                                            <form action="{{ route('reservations.store') }}" method="POST">
+
+                                                @csrf
+
+                                                <input type="hidden" name="book_type" value="fisik">
+
+                                                <input type="hidden" name="kode_buku" value="{{ $book->kode_buku }}">
+
+                                                <input type="hidden" name="reservation_date"
+                                                    value="{{ now()->format('Y-m-d') }}">
+
+                                                <input type="hidden" name="from" value="anggota">
+
+                                                <button type="submit"
+                                                    class="bg-blue-950 text-white px-6 py-3 rounded-lg hover:bg-blue-900">
+
+                                                    Ajukan Reservasi
+
+                                                </button>
+
+                                            </form>
+                                        @endif
+
+                                        <a href="{{ route('opac.index') }}"
+                                            class="border border-slate-300 px-6 py-3 rounded-lg hover:bg-slate-50">
+
+                                            Lihat Buku Lain
 
                                         </a>
-                                    @else
+
+                                    </div>
+                                @else
+                                    <div class="flex gap-4">
+
                                         <a href="{{ route('login') }}"
                                             class="bg-blue-950 text-white px-6 py-3 rounded-lg hover:bg-blue-900">
 
                                             Login untuk Reservasi
 
                                         </a>
-                                    @endif
 
-                                    <a href="{{ route('opac.index') }}"
-                                        class="border border-slate-300 px-6 py-3 rounded-lg hover:bg-slate-50">
+                                        <a href="{{ route('opac.index') }}"
+                                            class="border border-slate-300 px-6 py-3 rounded-lg hover:bg-slate-50">
 
-                                        Lihat Buku Lain
+                                            Lihat Buku Lain
 
-                                    </a>
+                                        </a>
 
-                                </div>
+                                    </div>
 
+                                @endif
                             </div>
-                        </div>
             </main>
 
         </div>

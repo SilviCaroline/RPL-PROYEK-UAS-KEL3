@@ -27,7 +27,7 @@ class LoanController extends BaseControllers
     }
     public function store(Request $request)
     {
-        $$request->validate([
+        $request->validate([
             'member_code' => 'required',
             'kode_buku'   => 'required',
             'loan_date'   => 'required|date',

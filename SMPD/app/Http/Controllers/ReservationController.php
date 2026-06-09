@@ -173,6 +173,14 @@ class ReservationController extends BaseController
             $request->kode_buku
         )->firstOrFail();
 
+        if ($book->stock > 0) {
+
+            return back()->withErrors([
+                'kode_buku' =>
+                'Buku masih tersedia dan tidak perlu direservasi.'
+            ]);
+        }
+
         $existingReservation = Reservation::where(
             'member_id',
             $member->id
@@ -272,6 +280,11 @@ class ReservationController extends BaseController
                 'Dipinjam',
             ]);
         }
+
+        Book::where(
+            'id',
+            $reservation->book_id
+        )->decrement('stock');
 
         $notification = Notification::create([
             'member_id' => $reservation->member_id,

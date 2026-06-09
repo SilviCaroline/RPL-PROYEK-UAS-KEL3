@@ -26,6 +26,14 @@ class OpacController extends BaseControllers
 
     public function show(Book $book)
     {
-        return view('opac.detail', compact('book'));
+        $isAvailable = $book->stock > 0;
+
+        return view(
+            'opac.detail',
+            compact(
+                'book',
+                'isAvailable'
+            )
+        );
     }
 }
