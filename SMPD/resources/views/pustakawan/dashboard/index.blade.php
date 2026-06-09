@@ -76,47 +76,27 @@
         </section>
 
         <!-- Grafik Peminjaman -->
-        <div class="bg-white rounded-2xl shadow p-6">
+        <div class="bg-white rounded-2xl shadow p-8 mb-8">
 
             <div class="flex justify-between items-center mb-5">
 
                 <h2 class="text-xl font-bold text-blue-950">
-                    Grafik Peminjaman
+                    📈 Tren Peminjaman
                 </h2>
 
                 <form method="GET">
 
-                    <select name="period" onchange="this.form.submit()"
-                        class="border border-slate-300 rounded-lg px-3 py-2">
+                    <form method="GET">
 
-                        <option value="week" {{ $period == 'week' ? 'selected' : '' }}>
-                            1 Minggu
-                        </option>
+                        <input type="month" name="periode" value="{{ request('periode') }}"
+                            onchange="this.form.submit()" class="border rounded-lg px-3 py-2">
 
-                        <option value="month" {{ $period == 'month' ? 'selected' : '' }}>
-                            1 Bulan
-                        </option>
-
-                        <option value="year" {{ $period == 'year' ? 'selected' : '' }}>
-                            1 Tahun
-                        </option>
-
-                        <option value="3years" {{ $period == '3years' ? 'selected' : '' }}>
-                            3 Tahun
-                        </option>
-
-                    </select>
-
+                    </form>
                 </form>
 
             </div>
 
-            <div class="h-80">
-
-                <canvas id="loanChart"></canvas>
-
-            </div>
-
+            <canvas id="loanChart"></canvas>
         </div>
 
         <!-- Top Buku + Aktivitas -->
@@ -441,7 +421,11 @@
                                 </td>
 
                                 <td>
-                                    {{ $reservation->book->title }}
+                                    @if ($reservation->book_type == 'digital')
+                                        {{ $reservation->digitalBook?->title ?? 'E-Book Tidak Ditemukan' }}
+                                    @else
+                                        {{ $reservation->book?->title ?? 'Buku Tidak Ditemukan' }}
+                                    @endif
                                 </td>
 
                                 <td>
@@ -546,46 +530,28 @@
     const ctx = document.getElementById('loanChart');
 
     new Chart(ctx, {
-
         type: 'line',
-
         data: {
-
             labels: @json($labels),
             datasets: [{
                 label: 'Jumlah Peminjaman',
                 data: @json($data),
-                borderColor: '#172554',
-                backgroundColor: 'rgba(23,37,84,0.1)',
-                fill: true,
-                tension: 0.4,
                 borderWidth: 3,
-                pointRadius: 5,
-                pointHoverRadius: 7
+                tension: 0.4,
+                fill: true
             }]
         },
-
         options: {
             responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: true
-                }
-            },
             scales: {
-
                 y: {
                     beginAtZero: true,
+                    min: 0,
                     ticks: {
                         precision: 0
                     }
-
                 }
-
             }
-
         }
-
     });
 </script>

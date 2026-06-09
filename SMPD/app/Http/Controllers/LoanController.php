@@ -8,6 +8,8 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Routing\Controller as BaseControllers;
+use App\Models\Reservation;
+use App\Models\Notification;
 
 class LoanController extends BaseControllers
 {
@@ -31,7 +33,6 @@ class LoanController extends BaseControllers
             'member_code' => 'required',
             'kode_buku'   => 'required',
             'loan_date'   => 'required|date',
-            'due_date'    => 'required|date|after_or_equal:loan_date',
         ]);
 
         $member = Member::where('member_code', $request->member_code)
@@ -52,19 +53,60 @@ class LoanController extends BaseControllers
             return back()->with('error', 'Stok buku habis.');
         }
 
-        DB::transaction(function () use ($request, $member, $book) {
+        $reservation = Reservation::where(
+            'member_id',
+            $member->id
+        )
+            ->where(
+                'book_id',
+                $book->id
+            )
+            ->where(
+                'status',
+                'Disetujui'
+            )
+            ->first();
+
+        DB::transaction(function () use (
+            $request,
+            $member,
+            $book,
+            $reservation
+        ) {
 
             Loan::create([
                 'loan_code' => 'LN' . now()->format('YmdHis'),
                 'member_id' => $member->id,
                 'book_id'   => $book->id,
                 'loan_date' => $request->loan_date,
-                'due_date'  => $request->due_date,
+                'due_date' => date(
+                    'Y-m-d',
+                    strtotime($request->loan_date . ' +5 days')
+                ),
                 'status'    => 'Dipinjam',
             ]);
 
             $book->decrement('stock');
+
+            if ($reservation) {
+
+                $reservation->update([
+                    'status' => 'Selesai'
+                ]);
+            }
         });
+
+        Notification::create([
+            'member_id' => $member->id,
+            'title' => 'Peminjaman Berhasil',
+            'message' => 'Buku "' . $book->title . '" berhasil dipinjam sampai tanggal '
+                . date(
+                    'd-m-Y',
+                    strtotime($request->loan_date . ' +5 days')
+                ),
+            'type' => 'success',
+            'is_read' => false,
+        ]);
 
         return redirect()
             ->route('loans.index')

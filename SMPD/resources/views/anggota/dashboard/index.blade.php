@@ -192,7 +192,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow">
 
                         <p class="text-slate-500">
-                            📚 Pinjaman Aktif
+                            📚 Peminjaman Aktif
                         </p>
 
                         <h2 class="text-3xl font-bold text-blue-950">
@@ -204,7 +204,7 @@
                     <div class="bg-white p-6 rounded-2xl shadow">
 
                         <p class="text-slate-500">
-                            📖 Total Pinjaman
+                            📖 Total Peminjaman
                         </p>
 
                         <h2 class="text-3xl font-bold text-blue-950">
@@ -264,7 +264,6 @@
 
                 </div>
 
-                {{-- BUKU POPULER + ANGGOTA TERAKTIF --}}
                 {{-- BUKU POPULER + ANGGOTA TERAKTIF --}}
                 <div class="grid lg:grid-cols-2 gap-8 mb-8">
 

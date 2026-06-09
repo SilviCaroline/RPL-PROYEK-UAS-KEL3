@@ -33,6 +33,7 @@ return new class extends Migration
                 [
                     'Menunggu',
                     'Disetujui',
+                    'Dipinjam',
                     'Dibatalkan'
                 ]
             )->default('Menunggu');

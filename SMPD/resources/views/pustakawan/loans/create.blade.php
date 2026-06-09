@@ -61,16 +61,22 @@
                 </div>
 
                 <div>
-                    <label class="block mb-2 font-medium">Tanggal Pinjam</label>
+                    <label class="block mb-2 font-medium">
+                        Tanggal Pinjam
+                    </label>
+
                     <input type="date" name="loan_date" value="{{ old('loan_date', date('Y-m-d')) }}"
                         class="w-full border rounded-lg px-4 py-3" required>
                 </div>
 
-                <div>
-                    <label class="block mb-2 font-medium">Tanggal Jatuh Tempo</label>
-                    <input type="date" name="due_date"
-                        value="{{ old('due_date', date('Y-m-d', strtotime('+7 days'))) }}"
-                        class="w-full border rounded-lg px-4 py-3" required>
+                <div class="md:col-span-2 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                    <p class="font-semibold text-yellow-700">
+                        Durasi peminjaman otomatis 5 hari.
+                    </p>
+
+                    <p class="text-sm text-slate-600 mt-1">
+                        Tanggal jatuh tempo akan dihitung otomatis oleh sistem berdasarkan tanggal peminjaman.
+                    </p>
                 </div>
 
                 <div class="md:col-span-2">

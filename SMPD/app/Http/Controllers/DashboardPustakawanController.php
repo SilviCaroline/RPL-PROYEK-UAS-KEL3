@@ -16,73 +16,63 @@ class DashboardPustakawanController extends BaseController
 {
     public function index(Request $request)
     {
-        $period = $request->period ?? 'week';
+        $periode = $request->periode;
+
+        $bulan = null;
+        $tahun = null;
+
+        if ($periode) {
+            [$tahun, $bulan] = explode('-', $periode);
+        }
 
         $labels = [];
         $data = [];
 
         /*
-        |--------------------------------------------------------------------------
-        | Grafik Peminjaman
-        |--------------------------------------------------------------------------
-        */
+|--------------------------------------------------------------------------
+| Grafik Peminjaman
+|--------------------------------------------------------------------------
+*/
 
-        if ($period == 'week') {
+        if ($periode) {
 
-            for ($i = 6; $i >= 0; $i--) {
+            $days = cal_days_in_month(
+                CAL_GREGORIAN,
+                $bulan,
+                $tahun
+            );
 
-                $date = Carbon::now()->subDays($i);
+            for ($d = 1; $d <= $days; $d++) {
 
-                $labels[] = $date->format('D');
-
-                $data[] = Loan::whereDate(
-                    'loan_date',
-                    $date
-                )->count();
-            }
-        } elseif ($period == 'month') {
-
-            for ($i = 29; $i >= 0; $i--) {
-
-                $date = Carbon::now()->subDays($i);
-
-                $labels[] = $date->format('d M');
+                $labels[] = $d;
 
                 $data[] = Loan::whereDate(
                     'loan_date',
-                    $date
+                    sprintf(
+                        '%s-%s-%02d',
+                        $tahun,
+                        $bulan,
+                        $d
+                    )
                 )->count();
             }
-        } elseif ($period == 'year') {
+        } else {
 
-            for ($i = 11; $i >= 0; $i--) {
+            for ($i = 5; $i >= 0; $i--) {
 
-                $month = Carbon::now()->subMonths($i);
+                $date = now()->subMonths($i);
 
-                $labels[] = $month->format('M');
+                $labels[] = $date->format('M');
 
                 $data[] = Loan::whereMonth(
                     'loan_date',
-                    $month->month
+                    $date->month
                 )
                     ->whereYear(
                         'loan_date',
-                        $month->year
+                        $date->year
                     )
                     ->count();
-            }
-        } elseif ($period == '3years') {
-
-            for ($i = 2; $i >= 0; $i--) {
-
-                $year = Carbon::now()->subYears($i);
-
-                $labels[] = $year->format('Y');
-
-                $data[] = Loan::whereYear(
-                    'loan_date',
-                    $year->year
-                )->count();
             }
         }
 
@@ -93,24 +83,47 @@ class DashboardPustakawanController extends BaseController
         */
 
         // Total seluruh peminjaman
-        $totalLoans = Loan::count();
+        $loanQuery = Loan::query();
 
-        // Total seluruh pengembalian
-        $totalReturns = ReturnBook::count();
+        $returnQuery = ReturnBook::query();
 
-        // Reservasi menunggu
-        $pendingReservations = Reservation::where(
+        $reservationQuery = Reservation::where(
             'status',
             'Menunggu'
-        )->count();
+        );
 
-        // Total keterlambatan
-        $lateLoans = ReturnBook::where(
+        $lateQuery = ReturnBook::where(
             'late_days',
             '>',
             0
-        )->count();
+        );
 
+        if ($periode) {
+
+            $loanQuery
+                ->whereYear('loan_date', $tahun)
+                ->whereMonth('loan_date', $bulan);
+
+            $returnQuery
+                ->whereYear('return_date', $tahun)
+                ->whereMonth('return_date', $bulan);
+
+            $reservationQuery
+                ->whereYear('reservation_date', $tahun)
+                ->whereMonth('reservation_date', $bulan);
+
+            $lateQuery
+                ->whereYear('return_date', $tahun)
+                ->whereMonth('return_date', $bulan);
+        }
+
+        $totalLoans = $loanQuery->count();
+
+        $totalReturns = $returnQuery->count();
+
+        $pendingReservations = $reservationQuery->count();
+
+        $lateLoans = $lateQuery->count();
         /*
         |--------------------------------------------------------------------------
         | Ringkasan Sistem
@@ -121,10 +134,19 @@ class DashboardPustakawanController extends BaseController
 
         $totalMembers = Member::count();
 
-        $borrowedBooks = Loan::where(
+        $borrowedBooksQuery = Loan::where(
             'status',
             'Dipinjam'
-        )->count();
+        );
+
+        if ($periode) {
+
+            $borrowedBooksQuery
+                ->whereYear('loan_date', $tahun)
+                ->whereMonth('loan_date', $bulan);
+        }
+
+        $borrowedBooks = $borrowedBooksQuery->count();
 
         $availableBooks =
             $totalBooks - $borrowedBooks;
@@ -137,8 +159,24 @@ class DashboardPustakawanController extends BaseController
 
         $reservations = Reservation::with([
             'member',
-            'book'
-        ])
+            'book',
+            'digitalBook'
+        ]);
+
+        if ($periode) {
+
+            $reservations
+                ->whereYear(
+                    'reservation_date',
+                    $tahun
+                )
+                ->whereMonth(
+                    'reservation_date',
+                    $bulan
+                );
+        }
+
+        $reservations = $reservations
             ->latest()
             ->take(5)
             ->get();
@@ -149,7 +187,16 @@ class DashboardPustakawanController extends BaseController
         |--------------------------------------------------------------------------
         */
 
-        $popularBooks = Loan::with('book')
+        $popularLoanQuery = Loan::with('book');
+
+        if ($periode) {
+
+            $popularLoanQuery
+                ->whereYear('loan_date', $tahun)
+                ->whereMonth('loan_date', $bulan);
+        }
+
+        $popularBooks = $popularLoanQuery
             ->get()
             ->groupBy('book_id')
             ->map(function ($item) {
@@ -157,11 +204,12 @@ class DashboardPustakawanController extends BaseController
                 return [
 
                     'title' =>
-                    $item->first()->book->title,
+                    optional(
+                        $item->first()->book
+                    )->title ?? '-',
 
                     'total' =>
                     $item->count()
-
                 ];
             })
             ->sortByDesc('total')
@@ -176,7 +224,7 @@ class DashboardPustakawanController extends BaseController
         return view(
             'pustakawan.dashboard.index',
             compact(
-                'period',
+                'periode',
                 'labels',
                 'data',
 

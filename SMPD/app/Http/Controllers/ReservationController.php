@@ -259,40 +259,7 @@ class ReservationController extends BaseController
             $reservation->update([
                 'status' => 'Disetujui',
             ]);
-
-            Loan::create([
-                'loan_code' =>
-                'LON' . now()->format('YmdHis'),
-
-                'member_id' =>
-                $reservation->member_id,
-
-                'book_id' =>
-                $reservation->book_id,
-
-                'loan_date' =>
-                now(),
-
-                'due_date' =>
-                now()->addDays(7),
-
-                'status' =>
-                'Dipinjam',
-            ]);
         }
-
-        Book::where(
-            'id',
-            $reservation->book_id
-        )->decrement('stock');
-
-        $notification = Notification::create([
-            'member_id' => $reservation->member_id,
-            'title' => 'Reservasi Disetujui',
-            'message' => 'Reservasi buku Anda telah disetujui dan buku berhasil dipinjam.',
-            'type' => 'success',
-            'is_read' => false,
-        ]);
 
         return redirect()
             ->route('reservations.pustakawan')

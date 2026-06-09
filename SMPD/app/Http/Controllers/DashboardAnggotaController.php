@@ -31,64 +31,58 @@ class DashboardAnggotaController extends BaseController
 
         /*
         |--------------------------------------------------------------------------
-        | QUERY PINJAMAN SAYA
+        | STATISTIK GLOBAL
         |--------------------------------------------------------------------------
         */
 
-        $loanQuery = Loan::where(
-            'member_id',
-            $memberId
+        $activeLoans = Loan::where(
+            'status',
+            'Dipinjam'
         );
+
+        $loanHistory = Loan::query();
 
         if ($periode) {
 
-            $loanQuery
+            $activeLoans
+                ->whereYear('loan_date', $tahun)
+                ->whereMonth('loan_date', $bulan);
+
+            $loanHistory
+                ->whereYear('loan_date', $tahun)
+                ->whereMonth('loan_date', $bulan);
+        }
+
+        $activeLoans = $activeLoans->count();
+
+        $loanHistory = $loanHistory->count();
+
+        /*
+        |--------------------------------------------------------------------------
+        | TOTAL RESERVASI GLOBAL
+        |--------------------------------------------------------------------------
+        */
+
+        $reservations = Reservation::query();
+
+        if ($periode) {
+
+            $reservations
                 ->whereYear(
-                    'loan_date',
+                    'reservation_date',
                     $tahun
                 )
                 ->whereMonth(
-                    'loan_date',
+                    'reservation_date',
                     $bulan
                 );
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | STATISTIK SAYA
-        |--------------------------------------------------------------------------
-        */
-
-        $activeLoans = (clone $loanQuery)
-            ->where('status', 'Dipinjam')
-            ->count();
-
-        $loanHistory = (clone $loanQuery)
-            ->count();
+        $reservations = $reservations->count();
 
         /*
         |--------------------------------------------------------------------------
-        | RESERVASI SAYA
-        |--------------------------------------------------------------------------
-        */
-
-        $reservationQuery = Reservation::where(
-            'member_id',
-            $memberId
-        );
-
-        if ($periode) {
-
-            $reservationQuery
-                ->whereYear('created_at', $tahun)
-                ->whereMonth('created_at', $bulan);
-        }
-
-        $reservations = $reservationQuery->count();
-
-        /*
-        |--------------------------------------------------------------------------
-        | DENDA SAYA
+        | DENDA SAYA (PERSONAL)
         |--------------------------------------------------------------------------
         */
 
@@ -106,8 +100,14 @@ class DashboardAnggotaController extends BaseController
         if ($periode) {
 
             $fineQuery
-                ->whereYear('created_at', $tahun)
-                ->whereMonth('created_at', $bulan);
+                ->whereYear(
+                    'return_date',
+                    $tahun
+                )
+                ->whereMonth(
+                    'return_date',
+                    $bulan
+                );
         }
 
         $fine = $fineQuery->sum('fine_amount');
@@ -139,7 +139,16 @@ class DashboardAnggotaController extends BaseController
         $popularBooks = Loan::select(
             'book_id',
             DB::raw('COUNT(*) as total')
-        )
+        );
+
+        if ($periode) {
+
+            $popularBooks
+                ->whereYear('loan_date', $tahun)
+                ->whereMonth('loan_date', $bulan);
+        }
+
+        $popularBooks = $popularBooks
             ->with('book')
             ->groupBy('book_id')
             ->orderByDesc('total')
@@ -155,7 +164,16 @@ class DashboardAnggotaController extends BaseController
         $activeMembers = Loan::select(
             'member_id',
             DB::raw('COUNT(*) as total')
-        )
+        );
+
+        if ($periode) {
+
+            $activeMembers
+                ->whereYear('loan_date', $tahun)
+                ->whereMonth('loan_date', $bulan);
+        }
+
+        $activeMembers = $activeMembers
             ->with('member')
             ->groupBy('member_id')
             ->orderByDesc('total')
@@ -166,13 +184,12 @@ class DashboardAnggotaController extends BaseController
         |--------------------------------------------------------------------------
         | ANGGOTA ONLINE
         |--------------------------------------------------------------------------
-        |
-        | Jika belum punya kolom last_seen,
-        | sementara gunakan updated_at.
-        |
         */
 
-        $onlineUsers = Member::where('role_id', 3)
+        $onlineUsers = Member::where(
+            'role_id',
+            3
+        )
             ->where(
                 'updated_at',
                 '>=',
@@ -182,7 +199,7 @@ class DashboardAnggotaController extends BaseController
 
         /*
         |--------------------------------------------------------------------------
-        | GRAFIK PEMINJAMAN KESELURUHAN
+        | GRAFIK PEMINJAMAN GLOBAL
         |--------------------------------------------------------------------------
         */
 
