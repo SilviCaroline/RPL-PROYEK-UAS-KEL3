@@ -7,6 +7,9 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Routing\Controller as BaseController;
+use App\Models\EmailOtp;
+use App\Mail\SendOtpMail;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends BaseController
 {
@@ -19,9 +22,37 @@ class RegisterController extends BaseController
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:members,email',
+            'email' => 'required|email',
             'password' => 'required|min:6|confirmed',
         ]);
+
+        $existingMember = Member::where(
+            'email',
+            strtolower($request->email)
+        )->first();
+
+        if ($existingMember) {
+
+            if ($existingMember->status == 'Nonaktif') {
+
+                session([
+                    'verify_member_id' => $existingMember->id
+                ]);
+
+                return redirect()
+                    ->route('verify.email')
+                    ->with(
+                        'info',
+                        'Email sudah terdaftar tetapi belum diverifikasi.'
+                    );
+            }
+
+            return back()
+                ->withErrors([
+                    'email' => 'Email sudah digunakan.'
+                ])
+                ->withInput();
+        }
 
         // Cari role anggota
         $role = Role::where('name', 'anggota')->first();
@@ -60,15 +91,47 @@ class RegisterController extends BaseController
         $member->name = $request->name;
         $member->email = strtolower($request->email);
         $member->password = Hash::make($request->password);
-        $member->status = 'Aktif';
+        $member->status = 'Nonaktif';
 
         $member->save();
 
-        return redirect()
-            ->route('login')
-            ->with(
-                'success',
-                'Registrasi berhasil, silakan login.'
+        $otp = rand(100000, 999999);
+
+        EmailOtp::create([
+
+            'member_id' => $member->id,
+
+            'otp' => $otp,
+
+            'expired_at' => now()->addMinutes(5)
+
+        ]);
+
+        try {
+            Mail::to($member->email)
+                ->send(
+                    new SendOtpMail($otp)
+                );
+        } catch (\Exception $e) {
+
+            EmailOtp::where(
+                'member_id',
+                $member->id
+            )->delete();
+
+            $member->delete();
+
+            return back()->with(
+                'error',
+                'Gagal mengirim email verifikasi.'
             );
+        }
+
+        session([
+            'verify_member_id' => $member->id
+        ]);
+
+        return redirect()
+            ->route('verify.email');
     }
 }

@@ -23,6 +23,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EmailVerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -185,7 +186,6 @@ Route::delete(
     ->middleware('permission:books,delete')
     ->name('books.destroy');
 
-// MEMBERS
 // MEMBERS
 
 Route::get(
@@ -436,3 +436,19 @@ Route::put(
     '/profile/update',
     [ProfileController::class, 'update']
 )->name('profile.update');
+
+// EMAIL VERIFICATION
+Route::get(
+    '/verify-email',
+    [EmailVerificationController::class, 'showForm']
+)->name('verify.email');
+
+Route::post(
+    '/verify-email',
+    [EmailVerificationController::class, 'verify']
+)->name('verify.email.submit');
+
+Route::post(
+    '/resend-otp',
+    [EmailVerificationController::class, 'resendOtp']
+)->name('resend.otp');

@@ -23,19 +23,37 @@ class LoginController extends BaseController
             )
             ->first();
 
+        if (!$member) {
+
+            return back()->with(
+                'error',
+                'Email atau password salah.'
+            );
+        }
+
         if (
-            !$member ||
             !Hash::check(
                 $request->password,
                 $member->password
             )
         ) {
 
-            return back()
-                ->with(
-                    'error',
-                    'Email atau password salah.'
-                );
+            return back()->with(
+                'error',
+                'Email atau password salah.'
+            );
+        }
+
+        if (
+            $member->role->name === 'anggota'
+            &&
+            $member->email_verified_at === null
+        ) {
+
+            return back()->with(
+                'error',
+                'Email belum diverifikasi. Silakan verifikasi OTP terlebih dahulu.'
+            );
         }
 
         session([
