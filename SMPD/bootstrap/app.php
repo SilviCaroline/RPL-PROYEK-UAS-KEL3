@@ -44,11 +44,18 @@ $app = Application::configure(
         ]);
     })
 
-    ->withExceptions(function (
-        Exceptions $exceptions
-    ): void {
+    ->withExceptions(function (Exceptions $exceptions): void {
 
-        //
+        $exceptions->render(function (\Throwable $e, $request) {
+            if (config('app.debug')) {
+                return response()->json([
+                    'exception' => get_class($e),
+                    'message'   => $e->getMessage(),
+                    'file'      => $e->getFile(),
+                    'line'      => $e->getLine(),
+                ], 500);
+            }
+        });
     })
 
     ->create();
