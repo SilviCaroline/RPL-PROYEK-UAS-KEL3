@@ -6,7 +6,6 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 if (($_SERVER['VERCEL'] ?? false) || getenv('VERCEL')) {
     $tmpStorage = '/tmp/storage';
-
     if (!is_dir($tmpStorage)) {
         $dirs = [
             'app/public',
@@ -31,33 +30,24 @@ $app = Application::configure(
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
-
-    ->withMiddleware(function (
-        Middleware $middleware
-    ): void {
-
+    ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-
-            'permission' =>
-            \App\Http\Middleware\CheckPermission::class,
-
+            'permission' => \App\Http\Middleware\CheckPermission::class,
         ]);
     })
-
     ->withExceptions(function (Exceptions $exceptions): void {
-
         $exceptions->render(function (\Throwable $e, $request) {
             if (config('app.debug')) {
-                return response()->json([
+                return new \Symfony\Component\HttpFoundation\JsonResponse([
                     'exception' => get_class($e),
                     'message'   => $e->getMessage(),
                     'file'      => $e->getFile(),
                     'line'      => $e->getLine(),
+                    'trace'     => collect($e->getTrace())->take(5)->toArray(),
                 ], 500);
             }
         });
     })
-
     ->create();
 
 if (($_SERVER['VERCEL'] ?? false) || getenv('VERCEL')) {
