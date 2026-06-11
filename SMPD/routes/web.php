@@ -31,9 +31,11 @@ use App\Http\Controllers\EmailVerificationController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return 'TEST BERHASIL';
-});
+Route::get(
+    '/',
+    [LandingController::class, 'index']
+)->name('landing');
+
 
 /*
 |--------------------------------------------------------------------------
